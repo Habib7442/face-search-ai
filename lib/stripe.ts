@@ -1,12 +1,12 @@
 // lib/stripe.ts
-import Stripe from 'stripe';
+import Stripe from "stripe";
 
-if (!process.env.STPIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables');
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
 }
 
-export const stripe = new Stripe(process.env.STPIPE_SECRET_KEY, {
-  apiVersion: '2023-10-16',
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16",
 });
 
 export const STRIPE_CONFIGS = {
