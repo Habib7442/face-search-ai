@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { Spotlight } from "./ui/Spotlight";
+import testImages from "@/lib/images";
+import Image from "next/image";
+import Playstore from "@/public/playstore.png";
 
 const Herosection = () => {
   const { userId } = useAuth();
@@ -102,11 +105,11 @@ const Herosection = () => {
               </span>
             </div>
 
-            <h1 className="montserrat-landing text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              Unlimited Face Search,
+            <h1 className="montserrat-landing text-4xl md:text-6xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              Face Search Made Flexible,
               <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-                Single Monthly Charge
+                Use Credits, Unlock Potential
               </span>
             </h1>
 
@@ -128,21 +131,32 @@ const Herosection = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button className="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 hover:from-slate-700 hover:via-slate-800 hover:to-slate-700 text-cyan-300 font-semibold px-8 py-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+                  <Button
+                    className="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 hover:from-slate-700 hover:via-slate-800 hover:to-slate-700 text-cyan-300 font-semibold px-8 py-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 
+      shadow-[0_0_15px_rgba(0,255,255,0.7),0_0_30px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,1),0_0_40px_rgba(0,255,255,0.8)]"
+                  >
                     {userId ? "Explore" : "Get Started"}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </motion.div>
               </Link>
             </div>
-
+            {/* className="w-8 h-8 rounded-full bg-gray-800 border-2 border-black" */}
             <div className="flex items-center justify-center gap-4 mb-8">
               <div className="flex -space-x-2">
-                {[1, 2, 3].map((i) => (
+                {testImages.map((data) => (
                   <div
-                    key={i}
-                    className="w-8 h-8 rounded-full bg-gray-800 border-2 border-black"
-                  />
+                    key={data.id}
+                    className="w-8 h-8 rounded-full bg-gray-800 border-2 border-black overflow-hidden"
+                  >
+                    <Image
+                      width={100}
+                      height={100}
+                      src={data.image}
+                      alt="test-images"
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
                 ))}
               </div>
               <div className="flex items-center gap-1">
@@ -152,8 +166,16 @@ const Herosection = () => {
                 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
                 <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
               </div>
-              <span className="text-sm text-gray-300">
-                Rated 5.0 on Playstore
+              <span className="text-sm text-gray-300 flex justify-center items-center gap-5">
+                <Link href="https://play.google.com/store/apps/details?id=com.facesearch.app&hl=en_IN">
+                <Image
+                  src={Playstore}
+                  width={100}
+                  height={100}
+                  className="w-8 h-8 rounded-full cursor-pointer"
+                  alt="playstore-icon"
+                />
+                </Link>
               </span>
             </div>
           </motion.div>

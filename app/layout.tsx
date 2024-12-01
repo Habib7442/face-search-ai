@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "./provider";
 import Navbar from "@/components/navigation/Navbar";
+import {ReactLenis} from "@/lib/lenis"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <ReactLenis root>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative dark:bg-black dark:text-white`}
       >
@@ -47,6 +49,7 @@ export default function RootLayout({
           </ClerkProvider>
         </ThemeProvider>
       </body>
+      </ReactLenis>
     </html>
   );
 }
