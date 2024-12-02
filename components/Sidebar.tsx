@@ -22,7 +22,7 @@ import {
 } from "./ui/tooltip";
 import { SignOutButton } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { HomeIcon } from "lucide-react";
+import { HomeIcon, NotebookIcon } from "lucide-react";
 
 export function SidebarDemo() {
   const dispatch = useAppDispatch();
@@ -54,6 +54,13 @@ export function SidebarDemo() {
       href: "#",
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Reviews",
+      href: "/reviews",
+      icon: (
+        <NotebookIcon className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {

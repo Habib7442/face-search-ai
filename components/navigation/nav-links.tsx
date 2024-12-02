@@ -5,9 +5,7 @@ import { motion } from "framer-motion";
 import { UserButton, useUser } from "@clerk/nextjs"; // Import UserButton and useUser
 
 const links = [
-  { href: "#work", label: "Work" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#benefits", label: "Benefits" },
+  { href: "/view-reviews", label: "Reviews" },
   { href: "#faq", label: "FAQ" },
 ];
 

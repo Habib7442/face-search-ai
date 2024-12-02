@@ -1,6 +1,5 @@
 // components/TestimonialsSection.tsx
-import React from 'react';
-import { AnimatedTestimonialsDemo } from './Testimonials';
+import { InfiniteMovingCardsDemo } from './Testimonials';
 
 const TestimonialsSection = () => {
   return (
@@ -22,7 +21,7 @@ const TestimonialsSection = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-900/50 to-transparent pointer-events-none"></div>
           
           <div className="relative z-20">
-            <AnimatedTestimonialsDemo />
+            <InfiniteMovingCardsDemo />
           </div>
         </div>
 
