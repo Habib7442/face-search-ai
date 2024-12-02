@@ -6,6 +6,7 @@ import { UserButton, useUser } from "@clerk/nextjs"; // Import UserButton and us
 
 const links = [
   { href: "/view-reviews", label: "Reviews" },
+  { href: "/reviews", label: "Give Reviews" },
   { href: "#faq", label: "FAQ" },
 ];
 
