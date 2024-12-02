@@ -116,7 +116,7 @@ export default function TestimonialForm() {
           </div>
           
           <Textarea 
-            placeholder="Write your testimonial..."
+            placeholder="Write your review..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             required

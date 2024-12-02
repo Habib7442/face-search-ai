@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import {
   IconArrowLeft,
   IconBrandTabler,
-  IconSettings,
   IconUserBolt,
   IconCreditCard,
 } from "@tabler/icons-react";
@@ -43,7 +42,7 @@ export function SidebarDemo() {
       ),
     },
     {
-      label: "Dashboard",
+      label: "Upload",
       href: "#",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
@@ -63,13 +62,13 @@ export function SidebarDemo() {
         <NotebookIcon className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
-    {
-      label: "Settings",
-      href: "#",
-      icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
+    // {
+    //   label: "Settings",
+    //   href: "#",
+    //   icon: (
+    //     <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    //   ),
+    // },
     {
       label: "Logout",
       href: "#",

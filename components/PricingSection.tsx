@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Check, Star, Zap, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
@@ -25,7 +25,7 @@ const PricingSection = () => {
       ],
       highlighted: false,
       buttonText: "Get Started",
-      stripePriceId: "price_1QNsUeSABw0Heq1mTI8fY0jE", 
+      stripePriceId: "price_1QNsUeSABw0Heq1mTI8fY0jE",
     },
     {
       id: "pro",
@@ -45,7 +45,7 @@ const PricingSection = () => {
       highlighted: true,
       buttonText: "Try Pro Plan",
       badge: "Most Popular",
-      stripePriceId: "price_1QNsWGSABw0Heq1mCNToLIF2", 
+      stripePriceId: "price_1QNsWGSABw0Heq1mCNToLIF2",
     },
     {
       id: "enterprise",
@@ -64,7 +64,7 @@ const PricingSection = () => {
       ],
       highlighted: false,
       buttonText: "Contact Sales",
-      stripePriceId: "price_1QNsYkSABw0Heq1mPMQtOsBB", 
+      stripePriceId: "price_1QNsYkSABw0Heq1mPMQtOsBB",
     },
   ];
 
@@ -115,7 +115,7 @@ const PricingSection = () => {
         <div className="absolute -bottom-1/2 -left-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-5 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200">
@@ -203,11 +203,7 @@ const PricingSection = () => {
         {/* FAQ Note */}
         <div className="text-center mt-16">
           <p className="text-slate-400">
-            Have questions about our pricing?{" "}
-            <a href="#" className="text-blue-400 hover:text-blue-300 underline">
-              Check our FAQ
-            </a>{" "}
-            or{" "}
+            Have questions about our pricing?
             <a href="#" className="text-blue-400 hover:text-blue-300 underline">
               contact our team
             </a>
