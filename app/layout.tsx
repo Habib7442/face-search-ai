@@ -4,8 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "./provider";
-import Navbar from "@/components/navigation/Navbar";
 import {ReactLenis} from "@/lib/lenis"
+import { Providers } from "./ReduxProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,10 +41,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ClerkProvider>
+            <Providers>
             <main>
-              <Navbar />
+              
               {children}
             </main>
+            </Providers>
             <Toaster />
           </ClerkProvider>
         </ThemeProvider>

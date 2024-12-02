@@ -168,13 +168,13 @@ const Herosection = () => {
               </div>
               <span className="text-sm text-gray-300 flex justify-center items-center gap-5">
                 <Link href="https://play.google.com/store/apps/details?id=com.facesearch.app&hl=en_IN">
-                <Image
-                  src={Playstore}
-                  width={100}
-                  height={100}
-                  className="w-8 h-8 rounded-full cursor-pointer"
-                  alt="playstore-icon"
-                />
+                  <Image
+                    src={Playstore}
+                    width={100}
+                    height={100}
+                    className="w-8 h-8 rounded-full cursor-pointer"
+                    alt="playstore-icon"
+                  />
                 </Link>
               </span>
             </div>

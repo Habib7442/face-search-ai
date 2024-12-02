@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { SignOutButton } from "@clerk/nextjs";
+
 import Image from "next/image";
-import Link from "next/link";
-import { Upload as UploadIcon, Home, Loader2, CreditCard } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Upload as UploadIcon,  Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner"
 import { UserCredits } from "@/types/database";
@@ -112,9 +110,9 @@ const Upload = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-slate-200 py-10 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto mt-14">
+      <div className="max-w-6xl mx-auto lg:p-4 md:p-4">
          {/* Credits Display */}
-          <div className="mb-8 flex justify-between items-center bg-slate-800/50 backdrop-blur-sm p-4 rounded-xl border border-slate-700/50">
+          {/* <div className="mb-8 flex justify-between items-center bg-slate-800/50 backdrop-blur-sm p-4 rounded-xl border border-slate-700/50">
           <div className="flex items-center space-x-4">
             <div className="text-lg">
               {userCredits?.is_unlimited ? (
@@ -134,9 +132,9 @@ const Upload = () => {
             </Button>
             </Link>
           )}
-        </div>
+        </div> */}
         {/* Top Navigation */}
-        <div className="flex justify-between items-center mb-12">
+        {/* <div className="flex justify-between items-center mb-12">
           <Link href="/">
             <Button
               variant="ghost"
@@ -153,7 +151,7 @@ const Upload = () => {
               Sign Out
             </Button>
           </SignOutButton>
-        </div>
+        </div> */}
 
         {/* Main Content */}
         <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-slate-700/50">
