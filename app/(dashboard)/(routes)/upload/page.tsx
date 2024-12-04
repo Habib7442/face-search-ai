@@ -1,190 +1,195 @@
 "use client";
-import React, { useEffect, useState } from "react";
-
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
-import { Upload as UploadIcon,  Loader2 } from "lucide-react";
+import { Upload as UploadIcon, Loader2, Search } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import { toast } from "sonner"
-import { UserCredits } from "@/types/database";
+import { toast } from "sonner";
+import type { SearchResult } from "@/types/search";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/lib/redux";
+import { toggleAdultFilter } from "@/lib/redux/slices/adultFilterSlice";
 
 const Upload = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  const [userCredits, setUserCredits] = useState<UserCredits | null>(null);
+  // const [adultContentFilter, setAdultContentFilter] = useState<boolean>(false);
+  const [imageSourceUrl, setImageSourceUrl] = useState<string | null>(null);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
+  const dispatch = useDispatch();
+  const adultContentFilter = useSelector(
+    (state: RootState) => state.adultFilter.isEnabled
+  );
 
-  useEffect(() => {
-    checkCredits();
-  }, []);
-
-  const checkCredits = async () => {
-    try {
-      const response = await fetch('/api/credits/check');
-      const data = await response.json();
-      setUserCredits(data);
-    } catch (error) {
-      console.error('Error checking credits:', error);
-      toast.error('Failed to check credits');
-    }
-  };
-
-  // const handleUpgradeClick = async () => {
-  //   try {
-  //     const response = await fetch('/api/create-checkout-session', {
-  //       method: 'POST',
-  //     });
-  //     const data = await response.json();
-  //     if (data.url) {
-  //       window.location.href = data.url;
-  //     }
-  //   } catch (error) {
-  //     console.error('Error creating checkout session:', error);
-  //     toast.error('Failed to start checkout process');
-  //   }
-  // };
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Check credits
-    if (!userCredits?.is_unlimited && userCredits?.credits_remaining === 0) {
-      toast.error('No credits remaining. Please upgrade to continue.');
-      return;
-    }
-
+  const handleImageUpload = async (file: File) => {
     try {
       setIsLoading(true);
-      setSelectedImage(file);
+      setSearchResults([]);
 
-      // Use a credit
-      const response = await fetch('/api/credits/use', {
-        method: 'POST',
+      const base64Image = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          resolve(reader.result as string);
+        };
+      });
+
+      const response = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image: base64Image.split(",")[1],
+          adultFilter: adultContentFilter, // Use Redux state here
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to use credit');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setResultImage("/dummy.jpg");
-      
-      // Refresh credits
-      await checkCredits();
+      const data = await response.json();
+      if (data.results && Array.isArray(data.results)) {
+        setSearchResults(data.results);
+        setResultImage(data.results[0]?.imageUrl || null);
+        setImageSourceUrl(data.results[0]?.sourceUrl || null);
+      }
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('Failed to process image');
+      console.error("Error processing image:", error);
+      toast.error("Failed to process image");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setIsLoading(true);
+    if (file && file.type.startsWith("image/")) {
       setSelectedImage(file);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setResultImage("/dummy.jpg");
-      setIsLoading(false);
     }
-  };
+  }, []);
+
+  const renderGroupResults = useCallback(() => {
+    // Get unique groups and sort them
+    const groups = [
+      ...new Set(searchResults.map((result) => result.group)),
+    ].sort((a, b) => a - b);
+
+    return (
+      <div className="space-y-6">
+        {groups.map((groupNumber) => {
+          const groupResults = searchResults.filter(
+            (result) => result.group === groupNumber
+          );
+
+          return (
+            <motion.div
+              key={groupNumber}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 hover:bg-slate-800 transition-all duration-300"
+            >
+              <h3 className="text-xl font-semibold mb-4 text-slate-200">
+                Group {groupNumber}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {groupResults.map((result, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group cursor-pointer"
+                    onClick={() => {
+                      setResultImage(result.imageUrl);
+                      setImageSourceUrl(result.sourceUrl);
+                    }}
+                  >
+                    <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-900/50">
+                      <Image
+                        src={result.imageUrl}
+                        alt={`Result ${index + 1}`}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                    <div className="mt-2 text-sm text-slate-400">
+                      <a
+                        href={result.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-400 transition-colors truncate block"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {result.sourceUrl}
+                      </a>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    );
+  }, [searchResults]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-slate-200 py-10 px-4 md:px-8">
-      <div className="max-w-6xl mx-auto lg:p-4 md:p-4">
-         {/* Credits Display */}
-          {/* <div className="mb-8 flex justify-between items-center bg-slate-800/50 backdrop-blur-sm p-4 rounded-xl border border-slate-700/50">
-          <div className="flex items-center space-x-4">
-            <div className="text-lg">
-              {userCredits?.is_unlimited ? (
-                <span className="text-green-400">Unlimited Credits</span>
-              ) : (
-                <span>Credits Remaining: <span className="font-bold text-blue-400">{userCredits?.credits_remaining || 0}</span></span>
-              )}
-            </div>
-          </div>
-          {userCredits?.credits_remaining === 0 && (
-            <Link href="/payment">
-            <Button
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-            >
-              <CreditCard className="mr-2 h-4 w-4" />
-              Upgrade
-            </Button>
-            </Link>
-          )}
-        </div> */}
-        {/* Top Navigation */}
-        {/* <div className="flex justify-between items-center mb-12">
-          <Link href="/">
-            <Button
-              variant="ghost"
-              className="text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-300"
-            >
-              <Home className="mr-2 h-5 w-5" />
-              Back to Home
-            </Button>
-          </Link>
-          <SignOutButton>
-            <Button
-              className="bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-500 hover:to-red-600 text-white transition-all duration-300"
-            >
-              Sign Out
-            </Button>
-          </SignOutButton>
-        </div> */}
-
-        {/* Main Content */}
-        <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-slate-700/50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-slate-200 py-6 px-4 md:py-10 md:px-8 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-slate-800/50 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-xl border border-slate-700/50">
           <h1 className="text-3xl md:text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300">
-            Image Upload & Analysis
+            Image Search & Analysis
           </h1>
 
-          {/* Upload Area */}
+          <div className="flex justify-end mb-6">
+            <label className="flex items-center gap-3 bg-slate-700/50 px-4 py-2 rounded-lg cursor-pointer">
+              <span className="text-sm font-medium text-slate-300">
+                Adult Content Filter
+              </span>
+              <input
+                type="checkbox"
+                checked={adultContentFilter}
+                onChange={() => {
+                  dispatch(toggleAdultFilter());
+                  if (selectedImage) {
+                    handleImageUpload(selectedImage);
+                  }
+                }}
+                className="w-5 h-5 rounded border-slate-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-800"
+              />
+            </label>
+          </div>
+
           <div
-            className={`relative mb-8 ${
-              !selectedImage ? 'h-64' : 'h-auto'
-            }`}
-            onDragEnter={handleDrag}
+            className={`relative mb-8 ${!selectedImage ? "h-64" : "h-auto"}`}
+            onDragEnter={() => setDragActive(true)}
+            onDragLeave={() => setDragActive(false)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleDrop}
           >
-            {!selectedImage && (
+            {!selectedImage ? (
               <div
                 className={`h-full border-2 border-dashed rounded-xl transition-all duration-300 ${
                   dragActive
-                    ? 'border-blue-500 bg-blue-500/10'
-                    : 'border-slate-600 hover:border-slate-500'
+                    ? "border-blue-500 bg-blue-500/10"
+                    : "border-slate-600 hover:border-slate-500"
                 }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
               >
                 <label
                   htmlFor="image-upload"
                   className="flex flex-col items-center justify-center h-full cursor-pointer"
                 >
                   <UploadIcon className="h-12 w-12 mb-4 text-slate-400" />
-                  <span className="text-lg font-medium text-slate-300">
-                    Drag and drop your image here or click to browse
+                  <span className="text-lg font-medium text-slate-300 text-center">
+                    Drag and drop your image here
                   </span>
                   <span className="text-sm text-slate-400 mt-2">
                     Supports: JPG, PNG, GIF (max 5MB)
@@ -194,23 +199,41 @@ const Upload = () => {
                   id="image-upload"
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setSelectedImage(file);
+                    }
+                  }}
                   className="hidden"
                 />
+              </div>
+            ) : (
+              <div className="flex justify-center mb-6">
+                <button
+                  onClick={() => handleImageUpload(selectedImage)}
+                  disabled={isLoading}
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Search className="h-5 w-5" />
+                  )}
+                  Search Image
+                </button>
               </div>
             )}
           </div>
 
-          {/* Images Display */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {(selectedImage || resultImage) && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="grid md:grid-cols-2 gap-8"
+                className="grid md:grid-cols-2 gap-8 mb-8"
               >
-                {/* Uploaded Image */}
                 {selectedImage && (
                   <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50">
                     <h2 className="text-xl font-semibold mb-4 text-slate-300">
@@ -227,7 +250,6 @@ const Upload = () => {
                   </div>
                 )}
 
-                {/* Result Image */}
                 {isLoading ? (
                   <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50 flex items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
@@ -236,7 +258,7 @@ const Upload = () => {
                   resultImage && (
                     <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50">
                       <h2 className="text-xl font-semibold mb-4 text-slate-300">
-                        Result
+                        Selected Result
                       </h2>
                       <div className="relative aspect-square rounded-lg overflow-hidden">
                         <Image
@@ -246,12 +268,36 @@ const Upload = () => {
                           className="object-cover"
                         />
                       </div>
+                      {imageSourceUrl && (
+                        <p className="mt-4 text-sm text-slate-400 break-words">
+                          Source:{" "}
+                          <a
+                            href={imageSourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:text-blue-300 underline"
+                          >
+                            {imageSourceUrl}
+                          </a>
+                        </p>
+                      )}
                     </div>
                   )
                 )}
               </motion.div>
             )}
           </AnimatePresence>
+
+          {searchResults.length > 0 && (
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-6 text-slate-200">
+                Search Results
+              </h2>
+              <div className="overflow-y-auto max-h-[800px] pr-2 custom-scrollbar">
+                {renderGroupResults()}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

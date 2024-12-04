@@ -36,14 +36,14 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   // If signed in, render the dashboard layout
   if (isSignedIn) {
     return (
-      <div className="flex h-screen">
+      <div className="flex h-full">
         {/* Sidebar takes 1/7 of the screen */}
         <div className="w-1/7 h-full bg-gray-800 fixed z-10">
           <SidebarDemo />
         </div>
-        
+
         {/* Main content takes 2/3 of the screen */}
-        <div className="relative w-full lg:px-16 bg-gray-50 dark:bg-gray-900">
+        <div className="relative w-full h-full lg:px-16 bg-gray-50 dark:bg-gray-900">
           {children}
         </div>
       </div>
