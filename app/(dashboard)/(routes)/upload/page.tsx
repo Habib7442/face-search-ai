@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import { Upload as UploadIcon, Loader2, Search } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,7 +20,7 @@ const Upload = () => {
   const dispatch = useDispatch();
   const adultContentFilter = useAppSelector(selectAdultFilter);
 
-  const handleImageUpload = useCallback(async (file: File, filterEnabled: boolean) => {
+  const handleImageUpload = async (file: File, filterEnabled: boolean) => {
     try {
       setIsLoading(true);
       setSearchResults([]);
@@ -58,14 +58,7 @@ const Upload = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
-
-  // Effect to handle image upload when filter changes
-  useEffect(() => {
-    if (selectedImage) {
-      handleImageUpload(selectedImage, adultContentFilter);
-    }
-  }, [adultContentFilter, selectedImage, handleImageUpload]);
+  };
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -148,11 +141,10 @@ const Upload = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-slate-200 py-6 px-4 md:py-10 md:px-8 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="bg-slate-800/50 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-xl border border-slate-700/50">
-          <h1 className="text-3xl md:text-4xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300">
-            Image Search & Analysis
-          </h1>
-
-          <div className="flex justify-end mb-6">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300">
+              Image Search & Analysis
+            </h1>
             <label className="flex items-center gap-3 bg-slate-700/50 px-4 py-2 rounded-lg cursor-pointer">
               <span className="text-sm font-medium text-slate-300">
                 Adult Content Filter
@@ -302,4 +294,4 @@ const Upload = () => {
   );
 };
 
-export default Upload
+export default Upload;
