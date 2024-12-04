@@ -1,3 +1,4 @@
+// In your route handler file (e.g., route.ts)
 import { ProcessedData } from "@/types/search";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -5,6 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { image, adultFilter } = body;
+    console.log(adultFilter);
 
     if (!image) {
       return NextResponse.json({ error: "Missing image" }, { status: 400 });
@@ -53,7 +55,10 @@ export async function POST(request: NextRequest) {
             imageUrl:
               "https://images.news18.com/ibnlive/uploads/2023/09/image-1200x900-2023-09-28t062044.328-2023-09-a164584397280386417f9cd9739f766a-3x2.png?impolicy=website&width=510&height=356",
           },
-        ].filter((result) => !adultFilter || !result.adultContent),
+        ]
+          // By default, filter out adult content
+          // .filter((result) => !result.adultContent),
+          .filter((result) => adultFilter || !result.adultContent),
       },
     };
 

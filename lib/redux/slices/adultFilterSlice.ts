@@ -1,5 +1,6 @@
 // lib/redux/slices/adultFilterSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
 interface AdultFilterState {
   isEnabled: boolean;
@@ -23,5 +24,8 @@ export const adultFilterSlice = createSlice({
 });
 
 export const { toggleAdultFilter, setAdultFilter } = adultFilterSlice.actions;
+
+// Selector
+export const selectAdultFilter = (state: RootState) => state.adultFilter.isEnabled;
 
 export default adultFilterSlice.reducer;

@@ -1,29 +1,26 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { Upload as UploadIcon, Loader2, Search } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import type { SearchResult } from "@/types/search";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/lib/redux";
-import { toggleAdultFilter } from "@/lib/redux/slices/adultFilterSlice";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/lib/redux";
+import { selectAdultFilter, toggleAdultFilter } from "@/lib/redux/slices/adultFilterSlice";
 
 const Upload = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  // const [adultContentFilter, setAdultContentFilter] = useState<boolean>(false);
   const [imageSourceUrl, setImageSourceUrl] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
   const dispatch = useDispatch();
-  const adultContentFilter = useSelector(
-    (state: RootState) => state.adultFilter.isEnabled
-  );
+  const adultContentFilter = useAppSelector(selectAdultFilter);
 
-  const handleImageUpload = async (file: File) => {
+  const handleImageUpload = useCallback(async (file: File, filterEnabled: boolean) => {
     try {
       setIsLoading(true);
       setSearchResults([]);
@@ -41,7 +38,7 @@ const Upload = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           image: base64Image.split(",")[1],
-          adultFilter: adultContentFilter, // Use Redux state here
+          adultFilter: filterEnabled,
         }),
       });
 
@@ -61,7 +58,14 @@ const Upload = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  // Effect to handle image upload when filter changes
+  useEffect(() => {
+    if (selectedImage) {
+      handleImageUpload(selectedImage, adultContentFilter);
+    }
+  }, [adultContentFilter, selectedImage, handleImageUpload]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -75,10 +79,9 @@ const Upload = () => {
   }, []);
 
   const renderGroupResults = useCallback(() => {
-    // Get unique groups and sort them
-    const groups = [
-      ...new Set(searchResults.map((result) => result.group)),
-    ].sort((a, b) => a - b);
+    const groups = [...new Set(searchResults.map((result) => result.group))].sort(
+      (a, b) => a - b
+    );
 
     return (
       <div className="space-y-6">
@@ -157,12 +160,7 @@ const Upload = () => {
               <input
                 type="checkbox"
                 checked={adultContentFilter}
-                onChange={() => {
-                  dispatch(toggleAdultFilter());
-                  if (selectedImage) {
-                    handleImageUpload(selectedImage);
-                  }
-                }}
+                onChange={() => dispatch(toggleAdultFilter())}
                 className="w-5 h-5 rounded border-slate-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-800"
               />
             </label>
@@ -211,7 +209,7 @@ const Upload = () => {
             ) : (
               <div className="flex justify-center mb-6">
                 <button
-                  onClick={() => handleImageUpload(selectedImage)}
+                  onClick={() => handleImageUpload(selectedImage, adultContentFilter)}
                   disabled={isLoading}
                   className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
                 >
@@ -304,4 +302,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default Upload
