@@ -4,7 +4,7 @@ import {
   IconArrowLeft,
   IconBrandTabler,
   IconUserBolt,
-  IconCreditCard,
+ 
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,21 +13,16 @@ import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
 import { fetchUserCredits } from "@/lib/redux/features/credits/creditsSlice";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
+
 import { SignOutButton } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { HomeIcon, NotebookIcon } from "lucide-react";
+import { HistoryIcon, HomeIcon, NotebookIcon } from "lucide-react";
 
 export function SidebarDemo() {
   const dispatch = useAppDispatch();
   const { credits } = useAppSelector((state) => state.credits);
   const [open, setOpen] = useState(false);
-  const { user, isSignedIn } = useUser();
+  const {  isSignedIn } = useUser();
 
   useEffect(() => {
     dispatch(fetchUserCredits());
@@ -38,28 +33,35 @@ export function SidebarDemo() {
       label: "Home",
       href: "/",
       icon: (
-        <HomeIcon className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <HomeIcon className="text-neutral-700 dark:text-pink-300 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Dashboard",
       href: "/upload",
       icon: (
-        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconBrandTabler className="text-neutral-700 dark:text-orange-300 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Profile",
       href: "#",
       icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconUserBolt className="text-neutral-700 dark:text-blue-300 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Reviews",
       href: "/reviews",
       icon: (
-        <NotebookIcon className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <NotebookIcon className="text-neutral-700 dark:text-green-300 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "History",
+      href: "/history",
+      icon: (
+        <HistoryIcon className="text-yellow-700 dark:text-yellow-300 h-5 w-5 flex-shrink-0" />
       ),
     },
     // {
@@ -92,7 +94,7 @@ export function SidebarDemo() {
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        " flex flex-col md:flex-row bg-gray-100 dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b w-full flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
         "h-full"
       )}
     >
@@ -108,7 +110,7 @@ export function SidebarDemo() {
           </div>
 
           {/* Credits Progress Bar */}
-          <div className=" pb-4 space-y-2">
+          {/* <div className=" pb-4 space-y-2">
             <h3 className="text-sm font-medium text-gray-700 dark:text-neutral-300">
               Your Credits
             </h3>
@@ -153,7 +155,7 @@ export function SidebarDemo() {
                 </Tooltip>
               </TooltipProvider>
             )}
-          </div>
+          </div> */}
 
           <div>
             {isSignedIn && (
@@ -166,11 +168,11 @@ export function SidebarDemo() {
                   }}
                 />
                 {/* Display username */}
-                {user && (
+                {/* {user && (
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {user.username || user.firstName}
                   </span>
-                )}
+                )} */}
               </div>
             )}
           </div>

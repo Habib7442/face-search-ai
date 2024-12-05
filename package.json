@@ -11,6 +11,8 @@
   "dependencies": {
     "@clerk/nextjs": "^6.3.2",
     "@emotion/react": "^11.13.3",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
     "@reduxjs/toolkit": "^2.4.0",

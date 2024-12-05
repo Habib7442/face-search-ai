@@ -1,21 +1,31 @@
 "use client";
-import React, { useState, useCallback } from "react";
-import Image from "next/image";
-import { Upload as UploadIcon, Loader2, Search } from "lucide-react";
+
+import { useState, useCallback } from "react";
+import { Loader2, Search, Info } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
-import type { SearchResult } from "@/types/search";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/lib/redux";
-import { selectAdultFilter, toggleAdultFilter } from "@/lib/redux/slices/adultFilterSlice";
+import {
+  selectAdultFilter,
+  toggleAdultFilter,
+} from "@/lib/redux/slices/adultFilterSlice";
+import type { SearchResult } from "@/types/search";
+import { Button } from "@/components/ui/button";
+import { GlassCard } from "@/components/GlassCard";
+import { DropZone } from "@/components/DropZone";
+import { ImagePreview } from "@/components/ImagePreview";
+import { InfoModal } from "@/components/InfoModal";
+import { SearchResults } from "@/components/SearchResult";
 
-const Upload = () => {
+export default function Upload() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [imageSourceUrl, setImageSourceUrl] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const dispatch = useDispatch();
   const adultContentFilter = useAppSelector(selectAdultFilter);
@@ -60,92 +70,31 @@ const Upload = () => {
     }
   };
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith("image/")) {
-      setSelectedImage(file);
-    }
-  }, []);
-
-  const renderGroupResults = useCallback(() => {
-    const groups = [...new Set(searchResults.map((result) => result.group))].sort(
-      (a, b) => a - b
-    );
-
-    return (
-      <div className="space-y-6">
-        {groups.map((groupNumber) => {
-          const groupResults = searchResults.filter(
-            (result) => result.group === groupNumber
-          );
-
-          return (
-            <motion.div
-              key={groupNumber}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-slate-800/80 backdrop-blur-sm rounded-xl p-6 hover:bg-slate-800 transition-all duration-300"
-            >
-              <h3 className="text-xl font-semibold mb-4 text-slate-200">
-                Group {groupNumber}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {groupResults.map((result, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="group cursor-pointer"
-                    onClick={() => {
-                      setResultImage(result.imageUrl);
-                      setImageSourceUrl(result.sourceUrl);
-                    }}
-                  >
-                    <div className="relative aspect-square rounded-lg overflow-hidden bg-slate-900/50">
-                      <Image
-                        src={result.imageUrl}
-                        alt={`Result ${index + 1}`}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                    <div className="mt-2 text-sm text-slate-400">
-                      <a
-                        href={result.sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-blue-400 transition-colors truncate block"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {result.sourceUrl}
-                      </a>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    );
-  }, [searchResults]);
+  const handleSelectResult = useCallback(
+    (imageUrl: string, sourceUrl: string) => {
+      setResultImage(imageUrl);
+      setImageSourceUrl(sourceUrl);
+    },
+    []
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-slate-200 py-6 px-4 md:py-10 md:px-8 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-slate-800/50 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-xl border border-slate-700/50">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-purple-900 to-slate-900 text-slate-200 py-8 px-4 md:py-12 md:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <GlassCard className="p-8">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-8">
+            <motion.h1
+              className="playfair-display-sc-regular text-center text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
               Image Search & Analysis
-            </h1>
-            <label className="flex items-center gap-3 bg-slate-700/50 px-4 py-2 rounded-lg cursor-pointer">
+            </motion.h1>
+            <motion.label
+              className="flex items-center gap-3 bg-slate-800/50 px-6 py-3 rounded-xl cursor-pointer"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
               <span className="text-sm font-medium text-slate-300">
                 Adult Content Filter
               </span>
@@ -153,68 +102,42 @@ const Upload = () => {
                 type="checkbox"
                 checked={adultContentFilter}
                 onChange={() => dispatch(toggleAdultFilter())}
-                className="w-5 h-5 rounded border-slate-600 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-800"
+                className="w-5 h-5 rounded border-slate-600 text-purple-500 focus:ring-purple-500 focus:ring-offset-slate-800"
               />
-            </label>
+            </motion.label>
           </div>
 
-          <div
-            className={`relative mb-8 ${!selectedImage ? "h-64" : "h-auto"}`}
-            onDragEnter={() => setDragActive(true)}
-            onDragLeave={() => setDragActive(false)}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={handleDrop}
-          >
-            {!selectedImage ? (
-              <div
-                className={`h-full border-2 border-dashed rounded-xl transition-all duration-300 ${
-                  dragActive
-                    ? "border-blue-500 bg-blue-500/10"
-                    : "border-slate-600 hover:border-slate-500"
-                }`}
+          <DropZone
+            onDrop={(file) => setSelectedImage(file)}
+            dragActive={dragActive}
+            setDragActive={setDragActive}
+          />
+
+          <AnimatePresence mode="wait">
+            {selectedImage && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="mt-6 flex justify-center"
               >
-                <label
-                  htmlFor="image-upload"
-                  className="flex flex-col items-center justify-center h-full cursor-pointer"
-                >
-                  <UploadIcon className="h-12 w-12 mb-4 text-slate-400" />
-                  <span className="text-lg font-medium text-slate-300 text-center">
-                    Drag and drop your image here
-                  </span>
-                  <span className="text-sm text-slate-400 mt-2">
-                    Supports: JPG, PNG, GIF (max 5MB)
-                  </span>
-                </label>
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setSelectedImage(file);
-                    }
-                  }}
-                  className="hidden"
-                />
-              </div>
-            ) : (
-              <div className="flex justify-center mb-6">
-                <button
-                  onClick={() => handleImageUpload(selectedImage, adultContentFilter)}
+                <Button
+                  onClick={() =>
+                    handleImageUpload(selectedImage, adultContentFilter)
+                  }
                   disabled={isLoading}
-                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors disabled:opacity-50"
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 rounded-xl text-lg transition-colors"
                 >
                   {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
                   ) : (
-                    <Search className="h-5 w-5" />
+                    <Search className="h-5 w-5 mr-2" />
                   )}
-                  Search Image
-                </button>
-              </div>
+                  {isLoading ? "Processing..." : "Search Image"}
+                </Button>
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
 
           <AnimatePresence mode="wait">
             {(selectedImage || resultImage) && (
@@ -222,76 +145,69 @@ const Upload = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
-                className="grid md:grid-cols-2 gap-8 mb-8"
+                className="grid md:grid-cols-2 gap-8 mt-8"
               >
                 {selectedImage && (
-                  <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50">
-                    <h2 className="text-xl font-semibold mb-4 text-slate-300">
-                      Uploaded Image
-                    </h2>
-                    <div className="relative aspect-square rounded-lg overflow-hidden">
-                      <Image
-                        src={URL.createObjectURL(selectedImage)}
-                        alt="Uploaded preview"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
+                  <ImagePreview
+                    src={URL.createObjectURL(selectedImage)}
+                    alt="Uploaded preview"
+                    title="Uploaded Image"
+                  />
                 )}
 
                 {isLoading ? (
-                  <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50 flex items-center justify-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                  </div>
+                  <GlassCard className="p-6 flex items-center justify-center">
+                    <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+                  </GlassCard>
                 ) : (
                   resultImage && (
-                    <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-700/50">
-                      <h2 className="text-xl font-semibold mb-4 text-slate-300">
-                        Selected Result
-                      </h2>
-                      <div className="relative aspect-square rounded-lg overflow-hidden">
-                        <Image
-                          src={resultImage}
-                          alt="Result preview"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      {imageSourceUrl && (
-                        <p className="mt-4 text-sm text-slate-400 break-words">
-                          Source:{" "}
-                          <a
-                            href={imageSourceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-400 hover:text-blue-300 underline"
-                          >
-                            {imageSourceUrl}
-                          </a>
-                        </p>
-                      )}
-                    </div>
+                    <ImagePreview
+                      src={resultImage}
+                      alt="Result preview"
+                      title="Selected Result"
+                      sourceUrl={imageSourceUrl || undefined}
+                    />
                   )
                 )}
               </motion.div>
             )}
           </AnimatePresence>
+        </GlassCard>
 
-          {searchResults.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-6 text-slate-200">
-                Search Results
+        {searchResults.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center ">
+              <h2 className="text-3xl text-center font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                Deep Search Results
               </h2>
-              <div className="overflow-y-auto max-h-[800px] pr-2 custom-scrollbar">
-                {renderGroupResults()}
-              </div>
             </div>
-          )}
-        </div>
+            <SearchResults
+              results={searchResults}
+              onSelectResult={handleSelectResult}
+            />
+            <div className="w-full flex justify-center items-center">
+              <Button
+                onClick={() => setIsInfoModalOpen(true)}
+                className="bg-teal-800 hover:bg-slate-700 text-white"
+              >
+                <Info className="h-4 w-4 mr-2" />
+                Find More Info
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        <InfoModal
+          isOpen={isInfoModalOpen}
+          onClose={() => setIsInfoModalOpen(false)}
+          searchResults={searchResults}
+          onSelectResult={handleSelectResult}
+        />
       </div>
     </div>
   );
-};
-
-export default Upload;
+}
