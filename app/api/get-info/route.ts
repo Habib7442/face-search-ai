@@ -1,4 +1,3 @@
-// app/api/get-info/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -10,7 +9,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
 
-    // Search results as specified
+    // Static search results for demo
     const search_results = [
       {
         "adultContent": false,
@@ -38,7 +37,7 @@ export async function POST(request: NextRequest) {
       }
     ];
 
-    // Result generation based on the search results
+    // Static result for demo
     const result = {
       "Full Name": "Tanmay Bhat",
       "Topics": [

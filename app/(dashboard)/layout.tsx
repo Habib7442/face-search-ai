@@ -43,7 +43,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Main content takes 2/3 of the screen */}
-        <div className="relative w-full h-full lg:ml-16 bg-gray-50 dark:bg-gray-900">
+        <div className="relative w-full h-full lg:ml-16 bg-gray-50 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-black via-gray-950 to-slate-950">
           {children}
         </div>
       </div>

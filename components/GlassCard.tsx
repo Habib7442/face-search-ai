@@ -14,7 +14,7 @@ export function GlassCard({ children, className }: GlassCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl",
+        "bg-slate-600/10 backdrop-blur-xl border border-white/15 rounded-2xl shadow-xl",
         className
       )}
     >

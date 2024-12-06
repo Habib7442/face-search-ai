@@ -47,7 +47,7 @@ export default function HistoryPage() {
             <div className="p-3 rounded-full bg-primary/10">
               <History className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="text-3xl font-bold">Search History</h1>
+            <h1 className="poppins-semibold text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-300 via-gray-400 to-gray-400">Search History</h1>
           </div>
           <p className="text-gray-400">
             View your previous search results and findings
