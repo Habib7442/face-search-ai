@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <ReactLenis root>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative dark:bg-zinc-900 dark:text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative dark:bg-black dark:text-white`}
       >
         <ThemeProvider
           attribute="class"

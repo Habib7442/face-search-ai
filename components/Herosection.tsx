@@ -15,7 +15,7 @@ const Herosection = () => {
 
   return (
     <div className="relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute hidden lg:block xl:block inset-0 pointer-events-none">
         <Spotlight
           className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen opacity-30 rotate-45"
           fill="purple"
@@ -132,8 +132,7 @@ const Herosection = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Button
-                    className="bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 hover:from-slate-700 hover:via-slate-800 hover:to-slate-700 text-cyan-300 font-semibold px-8 py-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 
-      shadow-[0_0_15px_rgba(0,255,255,0.7),0_0_30px_rgba(0,255,255,0.5)] hover:shadow-[0_0_20px_rgba(0,255,255,1),0_0_40px_rgba(0,255,255,0.8)]"
+                    className="border text-cyan-300 font-semibold px-8 py-6 border-white bg-slate-950 hover:bg-slate-900 rounded-full "
                   >
                     {userId ? "Explore" : "Get Started"}
                     <ArrowRight className="ml-2 h-5 w-5" />
