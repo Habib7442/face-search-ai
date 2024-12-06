@@ -86,11 +86,11 @@ const Herosection = () => {
           </motion.div>
         </div>
       </div> */}
-      <div className="relative min-h-screen bg-black overflow-hidden">
-        <div className="absolute inset-0">
+      <div className="relative min-h-full bg-zinc-900 overflow-hidden">
+        {/* <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-transparent" />
           <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-black to-transparent" />
-        </div>
+        </div> */}
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16">
           <motion.div

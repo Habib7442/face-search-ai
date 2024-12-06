@@ -3,7 +3,7 @@ import { InfiniteMovingCardsDemo } from './Testimonials';
 
 const TestimonialsSection = () => {
   return (
-    <section className="relative w-full min-h-screen py-20 overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
+    <section className="relative w-full min-h-full py-10 overflow-hidden">
       <div className="absolute top-40 left-0 w-72 h-72 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div>
       <div className="absolute bottom-40 right-0 w-72 h-72 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse"></div>
       

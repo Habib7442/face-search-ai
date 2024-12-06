@@ -108,7 +108,7 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 py-20 px-4">
+    <section className="relative min-h-full py-10 px-4">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/2 -right-1/2 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />

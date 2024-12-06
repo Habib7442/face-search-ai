@@ -3,10 +3,10 @@ import { CardHoverEffectDemo } from "./FeaturesCard";
 
 const FeaturesSection = () => {
   return (
-    <section className="relative w-full min-h-screen py-10 overflow-hidden bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
+    <section className="relative w-full min-h-full py-10 overflow-hidden">
       <div className="relative z-10 container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-16 space-y-4">
+        <div className="text-center mb-8 space-y-4">
           <h2 className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-200 via-slate-100 to-slate-300">
             Features
           </h2>
