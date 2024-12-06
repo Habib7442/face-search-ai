@@ -37,7 +37,7 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         {/* Background Pattern */}
