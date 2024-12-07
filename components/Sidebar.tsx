@@ -89,12 +89,12 @@ export function SidebarDemo() {
     return credits ? (credits.credits_remaining / totalCredits) * 100 : 0;
   };
 
-  const progressPercentage = calculateProgressPercentage();
+  // const progressPercentage = calculateProgressPercentage();
 
   return (
     <div
       className={cn(
-        " flex flex-col md:flex-row bg-gray-100 dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b w-full flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "flex flex-col md:flex-row bg-gradient-to-b from-emerald-100 to-white  w-full flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
         "h-full"
       )}
     >

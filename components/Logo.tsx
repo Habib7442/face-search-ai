@@ -11,12 +11,12 @@ const Logo = () => {
           alt="FaceSearch AI Logo"
           width={40} // Set a specific width
           height={40} // Set a specific height
-          className="object-contain"
+          className="object-contain rounded-2xl"
         />
       </motion.div>
-      <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
-        FaceSearchAI
-      </span>
+      {/* <span className="text-ml font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-slate-900">
+        FaceSearch AI
+      </span> */}
     </Link>
   );
 };

@@ -1,19 +1,21 @@
 "use client";
-
-import { useState, useCallback, useEffect } from "react";
-import { Loader2, Search, Info,  ImageIcon } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Loader2, Search, Info, ImageIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/lib/redux";
-import { selectAdultFilter, toggleAdultFilter } from "@/lib/redux/slices/adultFilterSlice";
+import {
+  selectAdultFilter,
+  toggleAdultFilter,
+} from "@/lib/redux/slices/adultFilterSlice";
 import type { SearchResult } from "@/types/search";
 import { Button } from "@/components/ui/button";
+import { ImagePreview } from "@/components/ImagePreview";
 
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/GlassCard";
 import { DropZone } from "@/components/DropZone";
-import { ImagePreview } from "@/components/ImagePreview";
 import { SearchResults } from "@/components/SearchResult";
 
 export default function Upload() {
@@ -23,15 +25,48 @@ export default function Upload() {
   const [dragActive, setDragActive] = useState(false);
   const [imageSourceUrl, setImageSourceUrl] = useState<string | null>(null);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearchCompleted, setIsSearchCompleted] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
   const adultContentFilter = useAppSelector(selectAdultFilter);
 
+  // Function to convert base64 to File
+  const base64ToFile = (base64: string, filename: string) => {
+    const arr = base64.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  };
+
+  useEffect(() => {
+    // Check for image in local storage on component mount
+    const storedImage = localStorage.getItem("uploadedImage");
+    if (storedImage) {
+      // Convert base64 to File
+      const file = base64ToFile(storedImage, "uploaded-image.jpg");
+      setSelectedImage(file);
+
+      // Automatically search the image
+      handleImageUpload(file, adultContentFilter);
+
+      // Clear local storage after processing
+      localStorage.removeItem("uploadedImage");
+    }
+  }, []);
+
   const handleImageUpload = async (file: File, filterEnabled: boolean) => {
     try {
       setIsLoading(true);
       setSearchResults([]);
+      setIsSearchCompleted(false);
 
       const base64Image = await new Promise<string>((resolve) => {
         const reader = new FileReader();
@@ -65,24 +100,27 @@ export default function Upload() {
       toast.error("Failed to process image");
     } finally {
       setIsLoading(false);
+      setIsSearchCompleted(true);
     }
   };
 
-  // Auto-trigger search when filter changes
   useEffect(() => {
     if (selectedImage) {
       handleImageUpload(selectedImage, adultContentFilter);
     }
   }, [adultContentFilter]);
 
-  const handleSelectResult = useCallback((imageUrl: string, sourceUrl: string) => {
-    setResultImage(imageUrl);
-    setImageSourceUrl(sourceUrl);
-  }, []);
+  const handleSelectResult = useCallback(
+    (imageUrl: string, sourceUrl: string) => {
+      setResultImage(imageUrl);
+      setImageSourceUrl(sourceUrl);
+    },
+    []
+  );
 
   const handleMoreInfoClick = () => {
-    localStorage.setItem('searchResults', JSON.stringify(searchResults));
-    router.push('/info');
+    localStorage.setItem("searchResults", JSON.stringify(searchResults));
+    router.push("/info");
   };
 
   return (
@@ -90,11 +128,11 @@ export default function Upload() {
       <div className="max-w-7xl mx-auto space-y-8 mt-4 lg:mt-0">
         <GlassCard className="lg:p-8 md:p-6 p-1">
           <div className="flex flex-col lg:flex-row items-center gap-6 mb-8">
-          <div className="p-3 rounded-full bg-primary/10">
+            <div className="p-3 rounded-full bg-primary/10">
               <ImageIcon className="h-6 w-6 text-teal-400" />
             </div>
             <motion.h1
-              className="poppins-semibold text-center text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-300 via-gray-400 to-gray-400"
+              className="poppins-semibold text-center text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
             >
@@ -117,7 +155,9 @@ export default function Upload() {
                 className="mt-6 flex flex-col lg:flex-row md:flex-row xl:flex-row justify-center items-center gap-4"
               >
                 <Button
-                  onClick={() => handleImageUpload(selectedImage, adultContentFilter)}
+                  onClick={() =>
+                    handleImageUpload(selectedImage, adultContentFilter)
+                  }
                   disabled={isLoading}
                   className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 rounded-xl text-lg transition-colors"
                 >
@@ -129,15 +169,21 @@ export default function Upload() {
                   {isLoading ? "Processing..." : "Search Image"}
                 </Button>
 
-                <label className="flex items-center gap-3 bg-slate-800/50 px-6 py-3 rounded-xl cursor-pointer">
-                  <span className="text-sm font-medium text-slate-300">
+                {/* Adult Filter (Disabled until search is complete) */}
+                <label
+                  className={`flex items-center gap-3 bg-amber-400/50 px-6 py-3 rounded-xl cursor-pointer ${
+                    isSearchCompleted ? "" : "opacity-50 cursor-not-allowed"
+                  }`}
+                >
+                  <span className="text-sm font-medium text-slate-900">
                     Adult Filter
                   </span>
                   <input
                     type="checkbox"
                     checked={adultContentFilter}
                     onChange={() => dispatch(toggleAdultFilter())}
-                    className="w-5 h-5 rounded border-slate-600 text-purple-500 focus:ring-purple-500 focus:ring-offset-slate-800"
+                    className="w-5 h-5 rounded border-slate-600 text-purple-500 focus:ring-purple-500 focus:ring-offset-slate-300"
+                    disabled={!isSearchCompleted}
                   />
                 </label>
               </motion.div>
@@ -186,17 +232,16 @@ export default function Upload() {
             className="space-y-6"
           >
             <div className="flex items-center justify-between">
-              <h2 className="poppins-semibold text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-300 via-gray-400 to-gray-400">
+              <h2 className="poppins-semibold text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900">
                 Deep Search Results
               </h2>
-              
             </div>
             <SearchResults
               results={searchResults}
               onSelectResult={handleSelectResult}
             />
             <div className="w-full flex justify-center items-center">
-            <Button
+              <Button
                 onClick={handleMoreInfoClick}
                 className="bg-teal-800 hover:bg-slate-700 text-white"
               >

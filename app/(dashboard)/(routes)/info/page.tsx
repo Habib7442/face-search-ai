@@ -82,12 +82,12 @@ export default function InfoPage() {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-slate-800/50"
+              className="hover:bg-slate-800/50 bg-slate-900"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="poppins-semibold text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-300 via-gray-400 to-gray-400">
+          <h1 className="poppins-semibold text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900">
             Deep Analysis
           </h1>
         </div>
@@ -167,41 +167,57 @@ export default function InfoPage() {
             </div>
           )}
 
-          {gptResult && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                Analysis Results
-              </h2>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Full Name</h3>
-                <p>{gptResult["Full Name"]}</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">
-                  Confidential Analysis Score
-                </h3>
-                <p>{gptResult["Confidential Analysis Score"]}</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Topics</h3>
-                <ul className="list-disc pl-5">
-                  {gptResult.Topics.map((topic, index) => (
-                    <li key={index}>{topic}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">More Information</h3>
-                <p>{gptResult["More Information"]}</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2">
-                  AI Generated Poem
-                </h3>
-                <pre className="whitespace-pre-wrap">{gptResult["Poem"]}</pre>
-              </div>
-            </div>
-          )}
+{gptResult && (
+  <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+    {/* Header */}
+    <h2 className="text-2xl font-bold text-gray-800">
+      Analysis Results
+    </h2>
+
+    {/* Full Name */}
+    <div>
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">Full Name</h3>
+      <p className="text-gray-600">{gptResult["Full Name"]}</p>
+    </div>
+
+    {/* Confidential Analysis Score */}
+    <div>
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        Confidential Analysis Score
+      </h3>
+      <p className="text-gray-600">{gptResult["Confidential Analysis Score"]}</p>
+    </div>
+
+    {/* Topics */}
+    <div>
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">Topics</h3>
+      <ul className="list-disc pl-5 text-gray-600">
+        {gptResult.Topics.map((topic, index) => (
+          <li key={index}>{topic}</li>
+        ))}
+      </ul>
+    </div>
+
+    {/* More Information */}
+    <div>
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        More Information
+      </h3>
+      <p className="text-gray-600">{gptResult["More Information"]}</p>
+    </div>
+
+    {/* AI Generated Poem */}
+    <div>
+      <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        AI Generated Poem
+      </h3>
+      <pre className="whitespace-pre-wrap text-gray-600 bg-gray-100 p-4 rounded-lg">
+        {gptResult["Poem"]}
+      </pre>
+    </div>
+  </div>
+)}
+
         </GlassCard>
       </div>
     </div>

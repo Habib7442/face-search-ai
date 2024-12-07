@@ -14,6 +14,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        lightBlue: "#dfeeff",
+        white: "#ffffff",
+        backgroundImage: {
+          'hero-gradient': 'linear-gradient(to bottom, #dfeeff, #ffffff)',
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

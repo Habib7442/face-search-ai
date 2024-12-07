@@ -49,10 +49,10 @@ export function DropZone({ onDrop, dragActive, setDragActive }: DropZoneProps) {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <UploadIcon className="h-12 w-12 mb-4 text-slate-400" />
+            <UploadIcon className="h-12 w-12 mb-4 text-slate-600" />
           </motion.div>
           <motion.span
-            className="text-lg font-medium text-slate-300 text-center"
+            className="text-lg font-medium text-teal-950 text-center"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}

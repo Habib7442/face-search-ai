@@ -14,16 +14,21 @@ export function NavLinks() {
   const { isSignedIn } = useUser(); // Get the user signed-in status
 
   return (
-    <div className="hidden md:flex items-center space-x-8">
-      {links.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className="text-sm text-gray-300 hover:text-white transition-colors"
-        >
-          {link.label}
-        </Link>
-      ))}
+    <div className="hidden md:flex items-center justify-between w-full">
+      
+      <div className="flex justify-center items-center space-x-8 flex-1">
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-sm text-slate-900 hover:text-black font-bold transition-colors"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </div>
+      
+      {/* Other elements remain aligned as before */}
       <Link href="/payment">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -37,7 +42,7 @@ export function NavLinks() {
         <UserButton
           appearance={{
             elements: {
-              avatarBox: "w-8 h-8 border border-gray-300 rounded-full",
+              avatarBox: "w-8 h-8 border border-gray-300 rounded-full ml-2",
             },
           }}
         />
