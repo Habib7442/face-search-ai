@@ -38,7 +38,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className="flex h-full">
         {/* Sidebar takes 1/7 of the screen */}
-        <div className="w-1/7 h-full bg-gray-800 fixed z-10">
+        <div className="w-1/7 h-full fixed z-10">
           <SidebarDemo />
         </div>
 

@@ -4,7 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "./provider";
-import {ReactLenis} from "@/lib/lenis"
+import { ReactLenis } from "@/lib/lenis";
 import { Providers } from "./ReduxProvider";
 
 const geistSans = localFont({
@@ -31,26 +31,32 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <ReactLenis root>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative bg-gradient-to-b from-lightBlue to-white text-gray-800`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased relative bg-gradient-to-b from-lightBlue to-white text-gray-800`}
         >
-          <ClerkProvider>
-            <Providers>
-            <main>
-              
-              {children}
-            </main>
-            </Providers>
-            <Toaster />
-          </ClerkProvider>
-        </ThemeProvider>
-      </body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ClerkProvider>
+              <Providers>
+                <main className="relative">
+                  <div
+                    className="absolute inset-0 -z-10 bg-cover bg-center opacity-5"
+                    style={{
+                      backgroundImage: "url('/water-bubble.png')", // Path to your image in the public folder
+                    }}
+                  />
+
+                  {children}
+                </main>
+              </Providers>
+              <Toaster />
+            </ClerkProvider>
+          </ThemeProvider>
+        </body>
       </ReactLenis>
     </html>
   );

@@ -125,11 +125,12 @@ export default function Upload() {
 
   return (
     <div className="min-h-screen text-slate-200 py-8 px-4 md:py-12 md:px-8">
+      
       <div className="max-w-7xl mx-auto space-y-8 mt-4 lg:mt-0">
         <GlassCard className="lg:p-8 md:p-6 p-1">
           <div className="flex flex-col lg:flex-row items-center gap-6 mb-8">
             <div className="p-3 rounded-full bg-primary/10">
-              <ImageIcon className="h-6 w-6 text-teal-400" />
+              <ImageIcon className="h-8 w-8 text-teal-800 drop-shadow-md" />
             </div>
             <motion.h1
               className="poppins-semibold text-center text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900"

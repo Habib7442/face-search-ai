@@ -23,18 +23,18 @@ export function MobileMenu() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-16 left-0 right-0 bg-black/95 backdrop-blur-lg"
+            className="absolute top-16 z-20 left-0 right-0 bg-blue-50"
           >
             <div className="p-4 space-y-4">
               
               <Link
                 href="/view-reviews"
-                className="block text-gray-300 hover:text-white"
+                className="block text-gray-800 hover:text-black"
               >
                 Reviews
               </Link>
               
-              <a href="#faq" className="block text-gray-300 hover:text-white">
+              <a href="#faq" className="block text-gray-800 hover:text-black">
                 FAQ
               </a>
               <Link href="/payment">

@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
-import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import { fetchUserCredits } from "@/lib/redux/features/credits/creditsSlice";
 
 import { SignOutButton } from "@clerk/nextjs";
@@ -20,7 +20,7 @@ import { HistoryIcon, HomeIcon, NotebookIcon } from "lucide-react";
 
 export function SidebarDemo() {
   const dispatch = useAppDispatch();
-  const { credits } = useAppSelector((state) => state.credits);
+  // const { credits } = useAppSelector((state) => state.credits);
   const [open, setOpen] = useState(false);
   const {  isSignedIn } = useUser();
 
@@ -83,18 +83,18 @@ export function SidebarDemo() {
   ];
 
   // Calculate progress percentage
-  const calculateProgressPercentage = () => {
-    if (credits?.is_unlimited) return 100;
-    const totalCredits = 10;
-    return credits ? (credits.credits_remaining / totalCredits) * 100 : 0;
-  };
+  // const calculateProgressPercentage = () => {
+  //   if (credits?.is_unlimited) return 100;
+  //   const totalCredits = 10;
+  //   return credits ? (credits.credits_remaining / totalCredits) * 100 : 0;
+  // };
 
   // const progressPercentage = calculateProgressPercentage();
 
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row bg-gradient-to-b from-emerald-100 to-white  w-full flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "flex flex-col md:flex-row bg-[#cbd5e1]  w-full flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
         "h-full"
       )}
     >

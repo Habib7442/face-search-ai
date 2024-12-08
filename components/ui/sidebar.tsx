@@ -120,7 +120,7 @@ export const MobileSidebar = ({
         {...props}
       >
         <IconMenu2
-          className="text-neutral-800 dark:text-neutral-200 cursor-pointer"
+          className="text-neutral-800 dark:text-neutral-800 cursor-pointer"
           onClick={() => setOpen(!open)}
         />
         <AnimatePresence>

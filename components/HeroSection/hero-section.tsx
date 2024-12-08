@@ -13,8 +13,9 @@ import ImageUpload from "@/components/HeroSection/upload/image-upload";
 import testImages from "@/lib/images";
 import Image from "next/image";
 
-import { motion } from "framer-motion"; // Import framer-motion
+import { motion } from "framer-motion";
 import Navbar from "../navigation/Navbar";
+import Balancer from "react-wrap-balancer";
 
 const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -23,7 +24,7 @@ const HeroSection = () => {
 
   return (
     <section className="text-gray-800">
-      <div className= "lg:px-28 lg:py-3">
+      <div className="lg:px-28 lg:py-3">
         <Navbar />
       </div>
 
@@ -35,13 +36,15 @@ const HeroSection = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, type: "spring", stiffness: 50 }}
         >
-          Face Search Made{" "}
-          <span className="relative text-blue-600 drop-shadow-xl">
-            Flexible
-            <span className="absolute bottom-[-2px] left-0 h-2 w-full bg-purple-400" />
-          </span>
-          <br />
-          Use Credits, Unlock Potential
+          <Balancer>
+            Face Search Made{" "}
+            <span className="relative text-blue-600 drop-shadow-xl">
+              Flexible
+              <span className="absolute bottom-[-2px] left-0 h-2 w-full bg-purple-400" />
+            </span>{" "}
+            <br className="lg:block hidden" />
+            Use Credits, Unlock Potential
+          </Balancer>
         </motion.h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
           FaceSearchAI delivers premium facial recognition services within
@@ -52,7 +55,7 @@ const HeroSection = () => {
         <div className="mt-8 w-full flex justify-center items-center">
           <button
             onClick={handleDialogToggle}
-            className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-black font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
+            className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
           >
             Upload Image
             <ImageIcon className="ml-2 text-slate-800 drop-shadow-lg" />

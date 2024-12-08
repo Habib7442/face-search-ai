@@ -1,5 +1,3 @@
-"use client";
-
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -139,14 +137,6 @@ export const UploadDialog = ({ open, onClose }: UploadDialogProps) => {
 
             {/* Preview & Scanning Section */}
             <AnimatePresence>
-              {!uploadedImage && (
-                <div className="relative h-64 rounded-lg overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center">
-                  <p className="text-gray-500">
-                    Uploaded {""}
-                    <span className="text-blue-600 font-medium">Image</span>
-                  </p>
-                </div>
-              )}
               {uploadedImage && (
                 <motion.div
                   className="relative h-64 rounded-lg overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center"
@@ -157,6 +147,7 @@ export const UploadDialog = ({ open, onClose }: UploadDialogProps) => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
+                  {/* Display Image */}
                   <Image
                     src={uploadedImage}
                     width={100}
@@ -164,7 +155,11 @@ export const UploadDialog = ({ open, onClose }: UploadDialogProps) => {
                     alt="Processing Preview"
                     className="h-full w-full object-contain"
                   />
-                  {isUploading && <ScanningAnimation />}
+                  
+                  {/* Scanning Animation */}
+                  <div className="absolute inset-0">
+                    {isUploading && <ScanningAnimation />}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
