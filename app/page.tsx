@@ -1,6 +1,6 @@
 // import FeaturesSection from "@/components/FeaturesSection";
-// import Footer from "@/components/Footer";
 import AboutUs from "@/components/AboutUs/AboutUs";
+import Footer from "@/components/FooterSection/Footer";
 import Herosection from "@/components/HeroSection/hero-section";
 import PricingSection from "@/components/PricingSection/PricingSection";
 // import Navbar from "@/components/navigation/Navbar";
@@ -15,7 +15,7 @@ export default function Home() {
     {/* <FeaturesSection /> */}
     <PricingSection />
     {/* <TestimonialsSection /> */}
-    {/* <Footer />  */}
+    <Footer /> 
     </div>
   );
 }
