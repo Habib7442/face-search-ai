@@ -14,7 +14,7 @@ var Footer = function () {
         // Add your newsletter subscription logic here
         setEmail("");
     };
-    return (React.createElement("div", { className: "container w-full h-full px-4" },
+    return (React.createElement("div", { className: "w-full h-full px-4" },
         React.createElement("footer", { className: "bg-gradient-to-b rounded-2xl from-white to-gray-200 text-gray-800 shadow-md" },
             React.createElement("div", { className: "container mx-auto px-6 py-12" },
                 React.createElement("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10" },

@@ -102,14 +102,14 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="container relative min-h-full px-4 mb-8">
+    <section className="w-full relative min-h-full px-4 mb-8">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/3 -right-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-500/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-1/3 -left-1/4 w-96 h-96 bg-gradient-to-br from-purple-500/20 to-blue-500/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="container relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-4xl md:text-5xl font-bold">Choose Your Plan</h2>

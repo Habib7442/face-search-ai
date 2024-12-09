@@ -26,7 +26,7 @@ const Footer = () => {
   };
 
   return (
-    <div className="container w-full h-full px-4">
+    <div className="w-full h-full px-4">
   <footer className="bg-gradient-to-b rounded-2xl from-white to-gray-200 text-gray-800 shadow-md">
     {/* Main Footer Content */}
     <div className="container mx-auto px-6 py-12">
