@@ -190,7 +190,7 @@ export const Logo = () => {
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
       <Image
-        src="/logo-facesearch.jpeg"
+        src="/logo-facesearch.png"
         alt="FaceSearch AI Logo"
         width={40} // Set a specific width
         height={40} // Set a specific height
