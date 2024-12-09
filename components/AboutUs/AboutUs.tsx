@@ -58,7 +58,7 @@ const AboutUs = () => {
       </motion.div>
 
       {/* Why Choose Us Section */}
-      <div className="mx-auto pt-14 px-2 md:px-12 lg:mt-24 md:mt-20">
+      <div className="mx-auto pt-14 px-2 lg:mt-24 md:mt-24">
         <motion.div
           className="pt-8 relative"
           initial="hidden"

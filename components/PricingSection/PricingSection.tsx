@@ -102,7 +102,7 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="relative min-h-full px-4 mb-8">
+    <section className="container relative min-h-full px-4 mb-8">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/3 -right-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-500/10 rounded-full blur-3xl" />
