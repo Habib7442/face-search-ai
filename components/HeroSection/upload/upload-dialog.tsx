@@ -10,6 +10,7 @@ import {
 import { ScanningAnimation } from "./scanning-animation";
 import { ProgressIndicator } from "./progress-indicator";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface UploadDialogProps {
   open: boolean;
@@ -24,9 +25,34 @@ export const UploadDialog = ({ open, onClose }: UploadDialogProps) => {
 
   useEffect(() => {
     if (progress === 100) {
-      // Save uploaded image to local storage
-      if (uploadedImage) {
-        localStorage.setItem("uploadedImage", uploadedImage);
+      // Save uploaded image to local storage with error handling
+      try {
+        if (uploadedImage) {
+          // Attempt to save the image, but catch potential quota exceeded errors
+          localStorage.setItem("uploadedImage", uploadedImage);
+        }
+      } catch (error) {
+        if (
+          error instanceof DOMException &&
+          error.name === "QuotaExceededError"
+        ) {
+          toast.error("Storage limit reached", {
+            description: "use image less than 1mb",
+            duration: 4000,
+          });
+
+          // Optionally clear some localStorage to make space
+          try {
+            localStorage.removeItem("uploadedImage");
+          } catch (clearError) {
+            console.error("Could not clear localStorage", clearError);
+          }
+        } else {
+          toast.error("Error saving image", {
+            description: "An unexpected error occurred.",
+            duration: 4000,
+          });
+        }
       }
 
       setTimeout(() => {
@@ -155,7 +181,7 @@ export const UploadDialog = ({ open, onClose }: UploadDialogProps) => {
                     alt="Processing Preview"
                     className="h-full w-full object-contain"
                   />
-                  
+
                   {/* Scanning Animation */}
                   <div className="absolute inset-0">
                     {isUploading && <ScanningAnimation />}

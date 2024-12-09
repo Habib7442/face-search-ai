@@ -2,8 +2,8 @@
 // import Footer from "@/components/Footer";
 import AboutUs from "@/components/AboutUs/AboutUs";
 import Herosection from "@/components/HeroSection/hero-section";
+import PricingSection from "@/components/PricingSection/PricingSection";
 // import Navbar from "@/components/navigation/Navbar";
-// import PricingSection from "@/components/PricingSection";
 // import TestimonialsSection from "@/components/TestimonialsSection";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
       <Herosection />
        <AboutUs />
     {/* <FeaturesSection /> */}
-    {/* <PricingSection /> */}
+    <PricingSection />
     {/* <TestimonialsSection /> */}
     {/* <Footer />  */}
     </div>

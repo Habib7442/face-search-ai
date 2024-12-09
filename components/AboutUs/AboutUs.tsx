@@ -21,7 +21,7 @@ const AboutUs = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <h1 className="text-4xl font-bold">About Us</h1>
+        <h1 className="text-5xl font-bold">About Us</h1>
         <Balancer>
           <p className="mt-4 text-lg">
             At FaceSearchAI, we are transforming how the world interacts with
@@ -58,7 +58,7 @@ const AboutUs = () => {
       </motion.div>
 
       {/* Why Choose Us Section */}
-      <div className="mx-auto pt-12 px-2 md:px-12 lg:mt-24 md:mt-20">
+      <div className="mx-auto pt-14 px-2 md:px-12 lg:mt-24 md:mt-20">
         <motion.div
           className="pt-8 relative"
           initial="hidden"
@@ -161,9 +161,9 @@ const AboutUs = () => {
         >
           {/* Left Column - User Perspective */}
           <div className="w-full lg:w-1/2">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            {/* <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
               User Journey
-            </h3>
+            </h3> */}
             <VerticalTimeline layout="1-column-left">
               <VerticalTimelineElement
                 className="vertical-timeline-element--work"
@@ -238,9 +238,9 @@ const AboutUs = () => {
 
           {/* Right Column - Technical Perspective */}
           <div className="w-full lg:w-1/2">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            {/* <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
               Technical Process
-            </h3>
+            </h3> */}
             <VerticalTimeline layout="1-column-left">
               <VerticalTimelineElement
                 className="vertical-timeline-element--work"

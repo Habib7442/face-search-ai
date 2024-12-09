@@ -34,22 +34,22 @@ export default function HistoryPage() {
   }, []);
 
   return (
-    <main className="min-h-screen  text-white">
+    <main className="min-h-screen  text-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link href="/">
-          <Button variant="ghost" className="mb-8 text-gray-400 hover:text-white">
+          <Button variant="outline" className="mb-8 text-gray-300 hover:text-white">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
           </Button>
         </Link>
 
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-full bg-primary/10">
-              <History className="h-6 w-6 text-primary" />
+            <div className="p-3 rounded-full bg-primary/10 text-gray-800">
+              <History className="h-6 w-6 text-gray-800 drop-shadow-md" />
             </div>
-            <h1 className="poppins-semibold text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-300 via-gray-400 to-gray-400">Search History</h1>
+            <h1 className="poppins-semibold text-3xl font-bold text-gray-800">Search History</h1>
           </div>
-          <p className="text-gray-400">
+          <p className="text-black">
             View your previous search results and findings
           </p>
         </div>

@@ -12,7 +12,7 @@ interface HistoryCardProps {
 
 export function HistoryCard({ result }: HistoryCardProps) {
   return (
-    <Card className="overflow-hidden bg-gray-900 border-gray-800 hover:border-gray-700 transition-all">
+    <Card className="overflow-hidden border-none bg-gray-800 transition-all">
       <div className="relative aspect-video">
         <Image
           src={result.imageUrl}
