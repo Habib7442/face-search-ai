@@ -1,5 +1,5 @@
 import React from "react";
-import {  Check, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Define a type for the pricing plan to resolve TypeScript issue
@@ -22,11 +22,13 @@ const PricingCards: React.FC<{
   loadingPlan?: string | null;
   isLoaded?: boolean;
 }> = ({ pricingPlans, handlePurchase, loadingPlan = "", isLoaded = true }) => {
-  // Explicitly typed gradient colors
+  // Updated gradient colors for each plan
   const gradientColors: Record<string, string> = {
-    basic: "from-orange-200 to-orange-100",
-    pro: "from-indigo-200 to-indigo-100",
-    enterprise: "from-sky-200 to-sky-100",
+    "decentralized-intelligence-agency": "from-purple-200 to-purple-100",
+    "notification-plan": "from-red-200 to-red-100",
+    "most-popular": "from-blue-200 to-blue-100",
+    "referral-plan": "from-green-200 to-green-100",
+    "super-basic": "from-gray-200 to-gray-100",
   };
 
   return (

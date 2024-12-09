@@ -47,7 +47,7 @@ const HeroSection = () => {
           </Balancer>
         </motion.h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
-          FaceSearchAI delivers premium facial recognition services within
+          FaceSearch AI delivers premium facial recognition services within
           budget constraints, ensuring accessibility for everyone.
         </p>
 

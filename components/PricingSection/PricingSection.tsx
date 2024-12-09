@@ -12,60 +12,79 @@ const PricingSection = () => {
 
   const pricingPlans = [
     {
-      id: "basic",
-      name: "Basic",
-      price: "$9.99",
+      id: "decentralized-intelligence-agency",
+      name: "Join The Decentralized Intelligence Agency",
+      price: "$10,000",
       period: "month",
-      description: "Perfect for individuals starting with face search",
+      description: "Designed for enterprise-level intelligence operations",
       features: [
-        "10 Face searches per day",
-        "Basic web search results",
-        "Email support",
-        "Export search history",
-        "Standard API access",
+        "Video to Google Sheets",
+        "API Access",
+        "Unlimited DCMA takedown requests on requested photos",
       ],
       highlighted: false,
       buttonText: "Get Started",
-      stripePriceId: "price_1QNsUeSABw0Heq1mTI8fY0jE",
+      stripePriceId: "price_1QNsUeSABw0Heq1mDecentralized",
     },
     {
-      id: "pro",
-      name: "Pro",
-      price: "$24.99",
+      id: "notification-plan",
+      name: "1,000 Credits / Month",
+      price: "$50",
       period: "month",
-      description: "Ideal for professionals and small teams",
+      description: "Stay informed with real-time notifications",
       features: [
-        "50 Face searches per day",
-        "Advanced search filters",
-        "Priority support",
-        "Contact information finder",
-        "Custom poem generation",
-        "Advanced API access",
-        "Bulk search capability",
+        "Get notified when a new photo is published on someone",
       ],
       highlighted: true,
-      buttonText: "Try Pro Plan",
-      badge: "Most Popular",
-      stripePriceId: "price_1QNsWGSABw0Heq1mCNToLIF2",
+      buttonText: "Get Started",
+      stripePriceId: "price_1QNsWGSABw0Heq1mNotification",
     },
     {
-      id: "enterprise",
-      name: "Enterprise",
-      price: "Custom",
+      id: "most-popular",
+      name: "MOST POPULAR",
+      price: "$19.95",
       period: "month",
-      description: "For organizations requiring advanced solutions",
+      description: "Advanced features for deep search capabilities",
       features: [
-        "Unlimited face searches",
-        "Dedicated support team",
-        "Custom integration",
-        "Advanced analytics",
-        "White-label option",
-        "Enterprise API access",
-        "Custom feature development",
+        "1 week free trial then 500 credits / month",
+        "Unlocks Background Check Search",
+        "Unlocks deep search capability",
       ],
       highlighted: false,
-      buttonText: "Contact Sales",
-      stripePriceId: "price_1QNsYkSABw0Heq1mPMQtOsBB",
+      buttonText: "Try Free for a Week",
+      badge: "Most Popular",
+      stripePriceId: "price_1QNsYkSABw0Heq1mPopular",
+    },
+    {
+      id: "referral-plan",
+      name: "Referral Plan",
+      price: "$14.20",
+      period: "month",
+      description: "Unlock rewards and monetization features",
+      features: [
+        "1 week free trial then $14.20 / month",
+        "Unlocks PDF form download",
+        "Increases cash referral bonus from 25% to 50%",
+        "Earn in perpetuity when users sign up via your link",
+        "150 credits / month",
+      ],
+      highlighted: false,
+      buttonText: "Start Free Trial",
+      stripePriceId: "price_1QNsRefSABw0Heq1mReferral",
+    },
+    {
+      id: "super-basic",
+      name: "Super Basic",
+      price: "$7.77",
+      period: "month",
+      description: "Simple and affordable starter plan",
+      features: [
+        "10 credits / month",
+        "Unlock discovering URL’s of content",
+      ],
+      highlighted: false,
+      buttonText: "Sign Up",
+      stripePriceId: "price_1QNsBasicSABw0Heq1mSuperBasic",
     },
   ];
 
@@ -103,11 +122,7 @@ const PricingSection = () => {
 
   return (
     <section className="w-full relative min-h-full px-4 mb-8">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/3 -right-1/4 w-96 h-96 bg-gradient-to-br from-blue-500/20 to-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-1/3 -left-1/4 w-96 h-96 bg-gradient-to-br from-purple-500/20 to-blue-500/10 rounded-full blur-3xl" />
-      </div>
+      
 
       <div className="container relative z-10 max-w-7xl mx-auto">
         {/* Header */}
@@ -128,19 +143,6 @@ const PricingSection = () => {
           loadingPlan={loadingPlan}
           isLoaded={isLoaded}
         />
-
-        {/* FAQ */}
-        {/* <div className="text-center mt-12">
-          <p className="text-gray-400">
-            Have questions about our pricing?
-            <a
-              href="#"
-              className="text-cyan-400 underline hover:text-cyan-300 ml-1"
-            >
-              Contact our team
-            </a>
-          </p>
-        </div> */}
       </div>
     </section>
   );
