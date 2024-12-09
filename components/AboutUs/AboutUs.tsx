@@ -48,7 +48,7 @@ const AboutUs = () => {
                     width={1000}
                     height={1000}
                     alt={`About us image ${item.id}`}
-                    className="rounded-lg w-full h-full object-cover"
+                    className="rounded-lg w-full lg:h-[250px] h-[200px] md:[220px] object-cover"
                   />
                 </CardHeader>
               </Card>
@@ -71,9 +71,7 @@ const AboutUs = () => {
           }}
         >
           <div className="container mx-auto px-6 md:px-12 text-center">
-            <h2 className="text-4xl font-bold text-gray-800">
-              Why Choose Us?
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-800">Why Choose Us?</h2>
             <Balancer>
               <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
                 FaceSearchAI combines innovation, security, and affordability to
@@ -142,10 +140,13 @@ const AboutUs = () => {
           <h2 className="text-4xl font-bold text-gray-800 mb-4">
             How It Works
           </h2>
-          <Balancer><p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover the seamless process of our advanced facial recognition
-            technology, designed to make image searching effortless and precise.
-          </p></Balancer>
+          <Balancer>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Discover the seamless process of our advanced facial recognition
+              technology, designed to make image searching effortless and
+              precise.
+            </p>
+          </Balancer>
         </motion.div>
 
         <motion.div
