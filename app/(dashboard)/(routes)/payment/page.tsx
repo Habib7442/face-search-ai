@@ -1,4 +1,4 @@
-import PricingSection from "@/components/PricingSection";
+import PricingSection from "@/components/PricingSection/PricingSection";
 
 const PaymentPage = () => {
   return (
