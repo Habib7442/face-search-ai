@@ -10,12 +10,12 @@ import {
   Star,
 } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
-import testImages from "@/lib/images";
 import Image from "next/image";
 
 import { motion } from "framer-motion";
 import Navbar from "../navigation/Navbar";
 import Balancer from "react-wrap-balancer";
+import imageData from "@/lib/images";
 
 const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -64,7 +64,7 @@ const HeroSection = () => {
 
         <div className="flex items-center justify-center gap-4 mt-8">
           <div className="flex -space-x-2">
-            {testImages.map((data) => (
+            {imageData.testImages.map((data) => (
               <div
                 key={data.id}
                 className="w-8 h-8 rounded-full bg-gray-800 border-2 border-black overflow-hidden"

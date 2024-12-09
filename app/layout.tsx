@@ -46,7 +46,7 @@ export default function RootLayout({
                   <div
                     className="absolute inset-0 -z-10 bg-cover bg-center opacity-5"
                     style={{
-                      backgroundImage: "url('/water-bubble.png')", // Path to your image in the public folder
+                      backgroundImage: "url('/water-bubble.png')",
                     }}
                   />
 
