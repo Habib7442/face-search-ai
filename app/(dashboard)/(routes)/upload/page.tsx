@@ -1,22 +1,25 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Loader2, Search, Info, ImageIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
-import { useAppSelector } from "@/lib/redux";
+import { RootState, useAppSelector } from "@/lib/redux";
 import {
   selectAdultFilter,
   toggleAdultFilter,
 } from "@/lib/redux/slices/adultFilterSlice";
-import type { SearchResult } from "@/types/search";
 import { Button } from "@/components/ui/button";
 import { ImagePreview } from "@/components/ImagePreview";
-
 import { useRouter } from "next/navigation";
 import { GlassCard } from "@/components/GlassCard";
 import { DropZone } from "@/components/DropZone";
 import { SearchResults } from "@/components/SearchResult";
+import {
+  selectSearchResults,
+  setSearchResults,
+} from "@/lib/redux/slices/searchResultsSlice";
+// import { clearUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 
 export default function Upload() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -24,48 +27,28 @@ export default function Upload() {
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [imageSourceUrl, setImageSourceUrl] = useState<string | null>(null);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  // const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearchCompleted, setIsSearchCompleted] = useState(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
   const adultContentFilter = useAppSelector(selectAdultFilter);
 
-  // Function to convert base64 to File
-  const base64ToFile = (base64: string, filename: string) => {
-    const arr = base64.split(",");
-    const mime = arr[0].match(/:(.*?);/)?.[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
+  const reduxSearchResults = useAppSelector(selectSearchResults);
+  const uploadedImage = useAppSelector(
+    (state: RootState) => state.uploadedImage.image
+  );
 
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new File([u8arr], filename, { type: mime });
-  };
-
-  useEffect(() => {
-    // Check for image in local storage on component mount
-    const storedImage = localStorage.getItem("uploadedImage");
-    if (storedImage) {
-      // Convert base64 to File
-      const file = base64ToFile(storedImage, "uploaded-image.jpg");
-      setSelectedImage(file);
-
-      // Automatically search the image
-      handleImageUpload(file, adultContentFilter);
-
-      // Clear local storage after processing
-      localStorage.removeItem("uploadedImage");
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Optional: Clear the image from Redux after retrieving
+  //   return () => {
+  //     dispatch(clearUploadedImage());
+  //   };
+  // }, [dispatch]);
 
   const handleImageUpload = async (file: File, filterEnabled: boolean) => {
     try {
       setIsLoading(true);
-      setSearchResults([]);
       setIsSearchCompleted(false);
 
       const base64Image = await new Promise<string>((resolve) => {
@@ -91,9 +74,10 @@ export default function Upload() {
 
       const data = await response.json();
       if (data.results && Array.isArray(data.results)) {
-        setSearchResults(data.results);
         setResultImage(data.results[0]?.imageUrl || null);
         setImageSourceUrl(data.results[0]?.sourceUrl || null);
+        // Only dispatch to Redux, no local state update needed
+        dispatch(setSearchResults(data.results));
       }
     } catch (error) {
       console.error("Error processing image:", error);
@@ -104,12 +88,7 @@ export default function Upload() {
     }
   };
 
-  useEffect(() => {
-    if (selectedImage) {
-      handleImageUpload(selectedImage, adultContentFilter);
-    }
-  }, [adultContentFilter]);
-
+  // Handle image selection from search results
   const handleSelectResult = useCallback(
     (imageUrl: string, sourceUrl: string) => {
       setResultImage(imageUrl);
@@ -118,14 +97,13 @@ export default function Upload() {
     []
   );
 
+  // Navigate to info page
   const handleMoreInfoClick = () => {
-    localStorage.setItem("searchResults", JSON.stringify(searchResults));
     router.push("/info");
   };
 
   return (
     <div className="min-h-screen text-slate-200 py-8 px-4 md:py-12 md:px-8">
-      
       <div className="max-w-7xl mx-auto space-y-8 mt-4 lg:mt-0">
         <GlassCard className="lg:p-8 md:p-6 p-1">
           <div className="flex flex-col lg:flex-row items-center gap-6 mb-8">
@@ -142,7 +120,10 @@ export default function Upload() {
           </div>
 
           <DropZone
-            onDrop={(file) => setSelectedImage(file)}
+            onDrop={(file) => {
+              setSelectedImage(file);
+              handleImageUpload(file, adultContentFilter);
+            }}
             dragActive={dragActive}
             setDragActive={setDragActive}
           />
@@ -157,6 +138,7 @@ export default function Upload() {
               >
                 <Button
                   onClick={() =>
+                    selectedImage &&
                     handleImageUpload(selectedImage, adultContentFilter)
                   }
                   disabled={isLoading}
@@ -170,7 +152,6 @@ export default function Upload() {
                   {isLoading ? "Processing..." : "Search Image"}
                 </Button>
 
-                {/* Adult Filter (Disabled until search is complete) */}
                 <label
                   className={`flex items-center gap-3 bg-amber-400/50 px-6 py-3 rounded-xl cursor-pointer ${
                     isSearchCompleted ? "" : "opacity-50 cursor-not-allowed"
@@ -192,16 +173,22 @@ export default function Upload() {
           </AnimatePresence>
 
           <AnimatePresence mode="wait">
-            {(selectedImage || resultImage) && (
+            {(selectedImage || resultImage || uploadedImage) && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 className="grid md:grid-cols-2 gap-8 mt-8"
               >
-                {selectedImage && (
+                {(selectedImage || uploadedImage) && (
                   <ImagePreview
-                    src={URL.createObjectURL(selectedImage)}
+                    // If uploadedImage is a base64 string, use it directly
+                    // If selectedImage is a File, use URL.createObjectURL
+                    src={
+                      selectedImage
+                        ? URL.createObjectURL(selectedImage)
+                        : uploadedImage || ""
+                    }
                     alt="Uploaded preview"
                     title="Uploaded Image"
                   />
@@ -226,7 +213,7 @@ export default function Upload() {
           </AnimatePresence>
         </GlassCard>
 
-        {searchResults.length > 0 && (
+        {reduxSearchResults.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -238,7 +225,7 @@ export default function Upload() {
               </h2>
             </div>
             <SearchResults
-              results={searchResults}
+              results={reduxSearchResults}
               onSelectResult={handleSelectResult}
             />
             <div className="w-full flex justify-center items-center">

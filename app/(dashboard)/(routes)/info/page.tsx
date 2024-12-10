@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,8 @@ import { GlassCard } from "@/components/GlassCard";
 import Link from "next/link";
 import type { SearchResult } from "@/types/search";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { useAppSelector } from "@/lib/redux";
+import { selectSearchResults } from "@/lib/redux/slices/searchResultsSlice";
 
 interface GPTResult {
   "Full Name": string;
@@ -22,21 +24,11 @@ export default function InfoPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [gptResult, setGPTResult] = useState<GPTResult | null>(null);
   const [apiSearchResults, setApiSearchResults] = useState<SearchResult[]>([]);
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
-  useEffect(() => {
-    const storedResults = localStorage.getItem("searchResults");
-    if (storedResults) {
-      try {
-        const parsedResults = JSON.parse(storedResults);
-        setSearchResults(parsedResults);
-        // Clean up storage after retrieving the data
-        localStorage.removeItem("searchResults");
-      } catch (error) {
-        console.error("Error parsing search results:", error);
-      }
-    }
-  }, []);
+  const searchResults = useAppSelector(selectSearchResults);
+
+  // Remove the localStorage effect since we're using Redux
+  // The searchResults will be available directly from the Redux store
 
   const handleImageSelect = (imageUrl: string) => {
     setSelectedImages((prev) => {
@@ -73,6 +65,23 @@ export default function InfoPage() {
       setIsLoading(false);
     }
   };
+
+  // If there are no search results, show a message and link back to upload
+  if (!searchResults.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-slate-200 py-8 px-4">
+        <GlassCard className="p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">No Search Results Available</h2>
+          <p className="mb-6">Please perform a search first to see results.</p>
+          <Link href="/upload">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+              Go to Search
+            </Button>
+          </Link>
+        </GlassCard>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen  text-slate-200 py-8 px-4 md:py-12 md:px-8">

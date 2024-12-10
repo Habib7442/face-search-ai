@@ -31,25 +31,21 @@ const PricingCards: React.FC<{
 
   return (
     <>
-      <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto py-12">
-        {/* First Column */}
-        <div className="flex flex-col space-y-8">
-          {pricingPlans
-            .filter((_, index) => index === 0 || index === 4)
-            .map((plan) => renderCard(plan))}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto py-4 px-2">
+        {/* First row for medium devices, First column for large devices */}
+        <div className="space-y-8">
+          {renderCard(pricingPlans[0])}
+          {renderCard(pricingPlans[1])}
         </div>
 
-        {/* Center Column */}
-        <div className="flex justify-center items-center">
+        {/* Second row for medium devices, Center column for large devices */}
+        <div className="space-y-8">
           {renderCard(pricingPlans[2])}
+          {renderCard(pricingPlans[3])}
         </div>
 
-        {/* Third Column */}
-        <div className="flex flex-col space-y-8">
-          {pricingPlans
-            .filter((_, index) => index === 1 || index === 3)
-            .map((plan) => renderCard(plan))}
-        </div>
+        {/* Third row for medium devices, Last column for large devices */}
+        <div className="space-y-8">{renderCard(pricingPlans[4])}</div>
       </div>
 
       {/* Comparison Table */}

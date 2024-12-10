@@ -128,12 +128,12 @@ const PricingSection = () => {
         {/* Header */}
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-4xl md:text-5xl font-bold">Choose Your Plan</h2>
-          <Balancer>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+          <Balancer>
               Select the perfect plan that suits your needs and unlock the full
               potential of FaceSearch AI.
-            </p>
           </Balancer>
+            </p>
         </div>
 
         {/* Pricing Cards */}
