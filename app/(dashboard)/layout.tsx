@@ -43,7 +43,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Main content takes 2/3 of the screen */}
-        <div className="relative w-full h-full lg:ml-16">
+        <div className="relative w-full h-full lg:ml-16 md:ml-20 overflow-hidden">
           {children}
         </div>
       </div>

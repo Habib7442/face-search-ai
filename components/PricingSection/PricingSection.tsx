@@ -35,7 +35,7 @@ const PricingSection = () => {
       features: [
         "Get notified when a new photo is published on someone",
       ],
-      highlighted: true,
+      highlighted: false,
       buttonText: "Get Started",
       stripePriceId: "price_1QNsWGSABw0Heq1mNotification",
     },
@@ -50,7 +50,7 @@ const PricingSection = () => {
         "Unlocks Background Check Search",
         "Unlocks deep search capability",
       ],
-      highlighted: false,
+      highlighted: true,
       buttonText: "Try Free for a Week",
       badge: "Most Popular",
       stripePriceId: "price_1QNsYkSABw0Heq1mPopular",
@@ -121,7 +121,7 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="w-full relative min-h-full px-4 mb-8">
+    <section className="w-full relative min-h-full lg:px-4 md:px-2 mb-8 z-0">
       
 
       <div className="container relative z-10 max-w-7xl mx-auto">

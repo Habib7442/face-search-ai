@@ -21,6 +21,7 @@ const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const handleDialogToggle = () => setDialogOpen((prev) => !prev);
+  
 
   return (
     <section className="text-gray-800">
