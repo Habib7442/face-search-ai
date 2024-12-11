@@ -12,79 +12,88 @@ const PricingSection = () => {
 
   const pricingPlans = [
     {
-      id: "decentralized-intelligence-agency",
-      name: "Join The Decentralized Intelligence Agency",
-      price: "$10,000",
+      id: "enterprise-plan",
+      name: "Enterprise Plan",
+      price: "$450",
       period: "month",
-      description: "Designed for enterprise-level intelligence operations",
+      description: "Ultimate solution for enterprise-level needs",
       features: [
-        "Video to Google Sheets",
-        "API Access",
-        "Unlimited DCMA takedown requests on requested photos",
+        "Video to GSheet Integration",
+        "Full API Access",
+        "Unlimited DCMA Takedown Requests for Requested Photos",
+        "24/7 Dedicated Support",
+        "Customizable Report Generation",
+        "Priority Support and Service",
       ],
       highlighted: false,
       buttonText: "Get Started",
-      stripePriceId: "price_1QNsUeSABw0Heq1mDecentralized",
+      stripePriceId: "price_1EnterprisePlan",
     },
     {
-      id: "notification-plan",
-      name: "1,000 Credits / Month",
+      id: "business-plan",
+      name: "Business Plan",
       price: "$50",
       period: "month",
-      description: "Stay informed with real-time notifications",
+      description: "Perfect for small businesses and teams",
       features: [
-        "Get notified when a new photo is published on someone",
+        "Receive Notifications When New Photos Are Published on Someone",
+        "1,000 Credits for Monthly Use",
+        "Unlimited Basic Image Research",
+        "Email and Chat Support",
+        "Access to Basic Data Insights",
       ],
       highlighted: false,
       buttonText: "Get Started",
-      stripePriceId: "price_1QNsWGSABw0Heq1mNotification",
+      stripePriceId: "price_1BusinessPlan",
     },
     {
-      id: "most-popular",
-      name: "MOST POPULAR",
+      id: "professional-plan",
+      name: "Professional Plan",
       price: "$19.95",
       period: "month",
-      description: "Advanced features for deep search capabilities",
+      description: "Advanced features for professionals",
       features: [
-        "1 week free trial then 500 credits / month",
         "Unlocks Background Check Search",
-        "Unlocks deep search capability",
+        "Unlocks Deep Search Capabilities",
+        "500 Credits for Monthly Use",
+        "Access to Advanced Search Filters",
+        "24/7 Basic Support",
       ],
       highlighted: true,
-      buttonText: "Try Free for a Week",
+      buttonText: "Get Started",
       badge: "Most Popular",
-      stripePriceId: "price_1QNsYkSABw0Heq1mPopular",
+      stripePriceId: "price_1ProfessionalPlan",
     },
     {
-      id: "referral-plan",
-      name: "Referral Plan",
+      id: "premium-plan",
+      name: "Premium Plan",
       price: "$14.20",
       period: "month",
-      description: "Unlock rewards and monetization features",
+      description: "Unlock premium features and referrals",
       features: [
-        "1 week free trial then $14.20 / month",
-        "Unlocks PDF form download",
-        "Increases cash referral bonus from 25% to 50%",
-        "Earn in perpetuity when users sign up via your link",
-        "150 credits / month",
+        "Unlocks PDF Form Download",
+        "Perpetual Referral Earnings for Background Checks",
+        "150 Credits for Monthly Use",
+        "Priority Referral Earnings Support",
       ],
       highlighted: false,
-      buttonText: "Start Free Trial",
-      stripePriceId: "price_1QNsRefSABw0Heq1mReferral",
+      buttonText: "Get Started",
+      stripePriceId: "price_1PremiumPlan",
     },
     {
-      id: "super-basic",
-      name: "Super Basic",
+      id: "basic-starter-plan",
+      name: "Basic Starter Plan",
       price: "$7.77",
       period: "month",
-      description: "Simple and affordable starter plan",
+      description: "Affordable plan for beginners",
       features: [
-        "10 credits / month",
-        "Unlock discovering URL’s of content",
+        "Unlocks Discovering URLs of Content",
+        "10 Credits for Monthly Use",
+        "Access to Basic Search Functions",
       ],
       highlighted: false,
       buttonText: "Sign Up",
-      stripePriceId: "price_1QNsBasicSABw0Heq1mSuperBasic",
+      stripePriceId: "price_1BasicStarterPlan",
     },
   ];
 
@@ -122,18 +131,16 @@ const PricingSection = () => {
 
   return (
     <section className="w-full relative min-h-full lg:px-4 md:px-2 mb-8 z-0">
-      
-
       <div className="container relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-4xl md:text-5xl font-bold">Choose Your Plan</h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-          <Balancer>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            <Balancer>
               Select the perfect plan that suits your needs and unlock the full
               potential of FaceSearch AI.
-          </Balancer>
-            </p>
+            </Balancer>
+          </p>
         </div>
 
         {/* Pricing Cards */}

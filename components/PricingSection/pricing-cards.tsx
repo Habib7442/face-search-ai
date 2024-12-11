@@ -22,11 +22,11 @@ const PricingCards: React.FC<{
   isLoaded?: boolean;
 }> = ({ pricingPlans, handlePurchase, loadingPlan = "", isLoaded = true }) => {
   const gradientColors: Record<string, string> = {
-    "decentralized-intelligence-agency": "from-purple-200 to-purple-100",
-    "notification-plan": "from-red-200 to-red-100",
-    "most-popular": "from-blue-200 to-blue-100",
-    "referral-plan": "from-green-200 to-green-100",
-    "super-basic": "from-gray-200 to-gray-100",
+    "enterprise-plan": "from-purple-200 to-purple-100",
+    "business-plan": "from-red-200 to-red-100",
+    "professional-plan": "from-blue-200 to-blue-100",
+    "premium-plan": "from-green-200 to-green-100",
+    "basic-starter-plan": "from-gray-200 to-gray-100",
   };
 
   return (
