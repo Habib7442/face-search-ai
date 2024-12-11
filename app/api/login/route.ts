@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const { email, password } = body;
 
     // Mock validation - replace with real authentication later
-    if (email === "demo@gmail.com" && password === "strongpassword123") {
+    if (email === "demo@gmail.com" && password === "123456") {
       return NextResponse.json(
         {
           message: "Login successful",
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
             id: 1,
             email: "demo@gmail.com",
             name: "Demo User",
-            is_verified: false,
+            isVerified: false,
           },
         },
         { status: 200 }
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
       { status: 401 }
     );
   } catch (error) {
+    console.error("Login error:", error);
     return NextResponse.json(
       { message: "Login failed" },
       { status: 500 }

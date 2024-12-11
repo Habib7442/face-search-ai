@@ -1,13 +1,14 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 import { toast } from "sonner";
 import Balancer from "react-wrap-balancer";
 import PricingCards from "./pricing-cards";
+import { RootState } from "@/lib/redux/store"; // Adjust import path as needed
+import { useAppSelector } from "@/lib/redux";
 
 const PricingSection = () => {
-  const { isSignedIn, isLoaded } = useAuth();
+  const user = useAppSelector((state: RootState) => state.user);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   const pricingPlans = [
@@ -97,10 +98,17 @@ const PricingSection = () => {
     },
   ];
 
-  const handlePurchase = async (plan: (typeof pricingPlans)[0]) => {
-    if (!isLoaded) return;
+  // Check if user data is loaded
+  const isLoaded = user !== null;
 
-    if (!isSignedIn) {
+  const handlePurchase = async (plan: (typeof pricingPlans)[0]) => {
+    // If user state is not fully loaded
+    if (!isLoaded) {
+      return;
+    }
+
+    // Check if user is signed in (has an ID)
+    if (!user.id) {
       toast("You need to be signed in to purchase a plan");
       return;
     }
@@ -111,7 +119,10 @@ const PricingSection = () => {
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId: plan.id }),
+        body: JSON.stringify({ 
+          planId: plan.id,
+          userId: user.id 
+        }),
       });
 
       const data = await response.json();

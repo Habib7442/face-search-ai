@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+// import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "./provider";
 import { ReactLenis } from "@/lib/lenis";
@@ -40,7 +40,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ClerkProvider>
+            {/* <ClerkProvider> */}
               <Providers>
                 <main className="relative">
                   <div
@@ -54,7 +54,7 @@ export default function RootLayout({
                 </main>
               </Providers>
               <Toaster />
-            </ClerkProvider>
+            {/* </ClerkProvider> */}
           </ThemeProvider>
         </body>
       </ReactLenis>

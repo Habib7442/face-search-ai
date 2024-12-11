@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { UserButton, useUser } from "@clerk/nextjs"; // Import UserButton and useUser
+import { useDispatch } from "react-redux";
+import { RootState } from "@/lib/redux/store";
+import { clearUser } from "@/lib/redux/slices/userSlice";
+import { useAppSelector } from "@/lib/redux";
 
 const links = [
   { href: "/view-reviews", label: "Reviews" },
@@ -11,11 +14,16 @@ const links = [
 ];
 
 export function NavLinks() {
-  const { isSignedIn } = useUser(); // Get the user signed-in status
+  const user = useAppSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+
+  
+  const handleLogout = () => {
+    dispatch(clearUser());
+  };
 
   return (
     <div className="hidden md:flex items-center justify-between w-full">
-      
       <div className="flex justify-center items-center space-x-8 flex-1">
         {links.map((link) => (
           <Link
@@ -28,7 +36,6 @@ export function NavLinks() {
         ))}
       </div>
       
-      {/* Other elements remain aligned as before */}
       <Link href="/payment">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -38,17 +45,30 @@ export function NavLinks() {
           Buy Plan
         </motion.button>
       </Link>
-      {isSignedIn ? (
-        <UserButton
-          appearance={{
-            elements: {
-              avatarBox: "w-8 h-8 border border-gray-300 rounded-full ml-2",
-            },
-          }}
-        />
+      
+      {user.id ? (
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            {/* <span className="text-sm font-medium">
+              {user.name || user.email}
+            </span> */}
+            {/* Optional: User avatar or initials */}
+            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+              {user.name 
+                ? user.name.charAt(0).toUpperCase() 
+                : user.email?.charAt(0).toUpperCase()}
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="text-sm px-4 py-2 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:text-white transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       ) : (
         <Link
-          href="/sign-in"
+          href="/auth"
           className="text-sm px-4 py-2 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:text-white transition-colors"
         >
           Sign In
