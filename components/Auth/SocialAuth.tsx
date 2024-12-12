@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import { Facebook, Github, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { IconBrandGoogle } from '@tabler/icons-react';
 
 export function SocialAuth() {
   return (
@@ -13,11 +13,11 @@ export function SocialAuth() {
             className="h-11 w-full gap-2"
             onClick={() => {}}
           >
-            <Facebook className="h-5 w-5 text-blue-600" />
-            <span className="hidden sm:inline">Facebook</span>
+            <IconBrandGoogle className="h-5 w-5 text-blue-600" />
+            <span className="hidden sm:inline">Google</span>
           </Button>
         </motion.div>
-        <motion.div whileHover={{ scale: 1.02 }} className="flex-1">
+        {/* <motion.div whileHover={{ scale: 1.02 }} className="flex-1">
           <Button
             variant="outline"
             className="h-11 w-full gap-2"
@@ -36,7 +36,7 @@ export function SocialAuth() {
             <Linkedin className="h-5 w-5 text-blue-500" />
             <span className="hidden sm:inline">LinkedIn</span>
           </Button>
-        </motion.div>
+        </motion.div> */}
       </div>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">

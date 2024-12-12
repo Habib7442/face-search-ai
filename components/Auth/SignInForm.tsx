@@ -11,12 +11,11 @@ import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { SocialAuth } from './SocialAuth';
-import { setUser } from "@/lib/redux/slices/userSlice";
+import { clearUser, setUser } from "@/lib/redux/slices/userSlice";
 
 export function SignInForm() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -32,29 +31,50 @@ export function SignInForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
+        credentials: 'include',
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
       }
-
+  
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+  
+      // Get the token from cookies after login
+      const cookies = document.cookie.split(';');
+      const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('client_token='));
+      
+      if (!tokenCookie) {
+        throw new Error("Authentication failed: No token received");
+      }
+  
       // Dispatch user data to Redux
-      dispatch(setUser(data.user));
-
+      dispatch(setUser({
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        isVerified: data.user.isVerified
+      }));
+  
       // Show success toast
       toast.success("Login successful!");
-
+  
       // Redirect to upload page
       router.push("/upload");
     } catch (error: any) {
+      // Clear any partial data on error
+      localStorage.removeItem('user');
+      dispatch(clearUser());
+      
       toast.error(error.message || "An error occurred during login");
       console.error(error);
     } finally {
@@ -71,12 +91,10 @@ export function SignInForm() {
     >
       <Card className="border-none shadow-none">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-3xl font-bold text-center text-green-600">
+          <CardTitle className="text-3xl font-bold text-center py-1 text-green-600">
             Login to Your Account
           </CardTitle>
-          <CardDescription className="text-center">
-            Enter your email and password to access your account
-          </CardDescription>
+         
         </CardHeader>
         <CardContent className="space-y-6">
           <SocialAuth />
@@ -119,7 +137,7 @@ export function SignInForm() {
               </div>
               <Button 
                 type="submit" 
-                className="h-11 w-full bg-green-600 hover:bg-green-700"
+                className="h-11 w-full "
                 disabled={loading}
               >
                 {loading ? "Signing In..." : "Sign In"}

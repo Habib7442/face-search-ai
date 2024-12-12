@@ -6,21 +6,44 @@ import { useDispatch } from "react-redux";
 import { RootState } from "@/lib/redux/store";
 import { clearUser } from "@/lib/redux/slices/userSlice";
 import { useAppSelector } from "@/lib/redux";
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const links = [
   { href: "/view-reviews", label: "Reviews" },
-  { href: "/reviews", label: "Give Reviews" },
+  // { href: "/reviews", label: "Give Reviews" },
   { href: "#faq", label: "FAQ" },
 ];
 
 export function NavLinks() {
   const user = useAppSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
-  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleLogout = () => {
+    // Clear redux state
     dispatch(clearUser());
+    
+    // Clear cookies
+    document.cookie = "client_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Clear localStorage
+    localStorage.removeItem('user');
+    
+    // Redirect to login
+    router.push('/auth');
   };
+
+  // Don't render anything until mounted
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="hidden md:flex items-center justify-between w-full">
@@ -35,45 +58,43 @@ export function NavLinks() {
           </Link>
         ))}
       </div>
-      
+
       <Link href="/payment">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium"
+          className="px-4 py-2 mx-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium"
         >
           Buy Plan
         </motion.button>
       </Link>
-      
-      {user.id ? (
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            {/* <span className="text-sm font-medium">
-              {user.name || user.email}
-            </span> */}
-            {/* Optional: User avatar or initials */}
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
-              {user.name 
-                ? user.name.charAt(0).toUpperCase() 
-                : user.email?.charAt(0).toUpperCase()}
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
+
+      <div className="flex items-center space-x-4">
+        {user.id ? (
+          <>
+            {/* <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                {user.name
+                  ? user.name.charAt(0).toUpperCase()
+                  : user.email?.charAt(0).toUpperCase()}
+              </div>
+            </div> */}
+            <button
+              onClick={handleLogout}
+              className="text-sm px-4 py-2 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:text-white transition-colors"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link
+            href="/auth"
             className="text-sm px-4 py-2 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:text-white transition-colors"
           >
-            Logout
-          </button>
-        </div>
-      ) : (
-        <Link
-          href="/auth"
-          className="text-sm px-4 py-2 rounded-full text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:text-white transition-colors"
-        >
-          Sign In
-        </Link>
-      )}
+            Sign In
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

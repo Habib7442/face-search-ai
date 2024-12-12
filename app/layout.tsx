@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "./provider";
 import { ReactLenis } from "@/lib/lenis";
 import { Providers } from "./ReduxProvider";
+import { AutoLogout } from "@/components/AutoLogout";
+import { PersistLogin } from "@/components/PersistLogin";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,8 +42,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* <ClerkProvider> */}
-              <Providers>
+            
+            <Providers>
+            <PersistLogin>
                 <main className="relative">
                   <div
                     className="absolute inset-0 -z-10 bg-cover bg-center opacity-5"
@@ -49,12 +52,13 @@ export default function RootLayout({
                       backgroundImage: "url('/water-bubble.png')",
                     }}
                   />
-
+                  <AutoLogout />
                   {children}
                 </main>
-              </Providers>
-              <Toaster />
-            {/* </ClerkProvider> */}
+              </PersistLogin>
+            </Providers>
+            <Toaster />
+          
           </ThemeProvider>
         </body>
       </ReactLenis>

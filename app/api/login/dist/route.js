@@ -38,9 +38,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.POST = void 0;
 var server_1 = require("next/server");
+var headers_1 = require("next/headers");
 function POST(request) {
     return __awaiter(this, void 0, void 0, function () {
-        var body, email, password, error_1;
+        var body, email, password, mockTokenResponse, thirtyMinutes, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -51,6 +52,28 @@ function POST(request) {
                     email = body.email, password = body.password;
                     // Mock validation - replace with real authentication later
                     if (email === "demo@gmail.com" && password === "123456") {
+                        mockTokenResponse = {
+                            access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3ZWJ0ZWNoMDc2QGdtYWlsLmNvbSIsImV4cCI6MTczMzk5OTA2Mn0.fptNY6Yd-jzymCTShXEcb4W4LJLdkPccG4o3adEVScA",
+                            token_type: "bearer"
+                        };
+                        thirtyMinutes = 30 * 60;
+                        // Set the HTTP-only cookie
+                        headers_1.cookies().set('access_token', mockTokenResponse.access_token, {
+                            httpOnly: true,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: thirtyMinutes,
+                            path: '/'
+                        });
+                        // Set a non-HTTP-only cookie for client access
+                        headers_1.cookies().set('client_token', mockTokenResponse.access_token, {
+                            httpOnly: false,
+                            secure: process.env.NODE_ENV === 'production',
+                            sameSite: 'strict',
+                            maxAge: thirtyMinutes,
+                            path: '/'
+                        });
+                        // Return the user data without the token in the response body
                         return [2 /*return*/, server_1.NextResponse.json({
                                 message: "Login successful",
                                 user: {
@@ -58,7 +81,8 @@ function POST(request) {
                                     email: "demo@gmail.com",
                                     name: "Demo User",
                                     isVerified: false
-                                }
+                                },
+                                expiresIn: thirtyMinutes
                             }, { status: 200 })];
                     }
                     return [2 /*return*/, server_1.NextResponse.json({ message: "Invalid credentials" }, { status: 401 })];

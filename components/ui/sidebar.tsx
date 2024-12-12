@@ -9,6 +9,7 @@ interface Links {
   label: string;
   href: string;
   icon: React.JSX.Element | React.ReactNode;
+  onClick?: () => void; // Add this line
 }
 
 interface SidebarContextProps {
@@ -113,12 +114,7 @@ export const MobileSidebar = ({
   const { open, setOpen } = useSidebar();
   return (
     <>
-      <div
-        className={cn(
-          "fixed top-4 right-4 z-50 md:hidden"
-        )}
-        {...props}
-      >
+      <div className={cn("fixed top-4 right-4 z-50 md:hidden")} {...props}>
         <IconMenu2
           className="text-neutral-800 dark:text-neutral-800 cursor-pointer"
           onClick={() => setOpen(!open)}
@@ -163,6 +159,33 @@ export const SidebarLink = ({
   props?: LinkProps;
 }) => {
   const { open, animate } = useSidebar();
+  if (link.onClick) {
+    return (
+      <button
+        onClick={link.onClick}
+        className={cn(
+          "flex items-center justify-start gap-2 group/sidebar py-2 w-full",
+          className
+        )}
+      >
+        {link.icon}
+
+        <motion.span
+          animate={{
+            display: animate
+              ? open
+                ? "inline-block"
+                : "none"
+              : "inline-block",
+            opacity: animate ? (open ? 1 : 0) : 1,
+          }}
+          className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        >
+          {link.label}
+        </motion.span>
+      </button>
+    );
+  }
   return (
     <Link
       href={link.href}

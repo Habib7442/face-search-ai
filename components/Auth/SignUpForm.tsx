@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -62,10 +61,10 @@ export function SignUpForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-center text-3xl">Create Account</CardTitle>
-        <CardDescription className="text-center">
+        <CardTitle className="text-center text-3xl text-green-600 py-1">Create Account</CardTitle>
+        {/* <CardDescription className="text-center">
           Enter your details below to create your account
-        </CardDescription>
+        </CardDescription> */}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>

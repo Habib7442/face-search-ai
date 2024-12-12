@@ -39,18 +39,25 @@ export default function Upload() {
     (state: RootState) => state.uploadedImage.image
   );
 
-  // useEffect(() => {
-  //   // Optional: Clear the image from Redux after retrieving
-  //   return () => {
-  //     dispatch(clearUploadedImage());
-  //   };
-  // }, [dispatch]);
 
   const handleImageUpload = async (file: File, filterEnabled: boolean) => {
     try {
       setIsLoading(true);
       setIsSearchCompleted(false);
+  
+      // Get access token from cookies
+      const cookies = document.cookie.split(';');
+    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('client_token='));
+    const accessToken = tokenCookie ? tokenCookie.split('=')[1].trim() : null;
 
+      console.log(accessToken)
+  
+      if (!accessToken) {
+        toast.error("Please login to search images");
+        router.push('/auth');
+        return;
+      }
+  
       const base64Image = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -58,25 +65,33 @@ export default function Upload() {
           resolve(reader.result as string);
         };
       });
-
+  
       const response = await fetch("/api/search", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
+        },
         body: JSON.stringify({
           image: base64Image.split(",")[1],
           adultFilter: filterEnabled,
         }),
       });
-
+  
+      if (response.status === 401) {
+        toast.error("Session expired. Please login again");
+        router.push('/auth');
+        return;
+      }
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
       if (data.results && Array.isArray(data.results)) {
         setResultImage(data.results[0]?.imageUrl || null);
         setImageSourceUrl(data.results[0]?.sourceUrl || null);
-        // Only dispatch to Redux, no local state update needed
         dispatch(setSearchResults(data.results));
       }
     } catch (error) {

@@ -3,8 +3,8 @@ import AboutUs from "@/components/AboutUs/AboutUs";
 import Footer from "@/components/FooterSection/Footer";
 import Herosection from "@/components/HeroSection/hero-section";
 import PricingSection from "@/components/PricingSection/PricingSection";
+import TestimonialsSection from "@/components/TestimonialSection/TestimonialsSection";
 // import Navbar from "@/components/navigation/Navbar";
-// import TestimonialsSection from "@/components/TestimonialsSection";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
        <AboutUs />
     {/* <FeaturesSection /> */}
     <PricingSection />
-    {/* <TestimonialsSection /> */}
+    <TestimonialsSection />
     <Footer /> 
     </div>
   );

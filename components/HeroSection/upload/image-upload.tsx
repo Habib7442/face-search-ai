@@ -1,15 +1,20 @@
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { ImageIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { toast } from 'sonner';
-import { useDispatch } from 'react-redux';
-import { setSearchResults } from '@/lib/redux/slices/searchResultsSlice';
-import { setUploadedImage } from '@/lib/redux/slices/uploadedImageSlice';
-import { RootState, useAppSelector } from '@/lib/redux';
-
-
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ImageIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setSearchResults } from "@/lib/redux/slices/searchResultsSlice";
+import { setUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
+import { RootState, useAppSelector } from "@/lib/redux";
+import { ScanningAnimation } from "./scanning-animation";
+import { ProgressIndicator } from "./progress-indicator";
 
 interface ImageUploadProps {
   open: boolean;
@@ -17,37 +22,39 @@ interface ImageUploadProps {
 }
 
 const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
-//   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const uploadedImage = useAppSelector((state: RootState) => state.uploadedImage.image);
+  const uploadedImage = useAppSelector(
+    (state: RootState) => state.uploadedImage.image
+  );
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     try {
       setIsUploading(true);
-      
+
       const reader = new FileReader();
       reader.onload = () => {
-        setUploadedImage(reader.result as string);
+        dispatch(setUploadedImage(reader.result as string));
         simulateUploadProgress(file);
       };
       reader.readAsDataURL(file);
-
     } catch (error) {
-      console.error('Error handling file:', error);
-      toast.error('Failed to process image');
+      console.error("Error handling file:", error);
+      toast.error("Failed to process image");
       setIsUploading(false);
     }
   };
 
   const simulateUploadProgress = (file: File) => {
     setProgress(0);
-    const interval = setInterval(async () => {
+    const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
@@ -61,6 +68,18 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
 
   const handleSearchUpload = async (file: File) => {
     try {
+      // Get access token from client cookie
+      const cookies = document.cookie.split(';');
+      const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('client_token='));
+      const accessToken = tokenCookie ? tokenCookie.split('=')[1].trim() : null;
+  
+      if (!accessToken) {
+        toast.error("Please login to search images");
+        onClose();
+        router.push('/login');
+        return;
+      }
+  
       const base64Image = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -68,40 +87,46 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
           resolve(reader.result as string);
         };
       });
-
+  
       const response = await fetch("/api/search", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`
+        },
         body: JSON.stringify({
           image: base64Image.split(",")[1],
           adultFilter: false,
         }),
       });
-
+  
+      if (response.status === 401) {
+        toast.error("Session expired. Please login again");
+        onClose();
+        router.push('/login');
+        return;
+      }
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
-      
+  
       if (data.results && Array.isArray(data.results)) {
-        // Dispatch actions as plain objects
         dispatch(setSearchResults(data.results));
         dispatch(setUploadedImage(base64Image));
-        
-        // Close the dialog
         onClose();
-        
-        // Navigate to upload page
         setTimeout(() => {
-          router.push('/upload');
+          router.push("/upload");
         }, 500);
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
-      toast.error('Failed to process image');
+      console.error("Error uploading image:", error);
+      toast.error("Failed to process image");
     } finally {
       setIsUploading(false);
+      setProgress(0);
     }
   };
 
@@ -114,7 +139,7 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6 relative">
           <label className="cursor-pointer block">
             <div className="relative h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 hover:border-blue-500 transition-colors">
               {!uploadedImage ? (
@@ -129,13 +154,16 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
                   </p>
                 </div>
               ) : (
-                <Image
-                  src={uploadedImage}
-                  alt="Uploaded preview"
-                  layout="fill"
-                  objectFit="contain"
-                  className="rounded-lg"
-                />
+                <div className="relative h-full w-full">
+                  <Image
+                    src={uploadedImage}
+                    alt="Uploaded preview"
+                    layout="fill"
+                    objectFit="contain"
+                    className="rounded-lg"
+                  />
+                  {isUploading && <ScanningAnimation />}
+                </div>
               )}
             </div>
             <input
@@ -146,20 +174,8 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
               disabled={isUploading}
             />
           </label>
-          
-          {uploadedImage && (
-            <div className="space-y-4">
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className="text-center text-gray-600">
-                {progress === 100 ? 'Processing search...' : `Uploading... ${progress}%`}
-              </p>
-            </div>
-          )}
+
+          {uploadedImage && <ProgressIndicator progress={progress} />}
         </div>
       </DialogContent>
     </Dialog>

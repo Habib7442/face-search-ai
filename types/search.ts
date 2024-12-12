@@ -7,11 +7,10 @@ export interface SearchResult {
   
   export interface ProcessedData {
     status: string;
-    processed_url: string;
-    details: {
-      uuid: string;
-      uploadedImageBase64: string;
-      UST_time: string;
-      results: SearchResult[];
-    };
+    user_email: string;
+    is_premium: boolean;
+    
+      
+    data: SearchResult[];
+    
   }
