@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -30,35 +30,21 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
     (state: RootState) => state.uploadedImage.image
   );
 
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    try {
-      setIsUploading(true);
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        dispatch(setUploadedImage(reader.result as string));
-        simulateUploadProgress(file);
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      console.error("Error handling file:", error);
-      toast.error("Failed to process image");
-      setIsUploading(false);
+  useEffect(() => {
+    if (uploadedImage && open) {
+      // Automatically start upload process when image is set
+      simulateUploadProgress();
     }
-  };
+  }, [uploadedImage, open]);
 
-  const simulateUploadProgress = (file: File) => {
+  const simulateUploadProgress = () => {
+    setIsUploading(true);
     setProgress(0);
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          handleSearchUpload(file);
+          handleSearchUpload();
           return 100;
         }
         return prev + 2;
@@ -66,7 +52,7 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
     }, 50);
   };
 
-  const handleSearchUpload = async (file: File) => {
+  const handleSearchUpload = async () => {
     try {
       // Get access token from client cookie
       const cookies = document.cookie.split(';');
@@ -76,17 +62,12 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
       if (!accessToken) {
         toast.error("Please login to search images");
         onClose();
-        router.push('/login');
+        router.push('/auth');
         return;
       }
   
-      const base64Image = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-      });
+      // Remove the data:image prefix and get base64 part
+      const base64Image = uploadedImage.split(",")[1];
   
       const response = await fetch("/api/search", {
         method: "POST",
@@ -95,7 +76,7 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
           "Authorization": `Bearer ${accessToken}`
         },
         body: JSON.stringify({
-          image: base64Image.split(",")[1],
+          image: base64Image,
           adultFilter: false,
         }),
       });
@@ -115,7 +96,7 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
   
       if (data.results && Array.isArray(data.results)) {
         dispatch(setSearchResults(data.results));
-        dispatch(setUploadedImage(base64Image));
+        dispatch(setUploadedImage(uploadedImage));
         onClose();
         setTimeout(() => {
           router.push("/upload");
@@ -140,40 +121,27 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
         </DialogHeader>
 
         <div className="mt-6 space-y-6 relative">
-          <label className="cursor-pointer block">
-            <div className="relative h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 hover:border-blue-500 transition-colors">
-              {!uploadedImage ? (
-                <div className="text-center p-4">
-                  <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                  <p className="text-gray-500">
-                    Drop your image here or{" "}
-                    <span className="text-blue-600 font-medium">browse</span>
-                  </p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    Supports JPG, PNG files
-                  </p>
-                </div>
-              ) : (
-                <div className="relative h-full w-full">
-                  <Image
-                    src={uploadedImage}
-                    alt="Uploaded preview"
-                    layout="fill"
-                    objectFit="contain"
-                    className="rounded-lg"
-                  />
-                  {isUploading && <ScanningAnimation />}
-                </div>
-              )}
-            </div>
-            <input
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={handleImageUpload}
-              disabled={isUploading}
-            />
-          </label>
+          <div className="relative h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 hover:border-blue-500 transition-colors">
+            {!uploadedImage ? (
+              <div className="text-center p-4">
+                <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <p className="text-gray-500">
+                  No image uploaded
+                </p>
+              </div>
+            ) : (
+              <div className="relative h-full w-full">
+                <Image
+                  src={uploadedImage}
+                  alt="Uploaded preview"
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-lg"
+                />
+                {isUploading && <ScanningAnimation />}
+              </div>
+            )}
+          </div>
 
           {uploadedImage && <ProgressIndicator progress={progress} />}
         </div>

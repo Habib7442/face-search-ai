@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ImageIcon, Star } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
 import Image from "next/image";
@@ -10,11 +10,40 @@ import Navbar from "../navigation/Navbar";
 import Balancer from "react-wrap-balancer";
 import imageData from "@/lib/images";
 import { features } from "@/lib/data/data";
+import { useDispatch } from "react-redux";
+import { setUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 
 const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
 
-  const handleDialogToggle = () => setDialogOpen((prev) => !prev);
+  const handleDirectUpload = () => {
+    // Programmatically click the hidden file input
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Read the file and convert to base64
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        // Dispatch the uploaded image to Redux
+        dispatch(setUploadedImage(e.target?.result as string));
+        
+        // Open the dialog
+        setDialogOpen(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
 
   return (
     <section className="text-gray-800">
@@ -48,12 +77,20 @@ const HeroSection = () => {
         {/* Call-to-Action */}
         <div className="mt-8 w-full flex justify-center items-center">
           <button
-            onClick={handleDialogToggle}
+            onClick={handleDirectUpload}
             className="px-8 py-3 bg-primary hover:primary-hover text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
           >
             Upload Image
             <ImageIcon className="ml-2 text-accent-foreground" />
           </button>
+          {/* Hidden file input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleFileSelect}
+          />
         </div>
 
         <div className="flex items-center justify-center gap-4 mt-8">
@@ -102,7 +139,7 @@ const HeroSection = () => {
       </div>
 
       {/* DialogModal */}
-      <ImageUpload open={isDialogOpen} onClose={handleDialogToggle} />
+      <ImageUpload open={isDialogOpen} onClose={handleDialogClose} />
     </section>
   );
 };

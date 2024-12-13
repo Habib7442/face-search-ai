@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/card';
 import { SocialAuth } from './SocialAuth';
 import { clearUser, setUser } from "@/lib/redux/slices/userSlice";
+import { Loader2 } from "lucide-react";
 
 export function SignInForm() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -82,6 +83,31 @@ export function SignInForm() {
     }
   };
 
+  const formFields = [
+    {
+      label: "Email",
+      name: "email",
+      type: "email",
+      placeholder: "name@example.com",
+      icon: (
+        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+        </svg>
+      )
+    },
+    {
+      label: "Password",
+      name: "password",
+      type: "password",
+      placeholder: "Enter your password",
+      icon: (
+        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      )
+    }
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -89,60 +115,88 @@ export function SignInForm() {
       transition={{ duration: 0.8 }}
       className="w-full max-w-lg mx-auto"
     >
-      <Card className="border-none shadow-none">
+      <Card className="border-none shadow-none bg-transparent">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-3xl font-bold text-center py-1 text-green-600">
-            Login to Your Account
+          <CardTitle className="text-3xl font-bold text-center text-primary">
+            Welcome Back
           </CardTitle>
-         
+          <p className="text-center text-gray-500 mt-2">
+            Sign in to continue your journey
+          </p>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8 mt-4">
           <SocialAuth />
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  className="h-11"
-                  value={form.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Button
-                    type="button"
-                    variant="link"
-                    className="px-0 font-semibold text-green-600"
-                  >
-                    Forgot password?
-                  </Button>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {formFields.map((field) => (
+              <div key={field.name} className="space-y-2">
+                <Label 
+                  htmlFor={field.name}
+                  className="text-sm font-medium text-gray-700"
+                >
+                  {field.label}
+                </Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {field.icon}
+                  </div>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    className="pl-10 h-11 border-gray-200 text-blue-600 focus:border-blue-500 focus:ring-blue-500 rounded-lg"
+                    value={form[field.name as keyof typeof form]}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  className="h-11"
-                  value={form.password}
-                  onChange={handleInputChange}
-                  required
-                />
               </div>
-              <Button 
-                type="submit" 
-                className="h-11 w-full "
-                disabled={loading}
+            ))}
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                  Remember me
+                </label>
+              </div>
+
+              <Button
+                type="button"
+                variant="link"
+                className="text-sm font-medium text-blue-600 hover:text-blue-500"
               >
-                {loading ? "Signing In..." : "Sign In"}
+                Forgot password?
               </Button>
             </div>
+
+            <Button 
+              type="submit" 
+              className="w-full h-11 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                  Signing In...
+                </div>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
           </form>
         </CardContent>
       </Card>

@@ -19,6 +19,8 @@ import {
   selectSearchResults,
   setSearchResults,
 } from "@/lib/redux/slices/searchResultsSlice";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 // import { clearUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 
 export default function Upload() {
@@ -118,74 +120,78 @@ export default function Upload() {
   };
 
   return (
-    <div className="min-h-screen text-slate-200 py-8 px-4 md:py-12 md:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#dfeeff] to-white py-8 px-4 md:py-12 md:px-8">
       <div className="max-w-7xl mx-auto space-y-8 mt-4 lg:mt-0">
-        <GlassCard className="lg:p-8 md:p-6 p-1">
-          <div className="flex flex-col lg:flex-row items-center gap-6 mb-8">
-            <div className="p-3 rounded-full bg-primary/10">
-              <ImageIcon className="h-8 w-8 text-teal-800 drop-shadow-md" />
+        <GlassCard className="lg:p-8 md:p-6 p-6 bg-white/80 backdrop-blur-lg">
+          <div className="flex flex-col lg:flex-row items-center gap-6 mb-12">
+            <div className="p-4 rounded-full bg-[#007BFF]/10">
+              <ImageIcon className="h-8 w-8 text-[#007BFF]" />
             </div>
-            <motion.h1
-              className="poppins-semibold text-center text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              Image Search & Analysis
-            </motion.h1>
+            <div className="space-y-2 text-center lg:text-left">
+              <motion.h1
+                className="text-4xl md:text-5xl font-bold text-primary"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                Image Search & Analysis
+              </motion.h1>
+              <p className="text-gray-600">Upload an image to start searching</p>
+            </div>
           </div>
 
-          <DropZone
-            onDrop={(file) => {
-              setSelectedImage(file);
-              handleImageUpload(file, adultContentFilter);
-            }}
-            dragActive={dragActive}
-            setDragActive={setDragActive}
-          />
+          <div className="relative">
+            <DropZone
+              onDrop={(file) => {
+                setSelectedImage(file);
+                handleImageUpload(file, adultContentFilter);
+              }}
+              dragActive={dragActive}
+              setDragActive={setDragActive}
+            />
 
-          <AnimatePresence mode="wait">
-            {selectedImage && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="mt-6 flex flex-col lg:flex-row md:flex-row xl:flex-row justify-center items-center gap-4"
-              >
-                <Button
-                  onClick={() =>
-                    selectedImage &&
-                    handleImageUpload(selectedImage, adultContentFilter)
-                  }
-                  disabled={isLoading}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 rounded-xl text-lg transition-colors"
+            <AnimatePresence mode="wait">
+              {selectedImage && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="mt-6 flex flex-col lg:flex-row md:flex-row xl:flex-row justify-center items-center gap-4"
                 >
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                  ) : (
-                    <Search className="h-5 w-5 mr-2" />
-                  )}
-                  {isLoading ? "Processing..." : "Search Image"}
-                </Button>
+                  <Button
+                    onClick={() => selectedImage && handleImageUpload(selectedImage, adultContentFilter)}
+                    disabled={isLoading}
+                    className="bg-[#007BFF] hover:bg-[#66B2FF] text-white px-8 py-6 rounded-xl text-lg transition-all duration-200"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <Search className="h-5 w-5 mr-2" />
+                        Search Image
+                      </>
+                    )}
+                  </Button>
 
-                <label
-                  className={`flex items-center gap-3 bg-amber-400/50 px-6 py-3 rounded-xl cursor-pointer ${
-                    isSearchCompleted ? "" : "opacity-50 cursor-not-allowed"
-                  }`}
-                >
-                  <span className="text-sm font-medium text-slate-900">
-                    Adult Filter
-                  </span>
-                  <input
-                    type="checkbox"
-                    checked={adultContentFilter}
-                    onChange={() => dispatch(toggleAdultFilter())}
-                    className="w-5 h-5 rounded border-slate-600 text-purple-500 focus:ring-purple-500 focus:ring-offset-slate-300"
-                    disabled={!isSearchCompleted}
-                  />
-                </label>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <div className={`flex items-center gap-3 bg-[#F0F4FA] px-6 py-3 rounded-xl ${
+                    isSearchCompleted ? "" : "opacity-50"
+                  }`}>
+                    <span className="text-sm font-medium text-gray-700">
+                      Adult Filter
+                    </span>
+                    <Switch
+                      checked={adultContentFilter}
+                      onCheckedChange={() => dispatch(toggleAdultFilter())}
+                      disabled={!isSearchCompleted}
+                      className="data-[state=checked]:bg-[#007BFF]"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <AnimatePresence mode="wait">
             {(selectedImage || resultImage || uploadedImage) && (
@@ -196,31 +202,38 @@ export default function Upload() {
                 className="grid md:grid-cols-2 gap-8 mt-8"
               >
                 {(selectedImage || uploadedImage) && (
-                  <ImagePreview
-                    // If uploadedImage is a base64 string, use it directly
-                    // If selectedImage is a File, use URL.createObjectURL
-                    src={
-                      selectedImage
-                        ? URL.createObjectURL(selectedImage)
-                        : uploadedImage || ""
-                    }
-                    alt="Uploaded preview"
-                    title="Uploaded Image"
-                  />
+                  <div className="relative rounded-xl overflow-hidden">
+                    <Badge className="absolute top-4 left-4 bg-[#007BFF] text-white">
+                      Uploaded Image
+                    </Badge>
+                    <ImagePreview
+                      src={selectedImage ? URL.createObjectURL(selectedImage) : uploadedImage || ""}
+                      alt="Uploaded preview"
+                      title="Uploaded Image"
+                    />
+                  </div>
                 )}
 
                 {isLoading ? (
-                  <GlassCard className="p-6 flex items-center justify-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-                  </GlassCard>
+                  <div className="bg-white/80 rounded-xl shadow-lg p-8 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 className="h-8 w-8 animate-spin text-[#007BFF]" />
+                      <p className="text-gray-600">Analyzing image...</p>
+                    </div>
+                  </div>
                 ) : (
                   resultImage && (
-                    <ImagePreview
-                      src={resultImage}
-                      alt="Result preview"
-                      title="Selected Result"
-                      sourceUrl={imageSourceUrl || undefined}
-                    />
+                    <div className="relative rounded-xl overflow-hidden">
+                      <Badge className="absolute top-4 left-4 bg-[#FF8C00] text-white">
+                        Result Image
+                      </Badge>
+                      <ImagePreview
+                        src={resultImage}
+                        alt="Result preview"
+                        title="Selected Result"
+                        sourceUrl={imageSourceUrl || undefined}
+                      />
+                    </div>
                   )
                 )}
               </motion.div>
@@ -232,26 +245,24 @@ export default function Upload() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="space-y-6"
+            className="space-y-8"
           >
             <div className="flex items-center justify-between">
-              <h2 className="poppins-semibold text-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900">
+              <h2 className="text-3xl font-bold text-primary">
                 Deep Search Results
               </h2>
-            </div>
-            <SearchResults
-              results={reduxSearchResults}
-              onSelectResult={handleSelectResult}
-            />
-            <div className="w-full flex justify-center items-center">
               <Button
                 onClick={handleMoreInfoClick}
-                className="bg-teal-800 hover:bg-slate-700 text-white"
+                className="bg-[#F0F4FA] text-gray-700 hover:bg-[#007BFF] hover:text-white transition-all duration-200"
               >
                 <Info className="h-4 w-4 mr-2" />
                 Find More Info
               </Button>
             </div>
+            <SearchResults
+              results={reduxSearchResults}
+              onSelectResult={handleSelectResult}
+            />
           </motion.div>
         )}
       </div>

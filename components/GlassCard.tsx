@@ -15,13 +15,13 @@ export function GlassCard({ children, className }: GlassCardProps) {
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "relative overflow-hidden backdrop-blur-lg bg-white/20", // Frosted effect
-        "border border-white/30 rounded-2xl shadow-lg", // Subtle border and shadow
-        "hover:shadow-xl transition-shadow duration-300 ease-in-out", // Hover effect
+        "rounded-2xl", // Subtle border and shadow
+        " duration-300 ease-in-out", // Hover effect
         className
       )}
     >
       {/* Gradient background overlay */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white/50 to-transparent opacity-50" />
+      {/* <div className="absolute inset-0 -z-10 " /> */}
       {children}
     </motion.div>
   );

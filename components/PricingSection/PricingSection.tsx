@@ -43,8 +43,9 @@ const PricingSection = () => {
         "Email and Chat Support",
         "Access to Basic Data Insights",
       ],
-      highlighted: false,
+      highlighted: true,
       buttonText: "Get Started",
+      badge: "Most Popular",
       stripePriceId: "price_1BusinessPlan",
     },
     {
@@ -60,9 +61,9 @@ const PricingSection = () => {
         "Access to Advanced Search Filters",
         "24/7 Basic Support",
       ],
-      highlighted: true,
+      highlighted: false,
       buttonText: "Get Started",
-      badge: "Most Popular",
+      // badge: "Most Popular",
       stripePriceId: "price_1ProfessionalPlan",
     },
     {
