@@ -81,7 +81,7 @@ export function NavLinks() {
             </div> */}
             <button
               onClick={handleLogout}
-              className="text-sm px-4 py-2 rounded-full text-white bg-primary hover:text-white transition-colors"
+              className="text-sm px-4 py-2 rounded-full text-white bg-red-400 hover:text-white transition-colors"
             >
               Logout
             </button>

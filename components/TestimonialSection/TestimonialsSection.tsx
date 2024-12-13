@@ -5,8 +5,8 @@ import { InfiniteMovingCardsDemo } from '../Testimonials';
 const TestimonialsSection = () => {
   return (
     <section className="relative w-full min-h-full py-10 overflow-hidden">
-      <div className="absolute top-40 left-0 w-72 h-72 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-40 right-0 w-72 h-72 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse"></div>
+      {/* <div className="absolute top-40 left-0 w-72 h-72 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div> */}
+      {/* <div className="absolute bottom-40 right-0 w-72 h-72 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse"></div> */}
       
       <div className="relative z-10 container mx-auto px-4">
         <div className="text-center mb-16 space-y-4">
@@ -19,7 +19,7 @@ const TestimonialsSection = () => {
         </div>
 
         <div className="relative">
-          <div className="absolute inset-0  pointer-events-none"></div>
+          {/* <div className="absolute inset-0 pointer-events-none"></div> */}
           
           <div className="relative z-20">
             <InfiniteMovingCardsDemo />

@@ -111,7 +111,7 @@ export default function HistoryPage() {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="animate-pulse bg-gray-800 rounded-lg aspect-video"
+                className=" bg-gray-800 rounded-lg aspect-video"
               />
             ))}
           </div>

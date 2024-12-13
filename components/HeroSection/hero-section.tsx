@@ -49,7 +49,7 @@ const HeroSection = () => {
         <div className="mt-8 w-full flex justify-center items-center">
           <button
             onClick={handleDialogToggle}
-            className="px-8 py-3 bg-[#007BFF] hover:primary-hover text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
+            className="px-8 py-3 bg-primary hover:primary-hover text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
           >
             Upload Image
             <ImageIcon className="ml-2 text-accent-foreground" />

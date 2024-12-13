@@ -21,7 +21,7 @@ const AboutUs = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <h1 className="text-5xl font-bold">About Us</h1>
+        <h1 className="text-4xl md:text-5xl font-bold">About Us</h1>
           <p className="mt-4 text-lg">
         <Balancer>
             At FaceSearchAI, we are transforming how the world interacts with
