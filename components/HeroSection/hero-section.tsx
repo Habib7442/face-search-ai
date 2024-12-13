@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ShieldCheck,
-  Search,
-  Cpu,
-  PhoneCall,
-  ImageIcon,
-  Star,
-} from "lucide-react";
+import { ImageIcon, Star } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
 import Image from "next/image";
 
@@ -16,12 +9,12 @@ import { motion } from "framer-motion";
 import Navbar from "../navigation/Navbar";
 import Balancer from "react-wrap-balancer";
 import imageData from "@/lib/images";
+import { features } from "@/lib/data/data";
 
 const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
 
   const handleDialogToggle = () => setDialogOpen((prev) => !prev);
-  
 
   return (
     <section className="text-gray-800">
@@ -39,7 +32,7 @@ const HeroSection = () => {
         >
           <Balancer>
             Face Search Made{" "}
-            <span className="relative text-blue-600 drop-shadow-xl">
+            <span className="relative text-primary drop-shadow-xl">
               Flexible
               <span className="absolute bottom-[-2px] left-0 h-2 w-full bg-purple-400" />
             </span>{" "}
@@ -56,10 +49,10 @@ const HeroSection = () => {
         <div className="mt-8 w-full flex justify-center items-center">
           <button
             onClick={handleDialogToggle}
-            className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
+            className="px-8 py-3 bg-[#007BFF] hover:primary-hover text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
           >
             Upload Image
-            <ImageIcon className="ml-2 text-slate-800 drop-shadow-lg" />
+            <ImageIcon className="ml-2 text-accent-foreground" />
           </button>
         </div>
 
@@ -92,67 +85,19 @@ const HeroSection = () => {
 
         {/* Info Boxes */}
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Box 1 */}
-          <motion.div
-            className="bg-purple-100 p-6 rounded-lg shadow flex flex-col items-center text-center"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, type: "spring", stiffness: 50 }}
-          >
-            <Cpu className="text-purple-600 w-12 h-12 mb-4" />
-            <h3 className="text-lg font-bold mb-2">
-              Advanced Face Recognition
-            </h3>
-            <p className="text-sm text-gray-600">
-              State-of-the-art AI algorithms that can identify faces from images
-              or videos with exceptional accuracy.
-            </p>
-          </motion.div>
-
-          {/* Box 2 */}
-          <motion.div
-            className="bg-blue-100 p-6 rounded-lg shadow flex flex-col items-center text-center"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, type: "spring", stiffness: 50 }}
-          >
-            <Search className="text-blue-600 w-12 h-12 mb-4" />
-            <h3 className="text-lg font-bold mb-2">Web-Wide Search</h3>
-            <p className="text-sm text-gray-600">
-              Comprehensive search across the entire web to find matching faces
-              and their associated information.
-            </p>
-          </motion.div>
-
-          {/* Box 3 */}
-          <motion.div
-            className="bg-green-100 p-6 rounded-lg shadow flex flex-col items-center text-center"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, type: "spring", stiffness: 50 }}
-          >
-            <ShieldCheck className="text-green-600 w-12 h-12 mb-4" />
-            <h3 className="text-lg font-bold mb-2">Secure & Reliable</h3>
-            <p className="text-sm text-gray-600">
-              Enterprise-grade security measures to protect user data and ensure
-              reliable search results.
-            </p>
-          </motion.div>
-
-          {/* Box 4 */}
-          <motion.div
-            className="bg-yellow-100 p-6 rounded-lg shadow flex flex-col items-center text-center"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, type: "spring", stiffness: 50 }}
-          >
-            <PhoneCall className="text-yellow-600 w-12 h-12 mb-4" />
-            <h3 className="text-lg font-bold mb-2">Contact Discovery</h3>
-            <p className="text-sm text-gray-600">
-              Advanced contact information retrieval system to find email
-              addresses and phone numbers.
-            </p>
-          </motion.div>
+          {features.map((feature) => (
+            <motion.div
+              key={feature.id}
+              className={`${feature.bgColor} p-6 rounded-lg shadow flex flex-col items-center text-center`}
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, type: "spring", stiffness: 50 }}
+            >
+              {feature.icon}
+              <h3 className="text-md font-bold mb-2">{feature.title}</h3>
+              <p className="text-sm text-gray-600">{feature.description}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
 

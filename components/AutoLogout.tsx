@@ -27,7 +27,8 @@ export function AutoLogout() {
     };
 
     // Check every minute
-    const intervalId = setInterval(checkSession, 60000);
+    const intervalId = setInterval(checkSession, 1800000); // 30 minutes in milliseconds
+
 
     // Cleanup
     return () => {

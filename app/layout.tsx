@@ -46,12 +46,12 @@ export default function RootLayout({
             <Providers>
             <PersistLogin>
                 <main className="relative">
-                  <div
+                  {/* <div
                     className="absolute inset-0 -z-10 bg-cover bg-center opacity-5"
                     style={{
                       backgroundImage: "url('/water-bubble.png')",
                     }}
-                  />
+                  /> */}
                   <AutoLogout />
                   {children}
                 </main>

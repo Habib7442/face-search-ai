@@ -22,7 +22,7 @@ const PricingCards: React.FC<{
   isLoaded?: boolean;
 }> = ({ pricingPlans, handlePurchase, loadingPlan = "", isLoaded = true }) => {
   const gradientColors: Record<string, string> = {
-    "enterprise-plan": "from-purple-200 to-purple-100",
+    "enterprise-plan": "bg-#B3E5FC",
     "business-plan": "from-red-200 to-red-100",
     "professional-plan": "from-blue-200 to-blue-100",
     "premium-plan": "from-green-200 to-green-100",
@@ -83,8 +83,8 @@ const PricingCards: React.FC<{
       <div
         key={plan.id}
         className={`flex flex-col justify-between min-h-[350px] rounded-2xl overflow-hidden transition-all duration-300 
-          hover:shadow-xl hover:scale-[1.02] bg-gradient-to-br ${gradient} 
-          ${plan.highlighted ? "ring-2 ring-cyan-400" : ""}
+          hover:shadow-xl hover:scale-[1.02] bg-secondary 
+          ${plan.highlighted ? "ring-2 ring-slate-300" : ""}
         `}
       >
         <div className="p-6 md:p-8 space-y-6">

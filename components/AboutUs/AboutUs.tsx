@@ -4,19 +4,19 @@ import { Card, CardHeader } from "@/components/ui/card";
 import imageData from "@/lib/images";
 import Image from "next/image";
 import Balancer from "react-wrap-balancer";
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
+// import {
+//   VerticalTimeline,
+//   VerticalTimelineElement,
+// } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import { Target, Globe, ImageIcon, Search, Upload, Shield } from "lucide-react";
+// import { Target, Globe, ImageIcon, Search, Upload, Shield } from "lucide-react";
 
 const AboutUs = () => {
   return (
     <div className="min-h-full">
       {/* Header Section */}
       <motion.div
-        className="text-center py-12 lg:h-[300px] md:h-[220px] text-black bg-blue-300/30 relative"
+        className="text-center py-12 lg:h-[300px] md:h-[220px] text-black bg-secondary relative"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
@@ -58,7 +58,7 @@ const AboutUs = () => {
       </motion.div>
 
       {/* Why Choose Us Section */}
-      <div className="mx-auto pt-14 px-2 lg:mt-24 md:mt-24">
+      {/* <div className="mx-auto pt-14 px-2 lg:mt-24 md:mt-24">
   <motion.div
     className="pt-8 relative"
     initial="hidden"
@@ -145,10 +145,10 @@ const AboutUs = () => {
       </div>
     </div>
   </motion.div>
-</div>
+</div> */}
 
       {/* How it works */}
-      <div className="container mx-auto py-16 px-2 md:px-12">
+      {/* <div className="container mx-auto py-16 px-2 md:px-12 pt-14 lg:mt-24 md:mt-24">
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: -50 }}
@@ -178,11 +178,9 @@ const AboutUs = () => {
             visible: { opacity: 1, y: 0 },
           }}
         >
-          {/* Left Column - User Perspective */}
+          
           <div className="w-full lg:w-1/2">
-            {/* <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              User Journey
-            </h3> */}
+            
             <VerticalTimeline layout="1-column-left">
               <VerticalTimelineElement
                 className="vertical-timeline-element--work"
@@ -255,11 +253,9 @@ const AboutUs = () => {
             </VerticalTimeline>
           </div>
 
-          {/* Right Column - Technical Perspective */}
+          
           <div className="w-full lg:w-1/2">
-            {/* <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-              Technical Process
-            </h3> */}
+            
             <VerticalTimeline layout="1-column-left">
               <VerticalTimelineElement
                 className="vertical-timeline-element--work"
@@ -333,7 +329,7 @@ const AboutUs = () => {
             </VerticalTimeline>
           </div>
         </motion.div>
-      </div>
+      </div> */}
     </div>
   );
 };

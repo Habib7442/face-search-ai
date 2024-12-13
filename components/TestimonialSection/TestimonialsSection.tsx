@@ -13,7 +13,7 @@ const TestimonialsSection = () => {
           <h2 className="text-4xl md:text-5xl font-bold">
             What Our Users Say
           </h2>
-          <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl max-w-2xl mx-auto">
           <Balancer>Hear from our community about their experiences with our AI face matching technology</Balancer>
           </p>
         </div>

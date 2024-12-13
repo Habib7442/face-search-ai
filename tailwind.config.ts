@@ -17,7 +17,26 @@ export default {
         lightBlue: "#dfeeff",
         white: "#ffffff",
         backgroundImage: {
-          'hero-gradient': 'linear-gradient(to bottom, #dfeeff, #ffffff)',
+          "hero-gradient": "linear-gradient(to bottom, #dfeeff, #ffffff)",
+        },
+        primary: {
+          DEFAULT: "#007BFF", // Bright Blue
+          foreground: "#ffffff", // Use white for text on primary buttons
+          hover: "#66B2FF",
+        },
+        secondary: {
+          DEFAULT: "#F0F4FA", // bg-gray-50 (very light gray)
+          foreground: "#1F2937", // Dark text for readability
+        },                          
+        
+        accent: {
+          DEFAULT: "#FF8C00", // Bright Orange
+          foreground: "#ffffff", // White text for contrast
+        },
+        
+        neutral: {
+          DEFAULT: "#F0F4FA", // Light Grayish Blue
+          foreground: "#000000", // Use black for text on neutral backgrounds
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -29,22 +48,22 @@ export default {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
+        // primary: {
+        //   DEFAULT: "hsl(var(--primary))",
+        //   foreground: "hsl(var(--primary-foreground))",
+        // },
+        // secondary: {
+        //   DEFAULT: "hsl(var(--secondary))",
+        //   foreground: "hsl(var(--secondary-foreground))",
+        // },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
+        // accent: {
+        //   DEFAULT: "hsl(var(--accent))",
+        //   foreground: "hsl(var(--accent-foreground))",
+        // },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -71,16 +90,6 @@ export default {
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
       },
       keyframes: {
-        spotlight: {
-          "0%": {
-            opacity: 0,
-            transform: "translate(-72%, -62%) scale(0.5)",
-          },
-          "100%": {
-            opacity: 1,
-            transform: "translate(-50%,-40%) scale(1)",
-          },
-        },
         scroll: {
           to: {
             transform: "translate(calc(-50% - 0.5rem))",
