@@ -139,7 +139,7 @@ export const Logo = () => {
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50"
     >
       <Image
-        src="/logo-facesearch.png"
+        src="/logo-facesearch.svg"
         alt="FaceSearch AI Logo"
         width={40}
         height={40}
@@ -163,7 +163,7 @@ export const LogoIcon = () => {
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50"
     >
       <Image
-        src="/logo-facesearch.png"
+        src="/logo-facesearch.svg"
         alt="FaceSearch AI Logo"
         width={40}
         height={40}

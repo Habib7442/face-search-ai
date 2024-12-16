@@ -1,47 +1,91 @@
 "use client";
 
+
+import { useState, useEffect } from "react";
 import { InfiniteMovingCards } from "./ui/infinite-moving-cards";
+import {supabase} from "@/lib/supabase"
+import Loading from "./Loading";
+
+interface Testimonial {
+  quote: string;
+  name: string;
+  title: string;
+  avatar_url: string;
+  rating: number;
+}
 
 export function InfiniteMovingCardsDemo() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("testimonials")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      // Transform the data to match the required format
+      const formattedTestimonials = await Promise.all(
+        (data || []).map(async (item) => {
+          let avatarUrl = "/default-avatar.png";
+
+          if (item.user_image_url) {
+            try {
+              const { data: signedData, error: signedError } =
+                await supabase.storage
+                  .from("testimonial-images")
+                  .createSignedUrl(item.user_image_url, 3600);
+
+              if (!signedError && signedData) {
+                avatarUrl = signedData.signedUrl;
+              }
+            } catch (err) {
+              console.error("Error getting signed URL:", err);
+            }
+          }
+
+          return {
+            quote: item.message,
+            name: item.name,
+            title: new Date(item.created_at).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            }),
+            avatar_url: avatarUrl,
+            rating: item.rating,
+          };
+        })
+      );
+
+      setTestimonials(formattedTestimonials);
+    } catch (error) {
+      console.error("Error fetching testimonials:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Loading/>
+    );
+  }
+
   return (
     <div className="h-full rounded-md flex flex-col antialiased items-center justify-center relative overflow-hidden">
       <InfiniteMovingCards
         items={testimonials}
         direction="right"
-        speed="slow"
+        speed="fast"
       />
     </div>
   );
 }
-
-const testimonials = [
-  {
-    quote:
-      "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
-    name: "Charles Dickens",
-    title: "A Tale of Two Cities",
-  },
-  {
-    quote:
-      "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer The slings and arrows of outrageous fortune, Or to take Arms against a Sea of troubles, And by opposing end them: to die, to sleep.",
-    name: "William Shakespeare",
-    title: "Hamlet",
-  },
-  {
-    quote: "All that we see or seem is but a dream within a dream.",
-    name: "Edgar Allan Poe",
-    title: "A Dream Within a Dream",
-  },
-  {
-    quote:
-      "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
-    name: "Jane Austen",
-    title: "Pride and Prejudice",
-  },
-  {
-    quote:
-      "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.",
-    name: "Herman Melville",
-    title: "Moby-Dick",
-  },
-];

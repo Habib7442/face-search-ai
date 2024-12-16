@@ -21,6 +21,7 @@ import {
 } from "@/lib/redux/slices/searchResultsSlice";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { selectSelectedImages } from "@/lib/redux/slices/selectedImagesSlice";
 // import { clearUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 
 export default function Upload() {
@@ -40,26 +41,28 @@ export default function Upload() {
   const uploadedImage = useAppSelector(
     (state: RootState) => state.uploadedImage.image
   );
-
+  const selectedImages = useAppSelector(selectSelectedImages);
 
   const handleImageUpload = async (file: File, filterEnabled: boolean) => {
     try {
       setIsLoading(true);
       setIsSearchCompleted(false);
-  
-      // Get access token from cookies
-      const cookies = document.cookie.split(';');
-    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('client_token='));
-    const accessToken = tokenCookie ? tokenCookie.split('=')[1].trim() : null;
 
-      console.log(accessToken)
-  
+      // Get access token from cookies
+      const cookies = document.cookie.split(";");
+      const tokenCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith("client_token=")
+      );
+      const accessToken = tokenCookie ? tokenCookie.split("=")[1].trim() : null;
+
+      console.log(accessToken);
+
       if (!accessToken) {
         toast.error("Please login to search images");
-        router.push('/auth');
+        router.push("/auth");
         return;
       }
-  
+
       const base64Image = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -67,29 +70,29 @@ export default function Upload() {
           resolve(reader.result as string);
         };
       });
-  
+
       const response = await fetch("/api/search", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           image: base64Image.split(",")[1],
           adultFilter: filterEnabled,
         }),
       });
-  
+
       if (response.status === 401) {
         toast.error("Session expired. Please login again");
-        router.push('/auth');
+        router.push("/auth");
         return;
       }
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       if (data.results && Array.isArray(data.results)) {
         setResultImage(data.results[0]?.imageUrl || null);
@@ -135,7 +138,9 @@ export default function Upload() {
               >
                 Image Search & Analysis
               </motion.h1>
-              <p className="text-gray-600">Upload an image to start searching</p>
+              <p className="text-gray-600">
+                Upload an image to start searching
+              </p>
             </div>
           </div>
 
@@ -158,9 +163,12 @@ export default function Upload() {
                   className="mt-6 flex flex-col lg:flex-row md:flex-row xl:flex-row justify-center items-center gap-4"
                 >
                   <Button
-                    onClick={() => selectedImage && handleImageUpload(selectedImage, adultContentFilter)}
+                    onClick={() =>
+                      selectedImage &&
+                      handleImageUpload(selectedImage, adultContentFilter)
+                    }
                     disabled={isLoading}
-                    className="bg-[#007BFF] hover:bg-[#66B2FF] text-white px-8 py-6 rounded-xl text-lg transition-all duration-200"
+                    className="bg-[#007BFF] hover:bg-[#66B2FF] text-white px-4 text-sm font-medium py-5 rounded-xl transition-all duration-200"
                   >
                     {isLoading ? (
                       <>
@@ -175,9 +183,11 @@ export default function Upload() {
                     )}
                   </Button>
 
-                  <div className={`flex items-center gap-3 bg-[#F0F4FA] px-6 py-3 rounded-xl ${
-                    isSearchCompleted ? "" : "opacity-50"
-                  }`}>
+                  <div
+                    className={`flex items-center gap-3 bg-[#F0F4FA] px-4 py-3 rounded-xl ${
+                      isSearchCompleted ? "" : "opacity-50"
+                    }`}
+                  >
                     <span className="text-sm font-medium text-gray-700">
                       Adult Filter
                     </span>
@@ -185,7 +195,7 @@ export default function Upload() {
                       checked={adultContentFilter}
                       onCheckedChange={() => dispatch(toggleAdultFilter())}
                       disabled={!isSearchCompleted}
-                      className="data-[state=checked]:bg-[#007BFF]"
+                      className="data-[state=checked]:bg-[#007BFF] data-[state=unchecked]:bg-[#007BFF]"
                     />
                   </div>
                 </motion.div>
@@ -207,7 +217,11 @@ export default function Upload() {
                       Uploaded Image
                     </Badge>
                     <ImagePreview
-                      src={selectedImage ? URL.createObjectURL(selectedImage) : uploadedImage || ""}
+                      src={
+                        selectedImage
+                          ? URL.createObjectURL(selectedImage)
+                          : uploadedImage || ""
+                      }
                       alt="Uploaded preview"
                       title="Uploaded Image"
                     />
@@ -251,13 +265,24 @@ export default function Upload() {
               <h2 className="text-3xl font-bold text-primary">
                 Deep Search Results
               </h2>
-              <Button
-                onClick={handleMoreInfoClick}
-                className="bg-[#F0F4FA] text-gray-700 hover:bg-[#007BFF] hover:text-white transition-all duration-200"
-              >
-                <Info className="h-4 w-4 mr-2" />
-                Find More Info
-              </Button>
+              <div className="flex items-center gap-4">
+                {selectedImages.length > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-[#F0F4FA] text-gray-700"
+                  >
+                    {selectedImages.length} images selected
+                  </Badge>
+                )}
+                <Button
+                  onClick={handleMoreInfoClick}
+                  disabled={selectedImages.length === 0}
+                  className="bg-[#F0F4FA] text-gray-700 hover:bg-[#007BFF] hover:text-white transition-all duration-200 disabled:opacity-50"
+                >
+                  <Info className="h-4 w-4 mr-2" />
+                  Find More Info
+                </Button>
+              </div>
             </div>
             <SearchResults
               results={reduxSearchResults}

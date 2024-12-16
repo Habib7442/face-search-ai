@@ -1,11 +1,12 @@
 "use client";
-
 import { motion } from "framer-motion";
 import Image from "next/image";
 import type { SearchResult } from "@/types/search";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Check } from "lucide-react";
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSelectedImage, selectSelectedImages } from '@/lib/redux/slices/selectedImagesSlice';
 
 interface SearchResultsProps {
   results: SearchResult[];
@@ -13,6 +14,9 @@ interface SearchResultsProps {
 }
 
 export function SearchResults({ results, onSelectResult }: SearchResultsProps) {
+  const dispatch = useDispatch();
+  const selectedImages = useSelector(selectSelectedImages);
+
   // Group results by group number
   const groupedResults = results.reduce((acc, result) => {
     if (!acc[result.group]) {
@@ -50,10 +54,12 @@ export function SearchResults({ results, onSelectResult }: SearchResultsProps) {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.3 }}
-                onClick={() => onSelectResult(result.imageUrl, result.sourceUrl)}
                 className="cursor-pointer group flex-shrink-0 w-72"
+                onClick={() => dispatch(toggleSelectedImage(result.imageUrl))}
               >
-                <Card className="overflow-hidden bg-gray-900 border-gray-800 hover:border-gray-700 transition-all hover:shadow-lg">
+                <Card className={`overflow-hidden bg-gray-900 border-gray-800 hover:border-gray-700 transition-all hover:shadow-lg relative ${
+                  selectedImages.includes(result.imageUrl) ? 'ring-2 ring-[#007BFF]' : ''
+                }`}>
                   <div className="relative aspect-video">
                     <Image
                       src={result.imageUrl}
@@ -62,6 +68,11 @@ export function SearchResults({ results, onSelectResult }: SearchResultsProps) {
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
+                    {selectedImages.includes(result.imageUrl) && (
+                      <div className="absolute top-2 right-2 bg-[#007BFF] text-white rounded-full p-1">
+                        <Check className="h-4 w-4" />
+                      </div>
+                    )}
                   </div>
                   <div className="p-4">
                     <div className="flex items-center justify-between">
@@ -73,7 +84,7 @@ export function SearchResults({ results, onSelectResult }: SearchResultsProps) {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <ExternalLink className="h-4 w-4" />
-                        result.sourceUrl
+                        {result.sourceUrl}
                       </a>
                     </div>
                   </div>

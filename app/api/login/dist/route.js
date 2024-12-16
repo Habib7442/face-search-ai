@@ -41,7 +41,7 @@ var server_1 = require("next/server");
 var headers_1 = require("next/headers");
 function POST(request) {
     return __awaiter(this, void 0, void 0, function () {
-        var body, email, password, mockTokenResponse, thirtyMinutes, error_1;
+        var body, email, password, thirtyMinutes, mockTokenResponse, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -50,30 +50,28 @@ function POST(request) {
                 case 1:
                     body = _a.sent();
                     email = body.email, password = body.password;
-                    // Mock validation - replace with real authentication later
+                    // Your existing authentication logic
                     if (email === "demo@gmail.com" && password === "123456") {
+                        thirtyMinutes = 30 * 60;
                         mockTokenResponse = {
-                            access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3ZWJ0ZWNoMDc2QGdtYWlsLmNvbSIsImV4cCI6MTczMzk5OTA2Mn0.fptNY6Yd-jzymCTShXEcb4W4LJLdkPccG4o3adEVScA",
+                            access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
                             token_type: "bearer"
                         };
-                        thirtyMinutes = 30 * 60;
-                        // Set the HTTP-only cookie
-                        headers_1.cookies().set('access_token', mockTokenResponse.access_token, {
+                        // Set your existing cookies
+                        headers_1.cookies().set("access_token", mockTokenResponse.access_token, {
                             httpOnly: true,
-                            secure: process.env.NODE_ENV === 'production',
-                            sameSite: 'strict',
+                            secure: process.env.NODE_ENV === "production",
+                            sameSite: "strict",
                             maxAge: thirtyMinutes,
-                            path: '/'
+                            path: "/"
                         });
-                        // Set a non-HTTP-only cookie for client access
-                        headers_1.cookies().set('client_token', mockTokenResponse.access_token, {
+                        headers_1.cookies().set("client_token", mockTokenResponse.access_token, {
                             httpOnly: false,
-                            secure: process.env.NODE_ENV === 'production',
-                            sameSite: 'strict',
+                            secure: process.env.NODE_ENV === "production",
+                            sameSite: "strict",
                             maxAge: thirtyMinutes,
-                            path: '/'
+                            path: "/"
                         });
-                        // Return the user data without the token in the response body
                         return [2 /*return*/, server_1.NextResponse.json({
                                 message: "Login successful",
                                 user: {
@@ -89,7 +87,7 @@ function POST(request) {
                 case 2:
                     error_1 = _a.sent();
                     console.error("Login error:", error_1);
-                    return [2 /*return*/, server_1.NextResponse.json({ message: "Login failed" }, { status: 500 })];
+                    return [2 /*return*/, server_1.NextResponse.json({ message: error_1.message || "Login failed" }, { status: 500 })];
                 case 3: return [2 /*return*/];
             }
         });

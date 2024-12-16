@@ -27,7 +27,7 @@ export function AuthLayout({
         <div className="relative flex h-full min-h-[400px] flex-col items-center justify-center px-8">
           <div className="absolute top-8 left-8">
             <Image
-              src="/logo-facesearch.png"
+              src="/logo-facesearch.svg"
               alt="Logo"
               width={40}
               height={40}

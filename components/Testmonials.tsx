@@ -1,17 +1,15 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
+
 import { ArrowLeft, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import Loading from "./Loading";
+import { supabase } from "@/lib/supabase";
 
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 interface Testimonial {
   id: string;
@@ -24,13 +22,15 @@ interface Testimonial {
 
 export default function TestimonialsDisplay() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetchTestimonials();
   }, []);
 
   const fetchTestimonials = async () => {
+    setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from("testimonials")
@@ -39,6 +39,27 @@ export default function TestimonialsDisplay() {
 
       if (error) throw error;
       setTestimonials(data || []);
+
+      // Load signed URLs for all testimonial images
+      const urls: Record<string, string> = {};
+      for (const testimonial of data || []) {
+        if (testimonial.user_image_url) {
+          try {
+            const { data: signedData, error: signedError } =
+              await supabase.storage
+                .from("testimonial-images")
+                .createSignedUrl(testimonial.user_image_url, 3600);
+
+            if (!signedError && signedData) {
+              urls[testimonial.id] = signedData.signedUrl;
+            }
+          } catch (err) {
+            console.error("Error getting signed URL:", err);
+            urls[testimonial.id] = "/default-avatar.png";
+          }
+        }
+      }
+      setImageUrls(urls);
     } catch (error) {
       console.error("Error fetching testimonials:", error);
     } finally {
@@ -51,8 +72,8 @@ export default function TestimonialsDisplay() {
       <Star
         key={starValue}
         className={`h-4 w-4 ${
-          starValue <= rating 
-            ? "text-[#FF8C00] fill-[#FF8C00]" 
+          starValue <= rating
+            ? "text-[#FF8C00] fill-[#FF8C00]"
             : "text-gray-300"
         }`}
       />
@@ -60,15 +81,7 @@ export default function TestimonialsDisplay() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-full min-h-[300px] bg-[#F0F4FA]">
-        <div className="animate-pulse flex space-x-2">
-          <div className="h-2 w-2 bg-primary rounded-full animate-bounce"></div>
-          <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-.3s]"></div>
-          <div className="h-2 w-2 bg-primary rounded-full animate-bounce [animation-delay:-.5s]"></div>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -84,8 +97,8 @@ export default function TestimonialsDisplay() {
             </p>
           </div>
           <Link href="/">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="bg-primary hover:primary-hover text-primary-foreground border-gray-200"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -99,7 +112,7 @@ export default function TestimonialsDisplay() {
             No testimonials yet. Be the first to share your experience!
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -116,11 +129,15 @@ export default function TestimonialsDisplay() {
                 <div className="flex items-start space-x-4 mb-4">
                   <div className="relative flex-shrink-0">
                     <Image
-                      src={testimonial.user_image_url || "/default-avatar.png"}
+                      src={imageUrls[testimonial.id] || "/default-avatar.png"}
                       alt={testimonial.name}
                       width={48}
                       height={48}
                       className="rounded-full object-cover ring-2 ring-[#007BFF]/10"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/default-avatar.png";
+                      }}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -132,11 +149,14 @@ export default function TestimonialsDisplay() {
                     </div>
                   </div>
                   <div className="text-xs text-gray-500">
-                    {new Date(testimonial.created_at).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
+                    {new Date(testimonial.created_at).toLocaleDateString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      }
+                    )}
                   </div>
                 </div>
                 <blockquote className="mt-4 text-gray-700 text-sm leading-relaxed">
@@ -150,13 +170,3 @@ export default function TestimonialsDisplay() {
     </div>
   );
 }
-
-export const ViewReviews = () => {
-  return (
-    <Link href="/">
-      <Button variant="outline" className="bg-transparent text-white border-gray-700 hover:bg-gray-800">
-        Back to Home
-      </Button>
-    </Link>
-  );
-};

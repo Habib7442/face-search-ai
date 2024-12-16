@@ -1,6 +1,6 @@
 "use client";
 
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import type { SearchResult } from "@/types/search";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { useAppSelector } from "@/lib/redux";
 import { selectSearchResults } from "@/lib/redux/slices/searchResultsSlice";
+import { selectSelectedImages } from "@/lib/redux/slices/selectedImagesSlice";
 
 interface GPTResult {
   "Full Name": string;
@@ -20,24 +21,21 @@ interface GPTResult {
 }
 
 export default function InfoPage() {
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  // const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const selectedImages = useAppSelector(selectSelectedImages);
   const [isLoading, setIsLoading] = useState(false);
   const [gptResult, setGPTResult] = useState<GPTResult | null>(null);
   const [apiSearchResults, setApiSearchResults] = useState<SearchResult[]>([]);
 
   const searchResults = useAppSelector(selectSearchResults);
 
-  // Remove the localStorage effect since we're using Redux
-  // The searchResults will be available directly from the Redux store
 
-  const handleImageSelect = (imageUrl: string) => {
-    setSelectedImages((prev) => {
-      if (prev.includes(imageUrl)) {
-        return prev.filter((url) => url !== imageUrl);
-      }
-      return [...prev, imageUrl];
-    });
-  };
+  useEffect(() => {
+    // Automatically analyze when component mounts
+    if (selectedImages.length > 0) {
+      handleAnalyze();
+    }
+  }, []);
 
   const handleAnalyze = async () => {
     if (selectedImages.length === 0) return;
@@ -96,7 +94,7 @@ export default function InfoPage() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="poppins-semibold text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-800 to-slate-900">
+          <h1 className="poppins-semibold text-primary text-3xl font-bold">
             Deep Analysis
           </h1>
         </div>
@@ -106,7 +104,7 @@ export default function InfoPage() {
             <Button
               onClick={handleAnalyze}
               disabled={selectedImages.length === 0 || isLoading}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-2"
+              className="bg-primary text-white px-8 py-2"
             >
               {isLoading ? (
                 <>
@@ -129,7 +127,7 @@ export default function InfoPage() {
                       ? "ring-2 ring-purple-500"
                       : ""
                   }`}
-                  onClick={() => handleImageSelect(result.imageUrl)}
+                  // onClick={() => handleImageSelect(result.imageUrl)}
                   whileHover={{ scale: 1.02 }}
                 >
                   <img

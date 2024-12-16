@@ -1,57 +1,43 @@
 "use client";
 
-import { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { Star, Upload, Camera } from 'lucide-react';
+import { useState } from "react";
+import { Loader2, Star, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { RootState } from "@/lib/redux/store";
 import { toast } from "sonner";
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { motion } from "framer-motion";
+import { supabase } from "@/lib/supabase";
 
 export default function TestimonialForm() {
   const user = useAppSelector((state: RootState) => state.user);
   const [rating, setRating] = useState(0);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [customImage, setCustomImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [useInitialAvatar, setUseInitialAvatar] = useState(true);
-
-  const getSupabaseClient = () => {
-    const cookies = document.cookie.split(';');
-    const tokenCookie = cookies.find(cookie => cookie.trim().startsWith('client_token='));
-    const accessToken = tokenCookie ? tokenCookie.split('=')[1].trim() : null;
-  
-    return createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        }
-      }
-    );
-  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Validate file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should be less than 5MB");
+        return;
+      }
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please upload an image file");
+        return;
+      }
       setCustomImage(file);
-      setUseInitialAvatar(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!user.id || rating === 0) {
       toast.error("Please login and provide a rating");
       return;
@@ -60,113 +46,54 @@ export default function TestimonialForm() {
     setIsSubmitting(true);
 
     try {
-      const supabase = getSupabaseClient();
-      let imageUrl = '';
+      let imageUrl = "";
 
-      if (useInitialAvatar) {
-        // Create canvas for initial avatar
-        const canvas = document.createElement('canvas');
-        canvas.width = 200;
-        canvas.height = 200;
-        const ctx = canvas.getContext('2d');
-        
-        if (ctx) {
-          // Draw background
-          ctx.fillStyle = '#3B82F6';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          
-          // Draw initial
-          ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 100px Arial';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          const initial = (user.name || user.email || 'A').charAt(0).toUpperCase();
-          ctx.fillText(initial, canvas.width/2, canvas.height/2);
-          
-          try {
-            // Convert to blob
-            const blob = await new Promise<Blob>((resolve, reject) => {
-              canvas.toBlob((blob) => {
-                if (blob) resolve(blob);
-                else reject(new Error('Failed to create blob'));
-              }, 'image/png');
-            });
-            
-            // Upload to Supabase
-            const fileName = `avatars/${user.id}_${Date.now()}.png`;
-            const { data: uploadData, error: uploadError } = await supabase.storage
-              .from('testimonial-images')
-              .upload(fileName, blob, {
-                contentType: 'image/png',
-                cacheControl: '3600',
-                upsert: true
-              });
+      // Handle image upload if an image was selected
+      if (customImage) {
+        const fileExt = customImage.name.split(".").pop();
+        const fileName = `${user.id}_${Date.now()}.${fileExt}`;
 
-            if (uploadError) throw uploadError;
+        // First upload the file
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("testimonial-images")
+          .upload(fileName, customImage, {
+            cacheControl: "3600",
+            upsert: true,
+          });
 
-            // Get public URL
-            const { data: urlData } = supabase.storage
-              .from('testimonial-images')
-              .getPublicUrl(fileName);
+        if (uploadError) throw uploadError;
 
-            imageUrl = urlData?.publicUrl || '';
-          } catch (imageError) {
-            console.error('Image processing error:', imageError);
-            throw new Error('Failed to process avatar image');
-          }
-        }
-      } else if (customImage) {
-        try {
-          const fileExt = customImage.name.split('.').pop();
-          const fileName = `uploads/${user.id}_${Date.now()}.${fileExt}`;
-          
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('testimonial-images')
-            .upload(fileName, customImage, {
-              cacheControl: '3600',
-              upsert: true
-            });
+        // Get the public URL after successful upload
+        const { data: urlData } = supabase.storage
+          .from("testimonial-images")
+          .getPublicUrl(fileName);
 
-          if (uploadError) throw uploadError;
-
-          const { data: urlData } = supabase.storage
-            .from('testimonial-images')
-            .getPublicUrl(fileName);
-
-          imageUrl = urlData?.publicUrl || '';
-        } catch (uploadError) {
-          console.error('Upload error:', uploadError);
-          throw new Error('Failed to upload image');
-        }
+        imageUrl = fileName; // Store just the filename
       }
 
       // Insert testimonial with image URL
       const { error: insertError } = await supabase
-        .from('testimonials')
+        .from("testimonials")
         .insert({
           user_id: user.id,
-          name: user.name || 'Anonymous',
+          name: user.name || "Anonymous",
           email: user.email,
           rating: rating,
           message: message,
-          user_image_url: imageUrl
+          user_image_url: imageUrl, // This will store just the filename
         });
 
-      if (insertError) {
-        console.error('Insert error:', insertError);
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
       // Reset form
       setRating(0);
-      setMessage('');
+      setMessage("");
       setCustomImage(null);
-      setUseInitialAvatar(true);
-      
-      toast.success('Thank you for your testimonial!');
+
+      toast.success("Thank you for your testimonial!");
     } catch (error: any) {
-      console.error('Testimonial submission error:', error);
-      toast.error(error.message || 'Failed to submit testimonial. Please try again.');
+      console.error("Testimonial submission error:", error);
+      toast.error("Failed to submit testimonial. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -174,13 +101,13 @@ export default function TestimonialForm() {
 
   const renderStars = () => {
     return [1, 2, 3, 4, 5].map((starValue) => (
-      <Star 
+      <Star
         key={starValue}
         onClick={() => setRating(starValue)}
         className={`cursor-pointer transition-colors duration-200 ${
-          starValue <= rating 
-            ? 'text-yellow-400 fill-current' 
-            : 'text-neutral-600 hover:text-neutral-400'
+          starValue <= rating
+            ? "text-yellow-400 fill-current"
+            : "text-neutral-600 hover:text-neutral-400"
         }`}
         size={32}
       />
@@ -189,67 +116,92 @@ export default function TestimonialForm() {
 
   if (!user.id) {
     return (
-      <div className="w-full bg-neutral-900 rounded-xl p-8">
-        <p className="text-neutral-400 text-center">Please login to submit a testimonial.</p>
+      <div className="flex min-h-[400px] items-center justify-center">
+        <Card className="border-none shadow-none bg-transparent">
+          <CardContent className="p-8">
+            <p className="text-center text-gray-500">
+              Please login to submit a testimonial.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="w-full bg-neutral-900 rounded-xl">
-      <div className="p-8 space-y-6">
-        <h2 className="text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-          Share Your Experience
-        </h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex justify-center mb-4">
-            {renderStars()}
-          </div>
-          
-          <Textarea 
-            placeholder="Write your review..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-            className="w-full bg-neutral-800 border-neutral-700 text-neutral-200 placeholder-neutral-500 focus:ring-2 focus:ring-blue-500"
-          />
-          
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              onClick={() => setUseInitialAvatar(true)}
-              className={`flex-1 ${useInitialAvatar ? 'bg-blue-500' : 'bg-neutral-700'}`}
-            >
-              <Camera className="mr-2 h-4 w-4" />
-              Use Initial Avatar
-            </Button>
-            
-            <div className="flex-1 relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
-              <Button
-                type="button"
-                className={`w-full ${!useInitialAvatar ? 'bg-blue-500' : 'bg-neutral-700'}`}
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Image
-              </Button>
-            </div>
-          </div>
-          
-          <Button 
-            type="submit" 
-            disabled={isSubmitting || rating === 0}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50"
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}
-          </Button>
-        </form>
+    <div className="container mx-auto px-4 py-8">
+      <div className="w-full mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="w-full max-w-lg mx-auto"
+        >
+          <Card className="border bg-transparent border-neutral">
+            <CardContent className="space-y-6 mt-6 p-4">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Your Rating
+                  </label>
+                  <div className="flex justify-start gap-2">
+                    {renderStars()}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Your Review
+                  </label>
+                  <Textarea
+                    placeholder="Share your experience with us..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    required
+                    className="min-h-[120px] border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-lg resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Profile Picture (Optional)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-11 bg-accent border-none"
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      {customImage ? "Image Selected" : "Upload Image"}
+                    </Button>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || rating === 0}
+                  className="w-full h-11 bg-primary text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center">
+                      <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                      Submitting...
+                    </div>
+                  ) : (
+                    "Submit Review"
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );

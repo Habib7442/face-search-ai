@@ -17,6 +17,7 @@ import {
 import { SocialAuth } from './SocialAuth';
 import { clearUser, setUser } from "@/lib/redux/slices/userSlice";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export function SignInForm() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -66,13 +67,9 @@ export function SignInForm() {
         isVerified: data.user.isVerified
       }));
   
-      // Show success toast
       toast.success("Login successful!");
-  
-      // Redirect to upload page
       router.push("/upload");
     } catch (error: any) {
-      // Clear any partial data on error
       localStorage.removeItem('user');
       dispatch(clearUser());
       
