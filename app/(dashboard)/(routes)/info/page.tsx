@@ -90,18 +90,16 @@ export default function InfoPage() {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-slate-800/50 bg-slate-900"
+              className="p-3 rounded-full bg-primary/10 text-gray-800"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-6 w-6 text-gray-800 drop-shadow-md" />
             </Button>
           </Link>
-          <h1 className="poppins-semibold text-primary text-3xl font-bold">
-            Deep Analysis
-          </h1>
+          <h1 className="text-primary text-3xl font-bold">Deep Analysis</h1>
         </div>
 
         <GlassCard className="p-8 mb-8">
-          <div className="flex justify-center mb-8">
+          {/* <div className="flex justify-center mb-8">
             <Button
               onClick={handleAnalyze}
               disabled={selectedImages.length === 0 || isLoading}
@@ -116,7 +114,7 @@ export default function InfoPage() {
                 "Analyze Selected Images"
               )}
             </Button>
-          </div>
+          </div> */}
 
           <div className="flex mb-8">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

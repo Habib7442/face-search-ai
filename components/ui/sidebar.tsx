@@ -50,15 +50,16 @@ export const SidebarProvider = ({
 }) => {
   const [openState, setOpenState] = useState(false);
 
-  const open = openProp !== undefined ? openProp : openState;
-  const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
+  const open = openProp ?? openState; // Use `openProp` if provided, else use state
+  const setOpen = setOpenProp ?? setOpenState; // Use `setOpenProp` if provided, else use state setter
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>
+    <SidebarContext.Provider value={{ open, setOpen, animate }}>
       {children}
     </SidebarContext.Provider>
   );
 };
+
 
 export const Sidebar = ({
   children,
@@ -119,44 +120,44 @@ export const MobileSidebar = ({
   ...props
 }: React.ComponentProps<"div">) => {
   const { open, setOpen } = useSidebar();
+
   return (
-    <>
-      <div className={cn("fixed top-4 right-4 z-50 md:hidden")} {...props}>
-        <button
-          className="p-2 bg-white/30 backdrop-blur-sm rounded-lg shadow-sm"
-          onClick={() => setOpen(!open)}
-        >
-          <IconMenu2 className="text-gray-700 h-5 w-5" />
-        </button>
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "-100%", opacity: 0 }}
-              transition={{
-                duration: 0.3,
-                ease: "easeInOut",
-              }}
-              className={cn(
-                "fixed h-full w-full inset-0 bg-white/95 backdrop-blur-sm p-6 z-[100] flex flex-col",
-                className
-              )}
+    <div className={cn("fixed top-4 right-4 z-50 md:hidden")} {...props}>
+      <button
+        className="p-2 bg-white/30 backdrop-blur-sm rounded-lg shadow-sm"
+        onClick={() => setOpen(!open)} // Toggle state
+      >
+        <IconMenu2 className="text-gray-700 h-5 w-5" />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ x: "-100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "-100%", opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              ease: "easeInOut",
+            }}
+            className={cn(
+              "fixed h-full w-full inset-0 bg-white/95 backdrop-blur-sm p-6 z-[100] flex flex-col",
+              className
+            )}
+          >
+            <button
+              className="absolute right-6 top-6 z-50 p-2 bg-white/50 rounded-lg"
+              onClick={() => setOpen(false)}
             >
-              <button
-                className="absolute right-6 top-6 z-50 p-2 bg-white/50 rounded-lg"
-                onClick={() => setOpen(false)}
-              >
-                <IconX className="text-gray-700 h-5 w-5" />
-              </button>
-              {children}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </>
+              <IconX className="text-gray-700 h-5 w-5" />
+            </button>
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
+
 
 export const SidebarLink = ({
   link,

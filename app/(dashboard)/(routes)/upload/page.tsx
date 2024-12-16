@@ -274,7 +274,6 @@ export default function Upload() {
                     {selectedImages.length} images selected
                   </Badge>
                 )}
-                
               </div>
             </div>
             <SearchResults
@@ -282,13 +281,13 @@ export default function Upload() {
               onSelectResult={handleSelectResult}
             />
             <Button
-                  onClick={handleMoreInfoClick}
-                  disabled={selectedImages.length === 0}
-                  className=" bg-accent  hover:bg-[#007BFF] text-white transition-all duration-200 disabled:opacity-50"
-                >
-                  <Info className="h-4 w-4 mr-2" />
-                  Find More Info
-                </Button>
+              onClick={handleMoreInfoClick}
+              disabled={selectedImages.length === 0}
+              className=" bg-accent  hover:bg-[#007BFF] text-white transition-all duration-200 disabled:opacity-50"
+            >
+              <Info className="h-4 w-4 mr-2" />
+              Find More Info
+            </Button>
           </motion.div>
         )}
       </div>

@@ -27,29 +27,45 @@ export function MobileMenu() {
           >
             <div className="p-4 space-y-4">
               
-              <Link
+              {/* <Link
                 href="/view-reviews"
                 className="block text-gray-800 hover:text-black"
               >
                 Reviews
-              </Link>
+              </Link> */}
               <Link
                 href="/reviews"
-                className="block text-gray-800 hover:text-black"
+                className="block text-gray-800 hover:text-black underline"
               >
                 Give Review
               </Link>
+              <Link
+                href="/upload"
+                className="block text-gray-800 hover:text-black underline"
+              >
+               Dashboard
+              </Link>
+             
               
               {/* <a href="#faq" className="block text-gray-800 hover:text-black">
                 FAQ
               </a> */}
-              <Link href="/payment">
+              <Link href="/auth">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 mt-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium"
+                  className="px-4 py-2 mt-4 rounded-full bg-primary text-white text-sm font-medium"
                 >
-                  Buy Plan
+                  Sign In
+                </motion.button>
+              </Link>
+              <Link href="/https://play.google.com/store/apps/details?id=com.facesearch.app&hl=en_IN">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 mt-4 ml-2 rounded-full bg-accent text-white text-sm font-medium"
+                >
+                  Download App
                 </motion.button>
               </Link>
             </div>

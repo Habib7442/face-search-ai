@@ -10,9 +10,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const links = [
-  { href: "/view-reviews", label: "Reviews" },
   { href: "/reviews", label: "Give Review" },
   { href: "/upload", label: "Dashboard" },
+  { href: "/https://play.google.com/store/apps/details?id=com.facesearch.app&hl=en_IN", label: "Download app" },
   // { href: "#faq", label: "FAQ" },
 ];
 
@@ -69,6 +69,7 @@ export function NavLinks() {
           Buy Plan
         </motion.button>
       </Link>
+      
 
       <div className="flex items-center space-x-4">
         {user.id ? (
