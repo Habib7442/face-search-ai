@@ -33,10 +33,16 @@ export function MobileMenu() {
               >
                 Reviews
               </Link>
+              <Link
+                href="/reviews"
+                className="block text-gray-800 hover:text-black"
+              >
+                Give Review
+              </Link>
               
-              <a href="#faq" className="block text-gray-800 hover:text-black">
+              {/* <a href="#faq" className="block text-gray-800 hover:text-black">
                 FAQ
-              </a>
+              </a> */}
               <Link href="/payment">
                 <motion.button
                   whileHover={{ scale: 1.05 }}

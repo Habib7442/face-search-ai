@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -26,6 +27,7 @@ export function AuthLayout({
         {/* Content container */}
         <div className="relative flex h-full min-h-[400px] flex-col items-center justify-center px-8">
           <div className="absolute top-8 left-8">
+            <Link href="/">
             <Image
               src="/logo-facesearch.svg"
               alt="Logo"
@@ -33,6 +35,7 @@ export function AuthLayout({
               height={40}
               className="object-contain"
             />
+            </Link>
           </div>
 
           <motion.div

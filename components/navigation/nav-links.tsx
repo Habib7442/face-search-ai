@@ -11,8 +11,9 @@ import { useEffect, useState } from 'react';
 
 const links = [
   { href: "/view-reviews", label: "Reviews" },
-  // { href: "/reviews", label: "Give Reviews" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/reviews", label: "Give Review" },
+  { href: "/upload", label: "Dashboard" },
+  // { href: "#faq", label: "FAQ" },
 ];
 
 export function NavLinks() {

@@ -274,20 +274,21 @@ export default function Upload() {
                     {selectedImages.length} images selected
                   </Badge>
                 )}
-                <Button
-                  onClick={handleMoreInfoClick}
-                  disabled={selectedImages.length === 0}
-                  className="bg-[#F0F4FA] text-gray-700 hover:bg-[#007BFF] hover:text-white transition-all duration-200 disabled:opacity-50"
-                >
-                  <Info className="h-4 w-4 mr-2" />
-                  Find More Info
-                </Button>
+                
               </div>
             </div>
             <SearchResults
               results={reduxSearchResults}
               onSelectResult={handleSelectResult}
             />
+            <Button
+                  onClick={handleMoreInfoClick}
+                  disabled={selectedImages.length === 0}
+                  className=" bg-accent  hover:bg-[#007BFF] text-white transition-all duration-200 disabled:opacity-50"
+                >
+                  <Info className="h-4 w-4 mr-2" />
+                  Find More Info
+                </Button>
           </motion.div>
         )}
       </div>

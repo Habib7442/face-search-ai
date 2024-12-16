@@ -3,9 +3,7 @@
 import { useEffect, useState } from "react";
 import { HistoryResponse } from "@/types/types";
 import { HistoryCard } from "@/components/HistoryCard";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, History } from "lucide-react";
-import Link from "next/link";
+import {  History } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -83,21 +81,21 @@ export default function HistoryPage() {
   return (
     <main className="min-h-screen  text-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link href="/">
+        {/* <Link href="/">
           <Button
             variant="outline"
             className="mb-8 text-gray-300 hover:text-white"
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
           </Button>
-        </Link>
+        </Link> */}
 
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-4">
             <div className="p-3 rounded-full bg-primary/10 text-gray-800">
               <History className="h-6 w-6 text-gray-800 drop-shadow-md" />
             </div>
-            <h1 className="poppins-semibold text-3xl font-bold text-gray-800">
+            <h1 className="poppins-semibold text-3xl font-bold text-primary">
               Search History
             </h1>
           </div>
