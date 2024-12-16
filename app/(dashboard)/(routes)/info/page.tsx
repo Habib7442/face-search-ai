@@ -1,6 +1,6 @@
 "use client";
 
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,6 @@ export default function InfoPage() {
   const [apiSearchResults, setApiSearchResults] = useState<SearchResult[]>([]);
 
   const searchResults = useAppSelector(selectSearchResults);
-
 
   useEffect(() => {
     // Automatically analyze when component mounts
@@ -69,7 +68,9 @@ export default function InfoPage() {
     return (
       <div className="min-h-screen flex items-center justify-center text-slate-200 py-8 px-4">
         <GlassCard className="p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">No Search Results Available</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            No Search Results Available
+          </h2>
           <p className="mb-6">Please perform a search first to see results.</p>
           <Link href="/upload">
             <Button className="bg-purple-600 hover:bg-purple-700 text-white">
@@ -127,7 +128,6 @@ export default function InfoPage() {
                       ? "ring-2 ring-purple-500"
                       : ""
                   }`}
-                  // onClick={() => handleImageSelect(result.imageUrl)}
                   whileHover={{ scale: 1.02 }}
                 >
                   <img
@@ -174,57 +174,62 @@ export default function InfoPage() {
             </div>
           )}
 
-{gptResult && (
-  <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
-    {/* Header */}
-    <h2 className="text-2xl font-bold text-gray-800">
-      Analysis Results
-    </h2>
+          {gptResult && (
+            <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+              {/* Header */}
+              <h2 className="text-2xl font-bold text-gray-800">
+                Analysis Results
+              </h2>
 
-    {/* Full Name */}
-    <div>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">Full Name</h3>
-      <p className="text-gray-600">{gptResult["Full Name"]}</p>
-    </div>
+              {/* Full Name */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Full Name
+                </h3>
+                <p className="text-gray-600">{gptResult["Full Name"]}</p>
+              </div>
 
-    {/* Confidential Analysis Score */}
-    <div>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">
-        Confidential Analysis Score
-      </h3>
-      <p className="text-gray-600">{gptResult["Confidential Analysis Score"]}</p>
-    </div>
+              {/* Confidential Analysis Score */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Confidential Analysis Score
+                </h3>
+                <p className="text-gray-600">
+                  {gptResult["Confidential Analysis Score"]}
+                </p>
+              </div>
 
-    {/* Topics */}
-    <div>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">Topics</h3>
-      <ul className="list-disc pl-5 text-gray-600">
-        {gptResult.Topics.map((topic, index) => (
-          <li key={index}>{topic}</li>
-        ))}
-      </ul>
-    </div>
+              {/* Topics */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  Topics
+                </h3>
+                <ul className="list-disc pl-5 text-gray-600">
+                  {gptResult.Topics.map((topic, index) => (
+                    <li key={index}>{topic}</li>
+                  ))}
+                </ul>
+              </div>
 
-    {/* More Information */}
-    <div>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">
-        More Information
-      </h3>
-      <p className="text-gray-600">{gptResult["More Information"]}</p>
-    </div>
+              {/* More Information */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  More Information
+                </h3>
+                <p className="text-gray-600">{gptResult["More Information"]}</p>
+              </div>
 
-    {/* AI Generated Poem */}
-    <div>
-      <h3 className="text-xl font-semibold text-gray-700 mb-2">
-        AI Generated Poem
-      </h3>
-      <pre className="whitespace-pre-wrap text-gray-600 bg-gray-100 p-4 rounded-lg">
-        {gptResult["Poem"]}
-      </pre>
-    </div>
-  </div>
-)}
-
+              {/* AI Generated Poem */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  AI Generated Poem
+                </h3>
+                <pre className="whitespace-pre-wrap text-gray-600 bg-gray-100 p-4 rounded-lg">
+                  {gptResult["Poem"]}
+                </pre>
+              </div>
+            </div>
+          )}
         </GlassCard>
       </div>
     </div>
