@@ -51,9 +51,9 @@ export function SignInForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-full flex items-center justify-center pt-8 lg:pt-0 md:pt-0">
       <Card className="w-full bg-gradient-to-b from-[#e8f3ff] to-white max-w-sm border border-gray-100 shadow-md">
-        <CardHeader className="space-y-1 px-8 pt-8">
+        <CardHeader className="space-y-1 px-8 py-4">
           <div className="p-4 rounded-full bg-[#007BFF]/10 mx-auto mb-3">
             <LogInIcon className="h-6 w-6 text-primary" />
           </div>
@@ -72,7 +72,7 @@ export function SignInForm() {
                 name="email"
                 type="email"
                 placeholder="name@example.com"
-                className="h-10 border-none"
+                className="h-10 border-none text-black"
                 value={form.email}
                 onChange={handleInputChange}
                 required
