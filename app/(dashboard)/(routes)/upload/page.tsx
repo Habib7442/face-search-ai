@@ -57,7 +57,7 @@ export default function Upload() {
   
       if (!accessToken) {
         toast.error("Please login to search images");
-        router.push("/auth");
+        router.push("/sign-in");
         return;
       }
   
@@ -83,7 +83,7 @@ export default function Upload() {
   
       if (response.status === 401) {
         toast.error("Session expired. Please login again");
-        router.push("/auth");
+        router.push("/sign-in");
         return;
       }
   

@@ -62,7 +62,7 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
       if (!accessToken) {
         toast.error("Please login to search images");
         onClose();
-        router.push('/auth');
+        router.push('/sign-in');
         return;
       }
   

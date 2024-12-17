@@ -26,7 +26,7 @@ export function SidebarDemo() {
     document.cookie =
       "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     localStorage.removeItem("user");
-    router.push("/auth");
+    router.push("/sign-in");
   };
 
   const links = [

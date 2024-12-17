@@ -25,7 +25,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           position: "top-right",
           duration: 3000,
         });
-        router.push("/auth");
+        router.push("/sign-in");
       }
     }
   }, [user, router, mounted]);

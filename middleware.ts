@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     
     if (!token) {
       // Redirect to login if no token is found
-      return NextResponse.redirect(new URL('/auth', request.url))
+      return NextResponse.redirect(new URL('/sign-in', request.url))
     }
   }
   
