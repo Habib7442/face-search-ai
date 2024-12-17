@@ -47,9 +47,9 @@ const HeroSection = () => {
 
   return (
     <section className="text-gray-800">
-      <div className="lg:px-28 lg:py-3">
+      {/* <div className="lg:px-28 lg:py-3">
         <Navbar />
-      </div>
+      </div> */}
 
       <div className="container mx-auto px-6 py-16 text-center">
         {/* Hero Heading with animation */}

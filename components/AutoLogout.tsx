@@ -21,7 +21,7 @@ export function AutoLogout() {
       if (!tokenCookie) {
         // Token is gone, perform logout
         dispatch(clearUser());
-        router.push('/auth');
+        router.push('/sign-in');
         toast.error('Session expired. Please login again.');
       }
     };

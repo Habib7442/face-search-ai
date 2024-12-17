@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Loader2, Search, Info, ImageIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
@@ -47,22 +47,20 @@ export default function Upload() {
     try {
       setIsLoading(true);
       setIsSearchCompleted(false);
-
+  
       // Get access token from cookies
       const cookies = document.cookie.split(";");
       const tokenCookie = cookies.find((cookie) =>
         cookie.trim().startsWith("client_token=")
       );
       const accessToken = tokenCookie ? tokenCookie.split("=")[1].trim() : null;
-
-      console.log(accessToken);
-
+  
       if (!accessToken) {
         toast.error("Please login to search images");
         router.push("/auth");
         return;
       }
-
+  
       const base64Image = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -70,7 +68,7 @@ export default function Upload() {
           resolve(reader.result as string);
         };
       });
-
+  
       const response = await fetch("/api/search", {
         method: "POST",
         headers: {
@@ -82,21 +80,19 @@ export default function Upload() {
           adultFilter: filterEnabled,
         }),
       });
-
+  
       if (response.status === 401) {
         toast.error("Session expired. Please login again");
         router.push("/auth");
         return;
       }
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
       if (data.results && Array.isArray(data.results)) {
-        setResultImage(data.results[0]?.imageUrl || null);
-        setImageSourceUrl(data.results[0]?.sourceUrl || null);
         dispatch(setSearchResults(data.results));
       }
     } catch (error) {
@@ -107,6 +103,12 @@ export default function Upload() {
       setIsSearchCompleted(true);
     }
   };
+
+  useEffect(() => {
+    if (selectedImage && isSearchCompleted) {
+      handleImageUpload(selectedImage, adultContentFilter);
+    }
+  }, [adultContentFilter]);
 
   // Handle image selection from search results
   const handleSelectResult = useCallback(
@@ -204,55 +206,39 @@ export default function Upload() {
           </div>
 
           <AnimatePresence mode="wait">
-            {(selectedImage || resultImage || uploadedImage) && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="grid md:grid-cols-2 gap-8 mt-8"
-              >
-                {(selectedImage || uploadedImage) && (
-                  <div className="relative rounded-xl overflow-hidden">
-                    <Badge className="absolute top-4 left-4 bg-[#007BFF] text-white">
-                      Uploaded Image
-                    </Badge>
-                    <ImagePreview
-                      src={
-                        selectedImage
-                          ? URL.createObjectURL(selectedImage)
-                          : uploadedImage || ""
-                      }
-                      alt="Uploaded preview"
-                      title="Uploaded Image"
-                    />
-                  </div>
-                )}
+  {(selectedImage || uploadedImage) && (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="mt-8"
+    >
+      <div className="relative rounded-xl overflow-hidden mx-auto w-full max-w-[400px] h-[400px]">
+        <Badge className="absolute top-4 left-4 bg-[#007BFF] text-white">
+          Uploaded Image
+        </Badge>
+        <ImagePreview
+          src={
+            selectedImage
+              ? URL.createObjectURL(selectedImage)
+              : uploadedImage || ""
+          }
+          alt="Uploaded preview"
+          title="Uploaded Image"
+        />
+      </div>
 
-                {isLoading ? (
-                  <div className="bg-white/80 rounded-xl shadow-lg p-8 flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
-                      <Loader2 className="h-8 w-8 animate-spin text-[#007BFF]" />
-                      <p className="text-gray-600">Analyzing image...</p>
-                    </div>
-                  </div>
-                ) : (
-                  resultImage && (
-                    <div className="relative rounded-xl overflow-hidden">
-                      <Badge className="absolute top-4 left-4 bg-[#FF8C00] text-white">
-                        Result Image
-                      </Badge>
-                      <ImagePreview
-                        src={resultImage}
-                        alt="Result preview"
-                        title="Selected Result"
-                        sourceUrl={imageSourceUrl || undefined}
-                      />
-                    </div>
-                  )
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+      {isLoading && (
+        <div className="bg-white/80 rounded-xl shadow-lg p-8 flex items-center justify-center mt-4">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-[#007BFF]" />
+            <p className="text-gray-600">Analyzing image...</p>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  )}
+</AnimatePresence>
         </GlassCard>
 
         {reduxSearchResults.length > 0 && (
