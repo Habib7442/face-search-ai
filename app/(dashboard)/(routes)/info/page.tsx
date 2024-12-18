@@ -83,86 +83,90 @@ export default function InfoPage() {
   }
 
   return (
-    <div className="min-h-screen  text-slate-200 py-8 px-4 md:py-12 md:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8 px-4 md:py-12 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-6 mb-10"
+        >
           <Link href="/upload">
             <Button
               variant="ghost"
               size="icon"
-              className="p-3 rounded-full bg-primary/10 text-gray-800"
+              className="p-4 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <ArrowLeft className="h-6 w-6 text-gray-800 drop-shadow-md" />
+              <ArrowLeft className="h-6 w-6 text-blue-600" />
             </Button>
           </Link>
-          <h1 className="text-primary text-3xl font-bold">Deep Analysis</h1>
-        </div>
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Deep Analysis
+            </h1>
+            <p className="text-gray-600 mt-1">Detailed insights from your selected images</p>
+          </div>
+        </motion.div>
 
-        <GlassCard className="p-8 mb-8">
-          {/* <div className="flex justify-center mb-8">
-            <Button
-              onClick={handleAnalyze}
-              disabled={selectedImages.length === 0 || isLoading}
-              className="bg-primary text-white px-8 py-2"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Analyzing Selected Images...
-                </>
-              ) : (
-                "Analyze Selected Images"
-              )}
-            </Button>
-          </div> */}
-
-          <div className="flex mb-8">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100/50 p-8"
+        >
+          {/* Selected Images Grid */}
+          <div className="mb-10">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Selected Images</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {searchResults.map((result, index) => (
                 <motion.div
                   key={index}
-                  className={`relative cursor-pointer rounded-lg overflow-hidden ${
+                  className={`relative group rounded-2xl overflow-hidden shadow-lg ${
                     selectedImages.includes(result.imageUrl)
-                      ? "ring-2 ring-purple-500"
+                      ? "ring-4 ring-blue-500 ring-offset-2"
                       : ""
                   }`}
                   whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <img
                     src={result.imageUrl}
                     alt={`Result ${index + 1}`}
-                    className="w-full h-32 object-cover"
+                    className="w-full h-40 object-cover"
                   />
                   <div
-                    className={`absolute inset-0 bg-purple-500/20 transition-opacity ${
+                    className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity ${
                       selectedImages.includes(result.imageUrl)
                         ? "opacity-100"
-                        : "opacity-0"
+                        : "opacity-0 group-hover:opacity-100"
                     }`}
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-1 text-white text-xs">
-                    Source: {result.sourceUrl}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white text-sm font-medium">
+                    {result.sourceUrl}
                   </div>
                 </motion.div>
               ))}
             </div>
           </div>
 
+          {/* API Search Results */}
           {apiSearchResults.length > 0 && (
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
+            <div className="mb-10">
+              <h2 className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">
                 Search Results
               </h2>
-              <BentoGrid>
+              <BentoGrid className="gap-6">
                 {apiSearchResults.map((result, index) => (
                   <BentoGridItem
                     key={index}
+                    className="bg-gray-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
                     header={
-                      <img
-                        src={result.imageUrl}
-                        alt={`Search Result ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                      <div className="aspect-video overflow-hidden">
+                        <img
+                          src={result.imageUrl}
+                          alt={`Search Result ${index + 1}`}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
                     }
                     title={`Source: ${result.sourceUrl}`}
                     description={`Group: ${result.group}`}
@@ -172,63 +176,67 @@ export default function InfoPage() {
             </div>
           )}
 
+          {/* GPT Analysis Results */}
           {gptResult && (
-            <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
-              {/* Header */}
-              <h2 className="text-2xl font-bold text-gray-800">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-8 bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-lg"
+            >
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Analysis Results
               </h2>
 
               {/* Full Name */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   Full Name
                 </h3>
-                <p className="text-gray-600">{gptResult["Full Name"]}</p>
+                <p className="text-gray-700">{gptResult["Full Name"]}</p>
               </div>
 
-              {/* Confidential Analysis Score */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              {/* Confidential Score */}
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   Confidential Analysis Score
                 </h3>
-                <p className="text-gray-600">
-                  {gptResult["Confidential Analysis Score"]}
-                </p>
+                <p className="text-gray-700">{gptResult["Confidential Analysis Score"]}</p>
               </div>
 
               {/* Topics */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   Topics
                 </h3>
-                <ul className="list-disc pl-5 text-gray-600">
+                <div className="flex flex-wrap gap-2">
                   {gptResult.Topics.map((topic, index) => (
-                    <li key={index}>{topic}</li>
+                    <span key={index} className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">
+                      {topic}
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
 
               {/* More Information */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   More Information
                 </h3>
-                <p className="text-gray-600">{gptResult["More Information"]}</p>
+                <p className="text-gray-700 leading-relaxed">{gptResult["More Information"]}</p>
               </div>
 
               {/* AI Generated Poem */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              <div className="bg-white p-6 rounded-xl shadow-md">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   AI Generated Poem
                 </h3>
-                <pre className="whitespace-pre-wrap text-gray-600 bg-gray-100 p-4 rounded-lg">
+                <pre className="whitespace-pre-wrap text-gray-700 bg-gray-50 p-6 rounded-xl font-serif italic">
                   {gptResult["Poem"]}
                 </pre>
               </div>
-            </div>
+            </motion.div>
           )}
-        </GlassCard>
+        </motion.div>
       </div>
     </div>
   );

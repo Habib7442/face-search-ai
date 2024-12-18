@@ -21,10 +21,8 @@ export function SidebarDemo() {
 
   const handleLogout = () => {
     dispatch(clearUser());
-    document.cookie =
-      "client_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "client_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     localStorage.removeItem("user");
     router.push("/sign-in");
   };
@@ -33,71 +31,60 @@ export function SidebarDemo() {
     {
       label: "Home",
       href: "/",
-      icon: <HomeIcon className="h-5 w-5 flex-shrink-0" />,
+      icon: <HomeIcon className="h-5 w-5 text-slate-600" />,
     },
     {
       label: "Dashboard",
       href: "/upload",
-      icon: <IconBrandTabler className="h-5 w-5 flex-shrink-0" />,
+      icon: <IconBrandTabler className="h-5 w-5 text-slate-600" />,
     },
     {
       label: "Reviews",
       href: "/reviews",
-      icon: <NotebookIcon className="h-5 w-5 flex-shrink-0" />,
+      icon: <NotebookIcon className="h-5 w-5 text-slate-600" />,
     },
     {
       label: "History",
       href: "/history",
-      icon: <HistoryIcon className="h-5 w-5 flex-shrink-0" />,
+      icon: <HistoryIcon className="h-5 w-5 text-slate-600" />,
     },
     {
       label: "Logout",
       href: "#",
-      icon: <IconLogout className="h-5 w-5 flex-shrink-0" />,
+      icon: <IconLogout className="h-5 w-5 text-red-500" />,
       onClick: handleLogout,
     },
   ];
 
   return (
-    <div
-      className={cn(
-        "flex flex-col md:flex-row w-full flex-1 max-w-7xl mx-auto overflow-hidden h-full",
-        "bg-gradient-to-b from-lightBlue to-white"
-      )}
-    >
+    <div className="h-screen bg-gradient-to-b from-slate-50/50 to-white/50">
       <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <div className="mb-8">{open ? <Logo /> : <LogoIcon />}</div>
+        <SidebarBody className="flex flex-col h-screen">
+          <div className="flex flex-col flex-1">
+            <div className="mb-8 px-3">{open ? <Logo /> : <LogoIcon />}</div>
 
-            <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               {links.map((link, idx) => {
-                const isActive =
-                  link.href === "#" ? false : pathname === link.href;
+                const isActive = link.href === "#" ? false : pathname === link.href;
                 return (
                   <SidebarLink
                     key={idx}
                     link={link}
                     className={cn(
-                      "transition-all duration-200 rounded-lg py-2",
-                      "hover:bg-blue-50",
-                      link.label === "Logout"
-                        ? "text-red-500 hover:bg-red-50"
-                        : "text-gray-700",
-                      isActive && "bg-blue-100 text-blue-600 font-medium"
+                      link.label === "Logout" && "text-red-500 hover:bg-red-50",
+                      isActive && "bg-indigo-50 text-indigo-600"
                     )}
-                    onClick={link.onClick}
                   />
                 );
               })}
             </div>
           </div>
 
-          <div className="mt-auto">
-            {user.id && (
-              <div className=" bg-white/40 backdrop-blur-sm rounded-full shadow-sm">
+          {user.id && (
+            <div className="mt-auto pt-8">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200/50">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-medium">
                     {user.name
                       ? user.name.charAt(0).toUpperCase()
                       : user.email?.charAt(0).toUpperCase()}
@@ -108,18 +95,18 @@ export function SidebarDemo() {
                       animate={{ opacity: 1 }}
                       className="flex flex-col"
                     >
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-slate-900">
                         {user.name || "User"}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-slate-500">
                         {user.email}
                       </span>
                     </motion.div>
                   )}
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </SidebarBody>
       </Sidebar>
     </div>
@@ -129,21 +116,18 @@ export function SidebarDemo() {
 // Logo components remain the same
 export const Logo = () => {
   return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative"
-    >
+    <Link href="/" className="flex items-center gap-3">
       <Image
         src="/logo-facesearch.svg"
         alt="FaceSearch AI Logo"
         width={40}
         height={40}
-        className="object-contain rounded-lg"
+        className="object-contain"
       />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-bold text-black  whitespace-pre"
+        className="font-bold text-slate-900"
       >
         FaceSearch AI
       </motion.span>
@@ -153,16 +137,13 @@ export const Logo = () => {
 
 export const LogoIcon = () => {
   return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative"
-    >
+    <Link href="/" className="inline-block">
       <Image
         src="/logo-facesearch.svg"
         alt="FaceSearch AI Logo"
         width={40}
         height={40}
-        className="object-contain rounded-lg"
+        className="object-contain"
       />
     </Link>
   );

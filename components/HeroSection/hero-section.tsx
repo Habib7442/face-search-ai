@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ImageIcon, Star } from "lucide-react";
+import { ImageIcon, Star, Shield, Search, Upload } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
 import Image from "next/image";
-
 import { motion } from "framer-motion";
-import Navbar from "../navigation/Navbar";
 import Balancer from "react-wrap-balancer";
 import imageData from "@/lib/images";
 import { features } from "@/lib/data/data";
@@ -15,131 +13,156 @@ import { setUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 
 const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 
-  const handleDirectUpload = () => {
-    // Programmatically click the hidden file input
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Read the file and convert to base64
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    handleFile(file);
+  };
+
+  const handleFile = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        // Dispatch the uploaded image to Redux
         dispatch(setUploadedImage(e.target?.result as string));
-        
-        // Open the dialog
         setDialogOpen(true);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) handleFile(file);
   };
 
   return (
-    <section className="text-gray-800">
-      {/* <div className="lg:px-28 lg:py-3">
-        <Navbar />
-      </div> */}
-
-      <div className="container mx-auto px-6 py-16 text-center">
-        {/* Hero Heading with animation */}
-        <motion.h1
-          className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, type: "spring", stiffness: 50 }}
-        >
-          <Balancer>
-            Face Search Made{" "}
-            <span className="relative text-primary drop-shadow-xl">
-              Flexible
-              <span className="absolute bottom-[-2px] left-0 h-2 w-full bg-purple-400" />
-            </span>{" "}
-            <br className="lg:block hidden" />
-            Use Credits, Unlock Potential
-          </Balancer>
-        </motion.h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
-          FaceSearch AI delivers premium facial recognition services within
-          budget constraints, ensuring accessibility for everyone.
-        </p>
-
-        {/* Call-to-Action */}
-        <div className="mt-8 w-full flex justify-center items-center">
-          <button
-            onClick={handleDirectUpload}
-            className="px-8 py-3 bg-primary hover:primary-hover text-white font-bold rounded-lg shadow-md hover:from-[#818cf8] hover:to-[#a5b4fc] hover:shadow-lg transition duration-300 ease-in-out flex items-center drop-shadow-xl"
-          >
-            Upload Image
-            <ImageIcon className="ml-2 text-accent-foreground" />
-          </button>
-          {/* Hidden file input */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            accept="image/*"
-            onChange={handleFileSelect}
-          />
+    <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+      <div className="container mx-auto px-6 py-24 text-center relative">
+        {/* Background Elements */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
+          <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+          <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
         </div>
 
-        <div className="flex items-center justify-center gap-4 mt-8">
-          <div className="flex -space-x-2">
-            {imageData.testImages.map((data) => (
-              <div
-                key={data.id}
-                className="w-8 h-8 rounded-full bg-gray-800 border-2 border-black overflow-hidden"
-              >
-                <Image
-                  width={100}
-                  height={100}
-                  src={data.image}
-                  alt="test-images"
-                  className="object-cover w-full h-full"
-                />
+        {/* Main Content */}
+        <div className="max-w-5xl mx-auto">
+          {/* Hero Text */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-16"
+          >
+            <h1 className="text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl mb-6">
+              <Balancer>
+                Advanced Facial Recognition
+                <span className="block mt-2 bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                  Made Simple & Secure
+                </span>
+              </Balancer>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+              Upload an image to instantly search and find similar faces across our secure database. 
+              Enterprise-grade facial recognition, now accessible to everyone.
+            </p>
+          </motion.div>
+
+          {/* Upload Area */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-16"
+          >
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              className={`
+                max-w-3xl mx-auto p-8 rounded-2xl border-2 border-dashed transition-all
+                ${isDragging 
+                  ? 'border-indigo-400 bg-indigo-50/50' 
+                  : 'border-slate-200 bg-white/50 hover:border-indigo-200 hover:bg-slate-50/50'
+                }
+                backdrop-blur-sm shadow-lg
+              `}
+            >
+              <div className="flex flex-col items-center gap-4">
+                <div className="p-4 rounded-full bg-indigo-50">
+                  <Upload className="w-8 h-8 text-indigo-600" />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    Drop your image here or
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-indigo-600 hover:text-indigo-700 mx-2"
+                    >
+                      browse
+                    </button>
+                  </h3>
+                  <p className="text-sm text-slate-500 mt-1">
+                    Supports JPG, PNG, WEBP up to 10MB
+                  </p>
+                </div>
               </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileSelect}
+              />
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="flex items-center justify-center gap-8 mt-8">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-600" />
+                <span className="text-sm text-slate-600">End-to-end encrypted</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Search className="w-5 h-5 text-indigo-600" />
+                <span className="text-sm text-slate-600">99.9% accuracy rate</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+              >
+                <div className="mb-2 text-indigo-600 flex justify-center">{feature.icon}</div>
+                <h3 className="text-lg font-semibold mb-2 text-slate-900">{feature.title}</h3>
+                <p className="text-slate-600 text-sm">{feature.description}</p>
+              </motion.div>
             ))}
           </div>
-          <div className="flex items-center gap-1">
-            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-          </div>
-          <span className="text-sm text-gray-300 flex justify-center items-center gap-5"></span>
-        </div>
-
-        {/* Info Boxes */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature) => (
-            <motion.div
-              key={feature.id}
-              className={`${feature.bgColor} p-6 rounded-lg shadow flex flex-col items-center text-center`}
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, type: "spring", stiffness: 50 }}
-            >
-              {feature.icon}
-              <h3 className="text-md font-bold mb-2">{feature.title}</h3>
-              <p className="text-sm text-gray-600">{feature.description}</p>
-            </motion.div>
-          ))}
         </div>
       </div>
 
-      {/* DialogModal */}
-      <ImageUpload open={isDialogOpen} onClose={handleDialogClose} />
+      <ImageUpload open={isDialogOpen} onClose={() => setDialogOpen(false)} />
     </section>
   );
 };

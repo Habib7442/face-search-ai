@@ -14,6 +14,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        slate: {
+          50: '#f8fafc',
+          // ... other slate colors
+        },
+        indigo: {
+          50: '#eef2ff',
+          // ... other indigo colors
+        },
+        violet: {
+          50: '#f5f3ff',
+          // ... other violet colors
+        },
         lightBlue: "#dfeeff",
         white: "#ffffff",
         backgroundImage: {
@@ -88,11 +100,26 @@ export default {
         spotlight: "spotlight 2s ease .75s 1 forwards",
         scroll:
           "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        blob: 'blob 7s infinite',
       },
       keyframes: {
         scroll: {
           to: {
             transform: "translate(calc(-50% - 0.5rem))",
+          },
+        },
+        blob: {
+          '0%': {
+            transform: 'translate(0px, 0px) scale(1)',
+          },
+          '33%': {
+            transform: 'translate(30px, -50px) scale(1.1)',
+          },
+          '66%': {
+            transform: 'translate(-20px, 20px) scale(0.9)',
+          },
+          '100%': {
+            transform: 'translate(0px, 0px) scale(1)',
           },
         },
       },

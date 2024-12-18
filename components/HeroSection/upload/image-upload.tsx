@@ -15,6 +15,7 @@ import { setUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 import { RootState, useAppSelector } from "@/lib/redux";
 import { ScanningAnimation } from "./scanning-animation";
 import { ProgressIndicator } from "./progress-indicator";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageUploadProps {
   open: boolean;
@@ -113,37 +114,80 @@ const ImageUpload = ({ open, onClose }: ImageUploadProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl p-6 bg-gradient-to-b from-[#ccf4e6] to-white">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-gray-800">
-            Upload Your Image
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-4xl p-0 bg-gradient-to-b from-slate-50/50 to-white/50 overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
+          <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+          <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
+        </div>
 
-        <div className="mt-6 space-y-6 relative">
-          <div className="relative h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 hover:border-blue-500 transition-colors">
-            {!uploadedImage ? (
-              <div className="text-center p-4">
-                <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <p className="text-gray-500">
-                  No image uploaded
-                </p>
-              </div>
-            ) : (
-              <div className="relative h-full w-full">
-                <Image
-                  src={uploadedImage}
-                  alt="Uploaded preview"
-                  layout="fill"
-                  objectFit="contain"
-                  className="rounded-lg"
-                />
-                {isUploading && <ScanningAnimation />}
-              </div>
+        <div className="p-8">
+          <DialogHeader>
+            <DialogTitle className="text-3xl font-bold text-slate-900 text-center">
+              Upload Your Image
+            </DialogTitle>
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-slate-600 text-center mt-2"
+            >
+              We'll analyze your image and find similar faces
+            </motion.p>
+          </DialogHeader>
+
+          <div className="mt-8 space-y-6 relative">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="relative h-80 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center bg-white/50 backdrop-blur-sm hover:border-indigo-400 transition-colors"
+            >
+              <AnimatePresence mode="wait">
+                {!uploadedImage ? (
+                  <motion.div
+                    key="placeholder"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center p-8"
+                  >
+                    <div className="bg-indigo-50 rounded-full p-4 inline-block mb-4">
+                      <ImageIcon className="h-8 w-8 text-indigo-600" />
+                    </div>
+                    <p className="text-slate-600">
+                      Processing your image...
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="preview"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="relative h-full w-full"
+                  >
+                    <Image
+                      src={uploadedImage}
+                      alt="Uploaded preview"
+                      layout="fill"
+                      objectFit="contain"
+                      className="rounded-xl"
+                    />
+                    {isUploading && <ScanningAnimation />}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            {uploadedImage && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <ProgressIndicator progress={progress} />
+              </motion.div>
             )}
           </div>
-
-          {uploadedImage && <ProgressIndicator progress={progress} />}
         </div>
       </DialogContent>
     </Dialog>

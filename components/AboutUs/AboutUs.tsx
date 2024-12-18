@@ -1,337 +1,144 @@
 "use client";
+
 import { motion } from "framer-motion";
-import { Card, CardHeader } from "@/components/ui/card";
-import imageData from "@/lib/images";
 import Image from "next/image";
-import Balancer from "react-wrap-balancer";
-// import {
-//   VerticalTimeline,
-//   VerticalTimelineElement,
-// } from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
-// import { Target, Globe, ImageIcon, Search, Upload, Shield } from "lucide-react";
+import { Users, Shield, Target, Award } from "lucide-react";
 
-const AboutUs = () => {
+const stats = [
+  { 
+    icon: <Users className="w-6 h-6" />,
+    value: "10M+", 
+    label: "Active Users" 
+  },
+  { 
+    icon: <Shield className="w-6 h-6" />,
+    value: "99.9%", 
+    label: "Security Score" 
+  },
+  { 
+    icon: <Target className="w-6 h-6" />,
+    value: "95%", 
+    label: "Accuracy Rate" 
+  },
+  { 
+    icon: <Award className="w-6 h-6" />,
+    value: "#1", 
+    label: "Rated Platform" 
+  },
+];
+
+const features = [
+  {
+    title: "Advanced AI Technology",
+    description: "Our cutting-edge facial recognition algorithms provide unmatched accuracy and speed in identifying and matching faces.",
+  },
+  {
+    title: "Privacy First",
+    description: "We prioritize user privacy with end-to-end encryption and strict data protection protocols that exceed industry standards.",
+  },
+  {
+    title: "Global Database",
+    description: "Access to an extensive, constantly updated database of images while maintaining complete compliance with privacy regulations.",
+  },
+];
+
+export default function AboutUs() {
   return (
-    <div className="min-h-full">
-      {/* Header Section */}
-      <motion.div
-        className="text-center py-12 lg:h-[300px] md:h-[220px] text-black bg-secondary relative"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <h1 className="text-4xl md:text-5xl font-bold">About Us</h1>
-          <p className="mt-4 text-lg">
-        <Balancer>
-            At FaceSearchAI, we are transforming how the world interacts with
-            facial recognition.
-        </Balancer>
-          </p>
-        {/* Cards Section */}
-        <div className="container mx-auto px-6 md:px-12 py-8">
-          <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          >
-            {imageData.aboutUsImages.map((item) => (
-              <Card
-                key={item.id}
-                className="shadow-lg hover:shadow-xl bg-transparent border-none p-1"
-              >
-                <CardHeader>
-                  <Image
-                    src={item.image}
-                    width={1000}
-                    height={1000}
-                    alt={`About us image ${item.id}`}
-                    className="rounded-lg w-full lg:h-[250px] h-[200px] md:[220px] object-cover"
-                  />
-                </CardHeader>
-              </Card>
-            ))}
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* Why Choose Us Section */}
-      {/* <div className="mx-auto pt-14 px-2 lg:mt-24 md:mt-24">
-  <motion.div
-    className="pt-8 relative"
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true }}
-    transition={{ duration: 1 }}
-    variants={{
-      hidden: { opacity: 0, y: 50 },
-      visible: { opacity: 1, y: 0 },
-    }}
-  >
-    <div className="container mx-auto px-6 md:px-12 text-center">
-      <h2 className="text-4xl font-bold text-gray-800">Why Choose Us?</h2>
-        <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-      <Balancer>
-          FaceSearchAI combines innovation, security, and affordability to
-          deliver a seamless experience for all users.
-      </Balancer>
-        </p>
-      
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-        <motion.div
-          className="p-8 bg-blue-50 rounded-lg shadow-lg flex flex-col"
-          whileHover={{ scale: 1.02 }}
-        >
-          <h3 className="text-xl font-bold text-gray-700 mb-4">
-            Tailored AI-Driven Searches
-          </h3>
-          <p className="text-gray-600 flex-grow">
-            Our cutting-edge AI models are optimized for various
-            categories, including faces, objects, and similar visuals,
-            ensuring every search delivers highly relevant results.
-            Whether you&apos;re looking to trace an image source or find
-            connections across the web, our platform adapts to your needs
-            effortlessly.
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="p-8 bg-purple-50 rounded-lg shadow-lg flex flex-col"
-          whileHover={{ scale: 1.02 }}
-        >
-          <h3 className="text-xl font-bold text-gray-700 mb-4">
-            Facial Recognition Precision
-          </h3>
-          <p className="text-gray-600 flex-grow">
-            Discover where your face or others appear online with
-            unmatched accuracy. Our facial recognition technology
-            identifies subtle details and matches them precisely,
-            providing actionable results. Note: Facial recognition is
-            subject to regional availability for compliance and privacy.
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="p-8 bg-green-50 rounded-lg shadow-lg flex flex-col"
-          whileHover={{ scale: 1.02 }}
-        >
-          <h3 className="text-xl font-bold text-gray-700 mb-4">
-            Image Ownership and Credibility
-          </h3>
-          <p className="text-gray-600 flex-grow">
-            Empower yourself with tools to locate original image sources,
-            protect copyrights, and trace duplicates. Our platform helps
-            you verify ownership and ensure proper attribution, offering
-            peace of mind in an increasingly digital world.
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="p-8 bg-rose-50 rounded-lg shadow-lg flex flex-col"
-          whileHover={{ scale: 1.02 }}
-        >
-          <h3 className="text-xl font-bold text-gray-700 mb-4">
-            Advanced Privacy Protection
-          </h3>
-          <p className="text-gray-600 flex-grow">
-            Your privacy is our priority. We implement state-of-the-art
-            encryption and security measures to protect your searches and
-            personal data. Our platform complies with global privacy
-            standards while delivering powerful search capabilities.
-          </p>
-        </motion.div>
+    <section className="py-16 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
+        <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+        <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
       </div>
-    </div>
-  </motion.div>
-</div> */}
 
-      {/* How it works */}
-      {/* <div className="container mx-auto py-16 px-2 md:px-12 pt-14 lg:mt-24 md:mt-24">
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-        >
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            How It Works
-          </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          <Balancer>
-              Discover the seamless process of our advanced facial recognition
-              technology, designed to make image searching effortless and
-              precise.
-          </Balancer>
-            </p>
-        </motion.div>
-
-        <motion.div
-          className="flex flex-col lg:flex-row gap-8 justify-center"
-          initial="hidden"
-          whileInView="visible"
+      <div className="container mx-auto px-4">
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          variants={{
-            hidden: { opacity: 0, y: 50 },
-            visible: { opacity: 1, y: 0 },
-          }}
+          transition={{ duration: 0.8 }}
+          className="text-center max-w-3xl mx-auto mb-12"
         >
-          
-          <div className="w-full lg:w-1/2">
-            
-            <VerticalTimeline layout="1-column-left">
-              <VerticalTimelineElement
-                className="vertical-timeline-element--work"
-                contentStyle={{
-                  background: "rgb(249, 250, 251)",
-                  color: "#4B5563",
-                }}
-                contentArrowStyle={{
-                  borderRight: "7px solid  rgb(249, 250, 251)",
-                }}
-                date="Step 1"
-                iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-                icon={<Upload />}
-              >
-                <h3 className="vertical-timeline-element-title font-bold text-gray-700">
-                  Upload Your Image
-                </h3>
-                <p>
-                  Begin your search by uploading the image you want to
-                  investigate. Our platform supports various image formats and
-                  ensures a smooth, user-friendly upload process.
-                </p>
-              </VerticalTimelineElement>
-
-              <VerticalTimelineElement
-                className="vertical-timeline-element--work"
-                contentStyle={{
-                  background: "rgb(249, 250, 251)",
-                  color: "#4B5563",
-                }}
-                contentArrowStyle={{
-                  borderRight: "7px solid  rgb(249, 250, 251)",
-                }}
-                date="Step 2"
-                iconStyle={{ background: "rgb(233, 30, 99)", color: "#fff" }}
-                icon={<Search />}
-              >
-                <h3 className="vertical-timeline-element-title font-bold text-gray-700">
-                  Internet-Wide Search
-                </h3>
-                <p>
-                  Our advanced AI scans billions of images across the internet,
-                  using sophisticated algorithms to find potential matches and
-                  related visual content with unprecedented speed and accuracy.
-                </p>
-              </VerticalTimelineElement>
-
-              <VerticalTimelineElement
-                className="vertical-timeline-element--work"
-                contentStyle={{
-                  background: "rgb(249, 250, 251)",
-                  color: "#4B5563",
-                }}
-                contentArrowStyle={{
-                  borderRight: "7px solid  rgb(249, 250, 251)",
-                }}
-                date="Step 3"
-                iconStyle={{ background: "rgb(76, 175, 80)", color: "#fff" }}
-                icon={<ImageIcon />}
-              >
-                <h3 className="vertical-timeline-element-title font-bold text-gray-700">
-                  Comprehensive Results
-                </h3>
-                <p>
-                  Receive a detailed report of similar images, their sources,
-                  and potential connections. Filter and analyze results with our
-                  intuitive interface designed for maximum insights.
-                </p>
-              </VerticalTimelineElement>
-            </VerticalTimeline>
-          </div>
-
-          
-          <div className="w-full lg:w-1/2">
-            
-            <VerticalTimeline layout="1-column-left">
-              <VerticalTimelineElement
-                className="vertical-timeline-element--work"
-                contentStyle={{
-                  background: "rgb(249, 250, 251)",
-                  color: "#4B5563",
-                }}
-                contentArrowStyle={{
-                  borderRight: "7px solid  rgb(249, 250, 251)",
-                }}
-                date="Advanced AI"
-                iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-                icon={<Target />}
-              >
-                <h3 className="vertical-timeline-element-title font-bold text-gray-700">
-                  Image Feature Extraction
-                </h3>
-                <p>
-                  Our AI breaks down the uploaded image into unique digital
-                  fingerprints, analyzing color patterns, facial landmarks, and
-                  complex visual characteristics with machine learning
-                  algorithms.
-                </p>
-              </VerticalTimelineElement>
-
-              <VerticalTimelineElement
-                className="vertical-timeline-element--work"
-                contentStyle={{
-                  background: "rgb(249, 250, 251)",
-                  color: "#4B5563",
-                }}
-                contentArrowStyle={{
-                  borderRight: "7px solid  rgb(249, 250, 251)",
-                }}
-                date="Global Network"
-                iconStyle={{ background: "rgb(233, 30, 99)", color: "#fff" }}
-                icon={<Globe />}
-              >
-                <h3 className="vertical-timeline-element-title font-bold text-gray-700">
-                  Distributed Search Architecture
-                </h3>
-                <p>
-                  Leveraging a global network of servers, we simultaneously
-                  search multiple databases and image repositories, ensuring
-                  comprehensive and rapid result generation.
-                </p>
-              </VerticalTimelineElement>
-
-              <VerticalTimelineElement
-                className="vertical-timeline-element--work"
-                contentStyle={{
-                  background: "rgb(249, 250, 251)",
-                  color: "#4B5563",
-                }}
-                contentArrowStyle={{
-                  borderRight: "7px solid  rgb(249, 250, 251)",
-                }}
-                date="Security First"
-                iconStyle={{ background: "rgb(76, 175, 80)", color: "#fff" }}
-                icon={<Shield />}
-              >
-                <h3 className="vertical-timeline-element-title font-bold text-gray-700">
-                  Privacy and Verification
-                </h3>
-                <p>
-                  We implement advanced encryption and privacy protocols,
-                  ensuring data anonymization and providing transparent
-                  verification of image sources and ownership.
-                </p>
-              </VerticalTimelineElement>
-            </VerticalTimeline>
-          </div>
+          <h2 className="text-4xl font-bold text-slate-900 mb-4">
+            Revolutionizing Face Search Technology
+          </h2>
+          <p className="text-lg text-slate-600">
+            At FaceSearch AI, we combine cutting-edge technology with unwavering privacy 
+            protection to deliver the most accurate and secure facial recognition platform.
+          </p>
         </motion.div>
-      </div> */}
-    </div>
-  );
-};
 
-export default AboutUs;
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg"
+            >
+              <div className="flex justify-center text-indigo-600 mb-2">
+                {stat.icon}
+              </div>
+              <div className="text-2xl font-bold text-slate-900 mb-1">
+                {stat.value}
+              </div>
+              <div className="text-sm text-slate-600">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Main Content */}
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          {/* Image Section */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="aspect-square relative rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/about-us/image3.jpg"
+                alt="FaceSearch AI Technology"
+                fill
+                className="object-cover"
+              />
+            </div>
+            {/* Decorative Elements */}
+            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-indigo-600/10 rounded-full blur-2xl" />
+            <div className="absolute -top-6 -left-6 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl" />
+          </motion.div>
+
+          {/* Features List */}
+          <div className="space-y-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg"
+              >
+                <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

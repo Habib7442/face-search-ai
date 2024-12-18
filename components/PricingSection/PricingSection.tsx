@@ -142,7 +142,7 @@ const PricingSection = () => {
   };
 
   return (
-    <section className="w-full relative min-h-full lg:px-4 md:px-2 mb-8 z-0 pt-20 lg:mt-28 md:mt-24">
+    <section className="w-full relative min-h-full lg:px-4 md:px-2 mb-8 z-0 pt-10">
       <div className="container relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center space-y-4 mb-16">

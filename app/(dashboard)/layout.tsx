@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { SidebarDemo } from "@/components/Sidebar";
 import { RootState } from "@/lib/redux/store";
 import { useAppSelector } from "@/lib/redux";
+import Loading from "@/components/Loading";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const user = useAppSelector((state: RootState) => state.user);
@@ -38,8 +39,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   // Show loading state while checking authentication
   if (user.id === null) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-blue-500 border-t-transparent"></div>
+      <div className="fixed inset-0 flex items-center justify-center  ">
+        <Loading />
       </div>
     );
   }

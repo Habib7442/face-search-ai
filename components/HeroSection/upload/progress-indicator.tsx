@@ -9,20 +9,23 @@ interface ProgressIndicatorProps {
 
 export const ProgressIndicator = ({ progress }: ProgressIndicatorProps) => {
     return (
-        <div className="w-full space-y-2">
-            {/* Progress bar with improved height and background color */}
+        <div className="w-full space-y-3">
             <Progress
                 value={progress}
-                className="h-4 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 rounded-full"
+                className="h-3 bg-slate-100 rounded-full overflow-hidden"
             />
             <motion.div
-                className="flex justify-between text-sm text-gray-800"
+                className="flex justify-between items-center"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
             >
-                <span>Processing image...</span>
-                <span>{progress}%</span>
+                <span className="text-sm text-slate-600 font-medium">
+                    Processing image...
+                </span>
+                <span className="text-sm font-medium text-indigo-600">
+                    {progress}%
+                </span>
             </motion.div>
         </div>
     );

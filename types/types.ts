@@ -31,7 +31,12 @@ export interface User {
   }
   
   export interface HistoryResponse {
-    status: string;
-    processed_url: string;
-    details: HistoryDetails;
+    id: string;
+    timestamp: string;
+    platform: string;
+    result_count: number;
+    search_results: Array<{
+      id: string;
+      url: string;
+    }>;
   }

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Link, { LinkProps } from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 
 interface Links {
   label: string;
@@ -25,9 +25,7 @@ interface SidebarContextProps {
   animate: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
-);
+const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
@@ -49,9 +47,8 @@ export const SidebarProvider = ({
   animate?: boolean;
 }) => {
   const [openState, setOpenState] = useState(false);
-
-  const open = openProp ?? openState; // Use `openProp` if provided, else use state
-  const setOpen = setOpenProp ?? setOpenState; // Use `setOpenProp` if provided, else use state setter
+  const open = openProp ?? openState;
+  const setOpen = setOpenProp ?? setOpenState;
 
   return (
     <SidebarContext.Provider value={{ open, setOpen, animate }}>
@@ -59,7 +56,6 @@ export const SidebarProvider = ({
     </SidebarContext.Provider>
   );
 };
-
 
 export const Sidebar = ({
   children,
@@ -94,23 +90,33 @@ export const DesktopSidebar = ({
   ...props
 }: React.ComponentProps<typeof motion.div>) => {
   const { open, setOpen, animate } = useSidebar();
+
   return (
-    <>
+    <div className="relative hidden md:block">
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden md:flex md:flex-col bg-white/30 backdrop-blur-sm w-[300px] flex-shrink-0 border-r border-gray-200/30",
+          "h-full px-4 py-6 flex flex-col bg-white/80 backdrop-blur-sm shadow-lg",
+          "border-r border-slate-200/50",
           className
         )}
         animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
+          width: animate ? (open ? "280px" : "80px") : "280px",
         }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
         {...props}
       >
         {children}
+        <button
+          onClick={() => setOpen(!open)}
+          className="absolute -right-4 top-8 p-1.5 rounded-full bg-white shadow-md border border-slate-200/50"
+        >
+          {open ? (
+            <ChevronLeft className="h-4 w-4 text-slate-600" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-slate-600" />
+          )}
+        </button>
       </motion.div>
-    </>
+    </div>
   );
 };
 
@@ -122,42 +128,54 @@ export const MobileSidebar = ({
   const { open, setOpen } = useSidebar();
 
   return (
-    <div className={cn("fixed top-4 right-4 z-50 md:hidden")} {...props}>
+    <div className="md:hidden">
       <button
-        className="p-2 bg-white/30 backdrop-blur-sm rounded-lg shadow-sm"
-        onClick={() => setOpen(!open)} // Toggle state
+        onClick={() => setOpen(true)}
+        className="fixed top-4 right-4 z-50 p-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg"
       >
-        <IconMenu2 className="text-gray-700 h-5 w-5" />
+        <Menu className="h-5 w-5 text-slate-600" />
       </button>
+
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            transition={{
-              duration: 0.3,
-              ease: "easeInOut",
-            }}
-            className={cn(
-              "fixed h-full w-full inset-0 bg-white/95 backdrop-blur-sm p-6 z-[100] flex flex-col",
-              className
-            )}
-          >
-            <button
-              className="absolute right-6 top-6 z-50 p-2 bg-white/50 rounded-lg"
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
+              className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40"
+            />
+
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              className={cn(
+                "fixed inset-y-0 left-0 w-[280px] z-50",
+                "bg-white/90 backdrop-blur-md shadow-xl",
+                "p-6 flex flex-col",
+                className
+              )}
+              {...props}
             >
-              <IconX className="text-gray-700 h-5 w-5" />
-            </button>
-            {children}
-          </motion.div>
+              <button
+                onClick={() => setOpen(false)}
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-100"
+              >
+                <X className="h-5 w-5 text-slate-600" />
+              </button>
+              {children}
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
   );
 };
-
 
 export const SidebarLink = ({
   link,
@@ -169,24 +187,32 @@ export const SidebarLink = ({
   
   const content = (
     <>
-      {link.icon}
+      <div className="p-2 rounded-lg bg-slate-100/50">
+        {link.icon}
+      </div>
       <motion.span
         animate={{
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-sm whitespace-pre inline-block"
+        className="text-sm font-medium whitespace-pre"
       >
         {link.label}
       </motion.span>
     </>
   );
   
+  const sharedClasses = cn(
+    "flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200",
+    "hover:bg-slate-100",
+    className
+  );
+
   if (link.onClick || onClick) {
     return (
       <button
         onClick={link.onClick || onClick}
-        className={cn("flex items-center gap-2 w-full", className)}
+        className={cn(sharedClasses, "w-full text-left")}
       >
         {content}
       </button>
@@ -196,7 +222,7 @@ export const SidebarLink = ({
   return (
     <Link
       href={link.href}
-      className={cn("flex items-center gap-2", className)}
+      className={sharedClasses}
       {...props}
     >
       {content}

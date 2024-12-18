@@ -1,47 +1,49 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { useDispatch } from "react-redux";
-import { RootState } from "@/lib/redux/store";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useAppSelector, useAppDispatch, RootState } from "@/lib/redux";
 import { clearUser } from "@/lib/redux/slices/userSlice";
-import { useAppSelector } from "@/lib/redux";
-import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { LogOutIcon } from "lucide-react";
 
 const links = [
-  { href: "/reviews", label: "Give Review" },
+  { href: "/", label: "Home" },
   { href: "/upload", label: "Dashboard" },
-  {
-    href: "https://play.google.com/store/apps/details?id=com.facesearch.app&hl=en_IN",
-    label: "Download app",
-  },
-  // { href: "#faq", label: "FAQ" },
+  // { href: "/pricing", label: "Pricing" },
+  { href: "/reviews", label: "Feedback" },
 ];
 
-export function NavLinks() {
-  const user = useAppSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
+export const NavLinks = () => {
+  const pathname = usePathname();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state: RootState) => state.user);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const handleGetStarted = () => {
+    router.push('/sign-in');
+  };
+
   const handleLogout = () => {
     // Clear redux state
     dispatch(clearUser());
 
     // Clear cookies
-    document.cookie =
-      "client_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie =
-      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "client_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
     // Clear localStorage
     localStorage.removeItem("user");
+
+    // Show success message
+    toast.success('Logged out successfully');
 
     // Redirect to login
     router.push("/sign-in");
@@ -52,61 +54,57 @@ export function NavLinks() {
     return null;
   }
 
-  const linkStyles =
-    "relative text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-200 px-3 py-2";
-  const linkHoverStyles =
-    "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300";
-
   return (
-    <div className="hidden md:flex items-center justify-between w-full">
-      <div className="flex justify-center items-center space-x-6 flex-1">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`${linkStyles} ${linkHoverStyles}`}
-          >
+    <div className="hidden lg:flex items-center space-x-8">
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className="relative group"
+        >
+          <span className={`text-sm font-medium transition-colors duration-300 ${
+            pathname === link.href 
+              ? "text-indigo-600" 
+              : "text-slate-600 hover:text-slate-900"
+          }`}>
             {link.label}
-          </Link>
-        ))}
-      </div>
+          </span>
+          
+          {/* Animated underline */}
+          <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+          
+          {/* Active indicator */}
+          {pathname === link.href && (
+            <motion.span
+              layoutId="activeNav"
+              className="absolute -bottom-1 left-0 w-full h-0.5 bg-indigo-600"
+              transition={{ duration: 0.3 }}
+            />
+          )}
+        </Link>
+      ))}
 
-      <div className="flex items-center space-x-4">
-        {/* <Link href="/payment">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
-          >
-            Buy Plan
-          </motion.button>
-        </Link> */}
-
-        {user.id ? (
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleLogout}
-          >
-            <div
-              className="p-3 rounded-full bg-red-300 hover:bg-[#FF3B3B]/20
- transition-all duration-300 shadow-md"
-            >
-              <LogOutIcon className="h-5 w-5 text-black" />
-            </div>
-          </motion.button>
-        ) : (
-          <Link href="/sign-in">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-5 py-2.5 rounded-full bg-black text-white text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              Sign In
-            </motion.button>
-          </Link>
-        )}
-      </div>
+      {/* Conditional Button: Show Logout if user is logged in, otherwise show Get Started */}
+      {user.id ? (
+        <motion.button
+          onClick={handleLogout}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-300 flex items-center gap-2"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </motion.button>
+      ) : (
+        <motion.button
+          onClick={handleGetStarted}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors duration-300"
+        >
+          Get Started
+        </motion.button>
+      )}
     </div>
   );
-}
+};
