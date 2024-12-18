@@ -14,6 +14,7 @@ const links = [
   { href: "/upload", label: "Dashboard" },
   // { href: "/pricing", label: "Pricing" },
   { href: "/reviews", label: "Feedback" },
+  { href: "https://play.google.com/store/apps/details?id=com.facesearch.app&hl=en_IN", label: "Download app" },
 ];
 
 export const NavLinks = () => {

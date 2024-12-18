@@ -50,7 +50,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+    <section className="min-h-full bg-gradient-to-b from-slate-50 via-white to-slate-50">
       <div className="container mx-auto px-6 py-24 text-center relative">
         {/* Background Elements */}
         <div className="absolute inset-0 -z-10">
