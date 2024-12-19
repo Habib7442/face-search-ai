@@ -51,7 +51,7 @@ export default function SignUp() {
                   <input
                     type="text"
                     required
-                    className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50"
+                    className="block w-full pl-10 pr-3 text-slate-300 py-2 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -66,7 +66,7 @@ export default function SignUp() {
                   <input
                     type="email"
                     required
-                    className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50"
+                    className="block w-full pl-10 pr-3 text-slate-300 py-2 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
                     placeholder="Enter your email"
                   />
                 </div>
@@ -81,7 +81,7 @@ export default function SignUp() {
                   <input
                     type="password"
                     required
-                    className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/50"
+                    className="block w-full pl-10 pr-3 text-slate-300 py-2 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
                     placeholder="Create a password"
                   />
                 </div>

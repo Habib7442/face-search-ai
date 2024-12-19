@@ -119,7 +119,7 @@ export default function TestimonialsSection() {
   }
 
   return (
-    <section className="py-24 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white/50">
+    <section className="py-16 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white/50">
       {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />

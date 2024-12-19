@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import Link, { LinkProps } from "next/link";
 import React, { useState, createContext, useContext } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, HTMLMotionProps } from "framer-motion";
 import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 
 interface Links {
@@ -25,7 +25,9 @@ interface SidebarContextProps {
   animate: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
+const SidebarContext = createContext<SidebarContextProps | undefined>(
+  undefined
+);
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
@@ -88,7 +90,7 @@ export const DesktopSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: HTMLMotionProps<"div">) => {
   const { open, setOpen, animate } = useSidebar();
 
   return (
@@ -104,7 +106,7 @@ export const DesktopSidebar = ({
         }}
         {...props}
       >
-        {children}
+        {children as React.ReactNode}
         <button
           onClick={() => setOpen(!open)}
           className="absolute -right-4 top-8 p-1.5 rounded-full bg-white shadow-md border border-slate-200/50"
@@ -184,12 +186,10 @@ export const SidebarLink = ({
   ...props
 }: SidebarLinkProps) => {
   const { open, animate } = useSidebar();
-  
+
   const content = (
     <>
-      <div className="p-2 rounded-lg bg-slate-100/50">
-        {link.icon}
-      </div>
+      <div className="p-2 rounded-lg bg-slate-100/50">{link.icon}</div>
       <motion.span
         animate={{
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
@@ -201,9 +201,9 @@ export const SidebarLink = ({
       </motion.span>
     </>
   );
-  
+
   const sharedClasses = cn(
-    "flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200",
+    "flex items-center gap-3 py-2 rounded-xl transition-all duration-200",
     "hover:bg-slate-100",
     className
   );
@@ -220,11 +220,7 @@ export const SidebarLink = ({
   }
 
   return (
-    <Link
-      href={link.href}
-      className={sharedClasses}
-      {...props}
-    >
+    <Link href={link.href} className={sharedClasses} {...props}>
       {content}
     </Link>
   );

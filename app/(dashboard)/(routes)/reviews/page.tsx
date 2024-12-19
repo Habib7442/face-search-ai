@@ -38,7 +38,7 @@ const Reviews = () => {
         </motion.div>
 
         {/* Main Content */}
-        <div className="w-full grid lg:grid-cols-2 gap-12 items-center">
+        <div className="w-full grid lg:grid-cols-2 gap-12">
           {/* Left Side - Illustration and Features */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -52,7 +52,7 @@ const Reviews = () => {
                 src="/reviews.jpg"
                 alt="Reviews Illustration"
                 fill
-                className="object-contain p-8"
+                className="object-contain"
                 priority
               />
             </div>

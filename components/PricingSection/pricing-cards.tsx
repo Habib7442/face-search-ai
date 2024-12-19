@@ -1,6 +1,6 @@
 import React from "react";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2, Check } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface PricingPlan {
   id: string;
@@ -21,88 +21,99 @@ const PricingCards: React.FC<{
   loadingPlan?: string | null;
   isLoaded?: boolean;
 }> = ({ pricingPlans, handlePurchase, loadingPlan = "", isLoaded = true }) => {
-  const renderCard = (plan: PricingPlan) => {
-    const isLoading = loadingPlan === plan.id;
+  return (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      {pricingPlans.map((plan, index) => (
+        <motion.div
+          key={plan.id}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          className={`
+            relative flex flex-col h-full rounded-2xl overflow-hidden transition-all duration-300
+            ${plan.highlighted 
+              ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-xl scale-105 z-10' 
+              : 'bg-white hover:shadow-xl border border-slate-200'
+            }
+          `}
+        >
+          {/* Popular Badge */}
+          {plan.badge && (
+            <div className="absolute top-4 right-4">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-600">
+                {plan.badge}
+              </span>
+            </div>
+          )}
 
-    return (
-      <div
-        key={plan.id}
-        className={`relative flex flex-col h-full min-h-[300px] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02] bg-secondary border border-gray-200 ${
-          plan.highlighted ? "ring-2 ring-blue-500 shadow-lg" : ""
-        }`}
-      >
-        {plan.badge && (
-          <div className="absolute top-4 right-4 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full">
-            {plan.badge}
-          </div>
-        )}
+          {/* Card Content */}
+          <div className="p-8 flex-grow space-y-6">
+            {/* Header */}
+            <div className="space-y-2">
+              <h3 className={`text-2xl font-bold ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
+                {plan.name}
+              </h3>
+              <p className={`text-sm ${plan.highlighted ? 'text-indigo-100' : 'text-slate-600'}`}>
+                {plan.description}
+              </p>
+            </div>
 
-        <div className="flex-grow p-6 md:p-8 space-y-6">
-          <div className="space-y-2">
-            <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
-            <p className="text-gray-600 h-12">{plan.description}</p>
-          </div>
+            {/* Price */}
+            <div className="space-y-1">
+              <div className="flex items-baseline">
+                <span className={`text-4xl font-extrabold ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
+                  {plan.price}
+                </span>
+                <span className={`text-sm ml-2 ${plan.highlighted ? 'text-indigo-100' : 'text-slate-600'}`}>
+                  /{plan.period}
+                </span>
+              </div>
+            </div>
 
-          <div className="space-y-1">
-            <span className="text-4xl font-extrabold text-gray-900">
-              {plan.price}
-            </span>
-            {plan.price !== "Custom" && (
-              <span className="text-lg text-gray-600">/{plan.period}</span>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <ul className="space-y-3">
+            {/* Features */}
+            <ul className="space-y-4">
               {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-center text-sm">
-                  <svg
-                    className="w-4 h-4 mr-2 text-green-500 flex-shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="line-clamp-2">{feature}</span>
+                <li key={index} className="flex items-start gap-3">
+                  <Check className={`w-5 h-5 flex-shrink-0 ${
+                    plan.highlighted ? 'text-indigo-200' : 'text-indigo-600'
+                  }`} />
+                  <span className={`text-sm ${
+                    plan.highlighted ? 'text-indigo-100' : 'text-slate-600'
+                  }`}>
+                    {feature}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
 
-        <div className="p-6 md:p-8 mt-auto">
-          <Button
-            onClick={() => handlePurchase(plan)}
-            disabled={isLoading || !isLoaded}
-            className={`w-full py-4 text-white ${
-              plan.highlighted
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-                : "bg-gray-800 hover:bg-gray-900"
-            }`}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              plan.buttonText
-            )}
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto py-4 px-2">
-      {pricingPlans.map((plan) => renderCard(plan))}
+          {/* Button */}
+          <div className="p-8 pt-0">
+            <button
+              onClick={() => handlePurchase(plan)}
+              disabled={loadingPlan === plan.id || !isLoaded}
+              className={`
+                w-full py-3 px-4 rounded-xl font-medium transition-all duration-200
+                ${plan.highlighted
+                  ? 'bg-white text-indigo-600 hover:bg-indigo-50'
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                }
+                disabled:opacity-50 disabled:cursor-not-allowed
+              `}
+            >
+              {loadingPlan === plan.id ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Processing...
+                </div>
+              ) : (
+                plan.buttonText
+              )}
+            </button>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 };

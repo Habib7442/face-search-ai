@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ImageIcon, Star, Shield, Search, Upload } from "lucide-react";
+import {  Shield, Search, Upload, PlayCircle, Apple } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import Balancer from "react-wrap-balancer";
-import imageData from "@/lib/images";
 import { features } from "@/lib/data/data";
 import { useDispatch } from "react-redux";
 import { setUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
@@ -60,7 +58,7 @@ const HeroSection = () => {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           {/* Hero Text */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -82,19 +80,53 @@ const HeroSection = () => {
             </p>
           </motion.div>
 
-          {/* Upload Area */}
+          {/* Download Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-12"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <a 
+                href="https://play.google.com/store/apps/details?id=com.facesearch.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              >
+                <PlayCircle className="w-6 h-6" />
+                <div className="text-left">
+                  <div className="text-xs opacity-80">GET IT ON</div>
+                  <div className="text-sm font-semibold">Google Play</div>
+                </div>
+              </a>
+              <a 
+                href="#"
+                className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              >
+                <Apple className="w-6 h-6" />
+                <div className="text-left">
+                  <div className="text-xs opacity-80">Download on the</div>
+                  <div className="text-sm font-semibold">App Store</div>
+                </div>
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Upload Area */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
             className="mb-16"
           >
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
               className={`
-                max-w-3xl mx-auto p-8 rounded-2xl border-2 border-dashed transition-all
+                max-w-3xl mx-auto p-8 rounded-2xl border-2 border-dashed transition-all cursor-pointer
                 ${isDragging 
                   ? 'border-indigo-400 bg-indigo-50/50' 
                   : 'border-slate-200 bg-white/50 hover:border-indigo-200 hover:bg-slate-50/50'
@@ -109,12 +141,12 @@ const HeroSection = () => {
                 <div className="text-center">
                   <h3 className="text-lg font-semibold text-slate-900">
                     Drop your image here or
-                    <button
+                    <span
                       onClick={() => fileInputRef.current?.click()}
                       className="text-indigo-600 hover:text-indigo-700 mx-2"
                     >
                       browse
-                    </button>
+                    </span>
                   </h3>
                   <p className="text-sm text-slate-500 mt-1">
                     Supports JPG, PNG, WEBP up to 10MB
@@ -143,20 +175,43 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
+          {/* Features Cards */}
+          <div className="hidden lg:flex justify-center gap-6">
+            {features.map((feature) => (
+              <div
                 key={feature.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+                className="w-[280px] bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md border border-slate-200/50 hover:shadow-lg transition-all duration-300"
               >
-                <div className="mb-2 text-indigo-600 flex justify-center">{feature.icon}</div>
-                <h3 className="text-lg font-semibold mb-2 text-slate-900">{feature.title}</h3>
-                <p className="text-slate-600 text-sm">{feature.description}</p>
-              </motion.div>
+                <div className="mb-4 text-indigo-600 flex justify-center">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-3 text-slate-900 text-center">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 text-sm text-center">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile Features Stack */}
+          <div className="lg:hidden space-y-4">
+            {features.map((feature) => (
+              <div
+                key={feature.id}
+                className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md border border-slate-200/50"
+              >
+                <div className="mb-4 text-indigo-600 flex justify-center">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-3 text-slate-900 text-center">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 text-sm text-center">
+                  {feature.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>

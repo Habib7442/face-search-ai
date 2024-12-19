@@ -61,7 +61,7 @@ export function SidebarDemo() {
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="flex flex-col h-screen">
           <div className="flex flex-col flex-1">
-            <div className="mb-8 px-3">{open ? <Logo /> : <LogoIcon />}</div>
+            <div className="mb-8">{open ? <Logo /> : <LogoIcon />}</div>
 
             <div className="space-y-2">
               {links.map((link, idx) => {
@@ -82,7 +82,7 @@ export function SidebarDemo() {
 
           {user.id && (
             <div className="mt-auto pt-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-slate-200/50">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200/50">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-medium">
                     {user.name
@@ -118,19 +118,13 @@ export const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-3">
       <Image
-        src="/logo-facesearch.svg"
+        src="/logo-facesearch.png"
         alt="FaceSearch AI Logo"
-        width={40}
-        height={40}
-        className="object-contain"
+        width={100}
+        height={100}
+        className="object-contain bg-slate-950 w-12 h-12 rounded-md"
       />
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="font-bold text-slate-900"
-      >
-        FaceSearch AI
-      </motion.span>
+      
     </Link>
   );
 };
@@ -139,11 +133,11 @@ export const LogoIcon = () => {
   return (
     <Link href="/" className="inline-block">
       <Image
-        src="/logo-facesearch.svg"
+        src="/logo-facesearch.png"
         alt="FaceSearch AI Logo"
-        width={40}
-        height={40}
-        className="object-contain"
+        width={100}
+        height={100}
+        className="object-contain bg-slate-950 w-10 h-10 rounded-md"
       />
     </Link>
   );
