@@ -65,94 +65,88 @@ export default function HistoryPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50/50 to-white/50 py-8 px-4">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8 px-4 md:py-12 md:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="flex items-center gap-6 mb-10"
         >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-xl bg-indigo-100/50 backdrop-blur-sm">
-              <History className="h-6 w-6 text-indigo-600" />
-            </div>
-            <h1 className="text-3xl font-bold text-slate-900">
+          <div className="p-4 rounded-full bg-white shadow-lg">
+            <History className="h-6 w-6 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Search History
             </h1>
+            <p className="text-gray-600 mt-1">
+              View your previous search results and findings
+            </p>
           </div>
-          <p className="text-slate-600">
-            View your previous search results and findings
-          </p>
         </motion.div>
 
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-              <p className="text-slate-600">Loading history...</p>
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <p className="text-gray-600">Loading history...</p>
             </div>
           </div>
         ) : history ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="space-y-8"
+            className="bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100/50 p-8"
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-slate-200/50">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="text-sm text-slate-500">Search ID</p>
-                  <p className="font-mono text-sm text-slate-900">{history.id}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500">Time</p>
-                  <p className="font-mono text-sm text-slate-900">{history.timestamp}</p>
-                </div>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-sm text-gray-500">Search ID</p>
+                <p className="font-mono text-sm text-gray-900">{history.id}</p>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {history.search_results.map((result, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <HistoryCard result={result} />
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="flex justify-between items-center mt-6 pt-6 border-t border-slate-200">
-                <p className="text-sm text-slate-500">
-                  Platform: <span className="text-slate-700">{history.platform}</span>
-                </p>
-                <p className="text-sm text-slate-500">
-                  Total Results: <span className="text-slate-700">{history.result_count}</span>
+              <div>
+                <p className="text-sm text-gray-500">Time</p>
+                <p className="font-mono text-sm text-gray-900">
+                  {history.timestamp}
                 </p>
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {history.search_results.map((result, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-gray-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <HistoryCard result={result} />
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-200">
+              <p className="text-sm text-gray-500">
+                Platform:{" "}
+                <span className="text-gray-700">{history.platform}</span>
+              </p>
+              <p className="text-sm text-gray-500">
+                Total Results:{" "}
+                <span className="text-gray-700">{history.result_count}</span>
+              </p>
             </div>
           </motion.div>
         ) : (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center min-h-[400px] text-center"
+            className="flex flex-col items-center justify-center min-h-[400px] text-center bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100/50 p-8"
           >
-            <div className="p-4 rounded-full bg-slate-100 mb-4">
-              <History className="h-8 w-8 text-slate-400" />
+            <div className="p-4 rounded-full bg-gray-50 mb-4">
+              <History className="h-8 w-8 text-blue-600" />
             </div>
-            <p className="text-slate-600">No history available</p>
+            <p className="text-gray-600">No history available</p>
           </motion.div>
         )}
       </div>
