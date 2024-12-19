@@ -47,9 +47,19 @@ export default function SignIn() {
         throw new Error(data.message || "Login failed");
       }
 
+      // First dispatch the user
       dispatch(setUser(data.user));
+      
+      // Show success message
       toast.success("Login successful!");
+      
+      // Wait briefly to ensure state is updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Then navigate
       router.push("/upload");
+      router.refresh(); // Force a refresh of the navigation
+
     } catch (error: any) {
       toast.error(error.message || "Failed to login");
     } finally {
