@@ -22,6 +22,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { selectSelectedImages } from "@/lib/redux/slices/selectedImagesSlice";
+import { cn } from "@/lib/utils";
 // import { clearUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
 
 export default function Upload() {
@@ -47,20 +48,20 @@ export default function Upload() {
     try {
       setIsLoading(true);
       setIsSearchCompleted(false);
-  
+
       // Get access token from cookies
       const cookies = document.cookie.split(";");
       const tokenCookie = cookies.find((cookie) =>
         cookie.trim().startsWith("client_token=")
       );
       const accessToken = tokenCookie ? tokenCookie.split("=")[1].trim() : null;
-  
+
       if (!accessToken) {
         toast.error("Please login to search images");
         router.push("/sign-in");
         return;
       }
-  
+
       const base64Image = await new Promise<string>((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -68,7 +69,7 @@ export default function Upload() {
           resolve(reader.result as string);
         };
       });
-  
+
       const response = await fetch("/api/search", {
         method: "POST",
         headers: {
@@ -80,17 +81,17 @@ export default function Upload() {
           adultFilter: filterEnabled,
         }),
       });
-  
+
       if (response.status === 401) {
         toast.error("Session expired. Please login again");
         router.push("/sign-in");
         return;
       }
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const data = await response.json();
       if (data.results && Array.isArray(data.results)) {
         dispatch(setSearchResults(data.results));
@@ -162,7 +163,7 @@ export default function Upload() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
-                  className="mt-8 flex flex-col lg:flex-row md:flex-row xl:flex-row justify-center items-center gap-4"
+                  className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4"
                 >
                   <Button
                     onClick={() =>
@@ -170,22 +171,22 @@ export default function Upload() {
                       handleImageUpload(selectedImage, adultContentFilter)
                     }
                     disabled={isLoading}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-5 rounded-xl shadow-lg transition-all duration-300"
+                    className="w-full sm:w-auto bg-white/90 backdrop-blur-sm border border-blue-100/50 hover:bg-blue-50/50 text-blue-600 px-6 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 min-w-[240px]"
                   >
                     {isLoading ? (
-                      <>
-                        <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                        Processing...
-                      </>
+                      <div className="flex items-center justify-center gap-2">
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        <span>Processing...</span>
+                      </div>
                     ) : (
-                      <>
-                        <Search className="h-5 w-5 mr-2" />
-                        Search Similar Images
-                      </>
+                      <div className="flex items-center justify-center gap-2">
+                        <Search className="h-5 w-5" />
+                        <span>Search Similar Images</span>
+                      </div>
                     )}
                   </Button>
 
-                  <div className="flex items-center gap-4 bg-gray-50 px-6 py-3 rounded-xl shadow-md">
+                  <div className="w-full sm:w-auto flex items-center justify-between gap-4 bg-white/90 backdrop-blur-sm border border-blue-100/50 px-6 py-4 rounded-xl shadow-lg min-w-[240px]">
                     <span className="text-sm font-medium text-gray-700">
                       Adult Content Filter
                     </span>
@@ -193,7 +194,10 @@ export default function Upload() {
                       checked={adultContentFilter}
                       onCheckedChange={() => dispatch(toggleAdultFilter())}
                       disabled={!isSearchCompleted}
-                      className="data-[state=checked]:bg-blue-600"
+                      className={cn(
+                        "data-[state=checked]:bg-gradient-to-r from-blue-600 to-indigo-600",
+                        "data-[state=unchecked]:bg-gray-200"
+                      )}
                     />
                   </div>
                 </motion.div>
@@ -209,7 +213,7 @@ export default function Upload() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="mt-10"
               >
-                <div className="relative rounded-2xl overflow-hidden mx-auto w-full max-w-[500px] h-[500px] shadow-2xl">
+                <div className="relative rounded-2xl overflow-hidden mx-auto w-full max-w-[500px] h-[500px] shadow-md">
                   <Badge className="absolute top-4 left-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full">
                     Uploaded Image
                   </Badge>
@@ -245,7 +249,7 @@ export default function Upload() {
             animate={{ opacity: 1 }}
             className="space-y-8"
           >
-            <div className="flex items-center justify-between bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+            <div className="flex items-center justify-between bg-white/90 backdrop-blur-md rounded-2xl p-6">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Search Results
               </h2>
@@ -257,16 +261,16 @@ export default function Upload() {
                 )}
               </div>
             </div>
-            
+
             <SearchResults
               results={reduxSearchResults}
               onSelectResult={handleSelectResult}
             />
-            
+
             <Button
               onClick={handleMoreInfoClick}
               disabled={selectedImages.length === 0}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 disabled:opacity-50"
+              className="w-full sm:w-auto bg-blue-50/50 backdrop-blur-sm border border-blue-100/50 hover:bg-blue-50/50 text-blue-600 px-6 py-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 min-w-[240px]"
             >
               <Info className="h-5 w-5 mr-2" />
               View Detailed Analysis

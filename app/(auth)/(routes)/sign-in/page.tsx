@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, Lock, ArrowLeft } from "lucide-react";
+import { Mail, Lock, ArrowRight } from "lucide-react";
 import { useAppDispatch } from "@/lib/redux";
 import { setUser } from "@/lib/redux/slices/userSlice";
 import Image from "next/image";
+import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 
 export default function SignIn() {
@@ -160,31 +161,33 @@ export default function SignIn() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center">
+              {/* <label className="flex items-center">
                 <input
                   type="checkbox"
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
-                <span className="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700">
+                <span className="ml-2 text-sm text-slate-600">Remember me</span>
+              </label> */}
+              <Link
+                href="/forgot-password"
+                className="text-sm text-indigo-600 hover:text-indigo-700"
+              >
                 Forgot password?
               </Link>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
+            <Button
               type="submit"
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 px-4 rounded-xl hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50"
             >
-              {isLoading ? "Processing..." : "Sign in"}
-            </motion.button>
+              {isLoading ? "Signing in..." : "Sign in"}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-slate-600">
               Don&apos;t have an account?{" "}
               <Link href="/sign-up" className="text-blue-600 hover:text-blue-700 font-medium">
                 Sign up

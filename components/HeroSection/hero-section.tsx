@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import {  Shield, Search, Upload, PlayCircle, Apple } from "lucide-react";
+import { Shield, Search, Upload, PlayCircle, Apple } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
 import { motion } from "framer-motion";
 import Balancer from "react-wrap-balancer";
@@ -33,7 +33,7 @@ const HeroSection = () => {
   };
 
   const handleFile = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (e) => {
         dispatch(setUploadedImage(e.target?.result as string));
@@ -65,7 +65,6 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            
           >
             <h1 className="text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl mb-6">
               <Balancer>
@@ -76,8 +75,9 @@ const HeroSection = () => {
               </Balancer>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
-              Upload an image to instantly search and find similar faces across our secure database. 
-              Enterprise-grade facial recognition, now accessible to everyone.
+              Upload an image to instantly search and find similar faces across
+              our secure database. Enterprise-grade facial recognition, now
+              accessible to everyone.
             </p>
           </motion.div>
 
@@ -86,21 +86,29 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            
           >
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a 
+            <div className="flex flex-row items-center justify-center gap-4">
+              <a
                 href="https://play.google.com/store/apps/details?id=com.facesearch.app"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image src="/google-badge.svg" alt="App Store" width={100} height={100} className="w-40 h-40" />
+                <Image
+                  src="/google-badge.svg"
+                  alt="App Store"
+                  width={100}
+                  height={100}
+                  className="w-40"
+                />
               </a>
-              <a 
-                href="#"
-                
-              >
-                <Image src="/apple-badge.svg" alt="App Store" width={100} height={100} className="w-40 h-40" />
+              <a href="#">
+                <Image
+                  src="/apple-badge.svg"
+                  alt="App Store"
+                  width={100}
+                  height={100}
+                  className="w-40"
+                />
               </a>
             </div>
           </motion.div>
@@ -119,9 +127,10 @@ const HeroSection = () => {
               onClick={() => fileInputRef.current?.click()}
               className={`
                 max-w-3xl mx-auto p-8 rounded-2xl border-2 border-dashed transition-all cursor-pointer
-                ${isDragging 
-                  ? 'border-indigo-400 bg-indigo-50/50' 
-                  : 'border-slate-200 bg-white/50 hover:border-indigo-200 hover:bg-slate-50/50'
+                ${
+                  isDragging
+                    ? "border-indigo-400 bg-indigo-50/50"
+                    : "border-slate-200 bg-white/50 hover:border-indigo-200 hover:bg-slate-50/50"
                 }
                 backdrop-blur-sm shadow-lg
               `}
@@ -158,11 +167,15 @@ const HeroSection = () => {
             <div className="flex items-center justify-center gap-8 mt-8">
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-green-600" />
-                <span className="text-sm text-slate-600">End-to-end encrypted</span>
+                <span className="text-sm text-slate-600">
+                  End-to-end encrypted
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Search className="w-5 h-5 text-indigo-600" />
-                <span className="text-sm text-slate-600">99.9% accuracy rate</span>
+                <span className="text-sm text-slate-600">
+                  99.9% accuracy rate
+                </span>
               </div>
             </div>
           </motion.div>
@@ -188,23 +201,25 @@ const HeroSection = () => {
           </div>
 
           {/* Mobile Features Stack */}
-          <div className="lg:hidden space-y-4">
-            {features.map((feature) => (
-              <div
-                key={feature.id}
-                className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md border border-slate-200/50"
-              >
-                <div className="mb-4 text-indigo-600 flex justify-center">
-                  {feature.icon}
+          <div className="lg:hidden">
+            <div className="md:grid md:grid-cols-2 md:gap-6 space-y-4 md:space-y-0">
+              {features.map((feature) => (
+                <div
+                  key={feature.id}
+                  className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md border border-slate-200/50"
+                >
+                  <div className="mb-4 text-indigo-600 flex justify-center">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-lg font-semibold mb-3 text-slate-900 text-center">
+                    {feature.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm text-center">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-semibold mb-3 text-slate-900 text-center">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 text-sm text-center">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

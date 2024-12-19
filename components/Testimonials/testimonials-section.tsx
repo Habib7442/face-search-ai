@@ -144,7 +144,7 @@ export default function TestimonialsSection() {
           </p>
           <Link href="/view-reviews">
             <Button
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium"
+              className="w-full sm:w-auto bg-blue-50/50 backdrop-blur-sm border border-blue-100/50 hover:bg-blue-50/50 text-blue-600 px-6 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 min-w-[240px]"
             >
               <Eye className="mr-2 h-4 w-4" />
               View All Reviews
