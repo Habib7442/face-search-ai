@@ -8,6 +8,7 @@ import Balancer from "react-wrap-balancer";
 import { features } from "@/lib/data/data";
 import { useDispatch } from "react-redux";
 import { setUploadedImage } from "@/lib/redux/slices/uploadedImageSlice";
+import Image from "next/image";
 
 const HeroSection = () => {
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -64,7 +65,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="mb-16"
+            
           >
             <h1 className="text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl mb-6">
               <Balancer>
@@ -85,30 +86,21 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-12"
+            
           >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a 
                 href="https://play.google.com/store/apps/details?id=com.facesearch.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors duration-300 shadow-lg hover:shadow-xl"
               >
-                <PlayCircle className="w-6 h-6" />
-                <div className="text-left">
-                  <div className="text-xs opacity-80">GET IT ON</div>
-                  <div className="text-sm font-semibold">Google Play</div>
-                </div>
+                <Image src="/google-badge.svg" alt="App Store" width={100} height={100} className="w-40 h-40" />
               </a>
               <a 
                 href="#"
-                className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors duration-300 shadow-lg hover:shadow-xl"
+                
               >
-                <Apple className="w-6 h-6" />
-                <div className="text-left">
-                  <div className="text-xs opacity-80">Download on the</div>
-                  <div className="text-sm font-semibold">App Store</div>
-                </div>
+                <Image src="/apple-badge.svg" alt="App Store" width={100} height={100} className="w-40 h-40" />
               </a>
             </div>
           </motion.div>
