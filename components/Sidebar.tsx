@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
+import { Sidebar,  SidebarBody,  SidebarLink } from "./ui/sidebar";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { HistoryIcon, HomeIcon, NotebookIcon, LogOut } from "lucide-react";
 import { clearUser } from "@/lib/redux/slices/userSlice";

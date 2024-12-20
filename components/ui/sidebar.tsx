@@ -94,7 +94,7 @@ export const DesktopSidebar = ({
   const { open, setOpen, animate } = useSidebar();
 
   return (
-    <div className="relative hidden md:block">
+    <div className="hidden lg:block fixed inset-y-0 left-0 z-20">
       <motion.div
         className={cn(
           "h-full px-4 py-6 flex flex-col",
@@ -140,11 +140,11 @@ export const MobileSidebar = ({
   const { open, setOpen } = useSidebar();
 
   return (
-    <div className="md:hidden">
+    <div className="block lg:hidden">
       <button
         onClick={() => setOpen(true)}
         className={cn(
-          "fixed top-4 right-4 z-50",
+          "fixed top-4 left-4 z-50",
           "p-2.5 rounded-xl",
           "bg-white/80 dark:bg-slate-800/80",
           "backdrop-blur-md",
