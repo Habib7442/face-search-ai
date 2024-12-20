@@ -70,12 +70,6 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="relative min-h-[calc(100vh-4rem)]">
               {/* Content Container with Glassmorphism */}
               <div className="relative rounded-3xl overflow-hidden bg-white/90 dark:bg-slate-950/50 backdrop-blur-xl shadow-xl border border-slate-200/50 dark:border-white/[0.1]">
-                {/* Gradient Overlays */}
-                <div className="absolute inset-0">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 dark:from-blue-400/5 dark:to-indigo-400/5" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-50/20 dark:from-white/[0.02] dark:via-transparent dark:to-white/[0.02]" />
-                </div>
-
                 {/* Content with Custom Scrollbar */}
                 <div className="relative h-full overflow-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
                   <div className="p-6 md:p-8">
@@ -104,4 +98,4 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default DashboardLayout;        
+export default DashboardLayout;
