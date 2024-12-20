@@ -7,7 +7,7 @@ const Logo = () => {
     <Link href="/" className="flex items-center space-x-2">
       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
         <Image
-          src="/logo-facesearch.png"
+          src="/logo-facesearch.svg"
           alt="FaceSearch AI Logo"
           width={100} // Set a specific width
           height={100} // Set a specific height

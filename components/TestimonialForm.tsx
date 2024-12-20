@@ -9,6 +9,8 @@ import { RootState } from "@/lib/redux/store";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
+import { Send } from "lucide-react";
 
 export default function TestimonialForm() {
   const user = useAppSelector((state: RootState) => state.user);
@@ -113,13 +115,13 @@ export default function TestimonialForm() {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-8"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Rating Section */}
-        <div className="space-y-3">
-          <label className="block text-sm font-medium text-slate-700">
+        <div className="space-y-4">
+          <label className="block text-base font-medium bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
             Your Rating
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-3 p-4 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/50 backdrop-blur-sm">
             {[1, 2, 3, 4, 5].map((starValue) => (
               <motion.button
                 key={starValue}
@@ -129,14 +131,15 @@ export default function TestimonialForm() {
                 onClick={() => setRating(starValue)}
                 onMouseEnter={() => setHoveredStar(starValue)}
                 onMouseLeave={() => setHoveredStar(0)}
-                className="focus:outline-none"
+                className="focus:outline-none transition-transform duration-200"
               >
                 <Star
-                  className={`w-8 h-8 transition-colors duration-200 ${
+                  className={cn(
+                    "w-8 h-8 transition-all duration-200",
                     starValue <= (hoveredStar || rating)
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-slate-300 hover:text-yellow-200"
-                  }`}
+                      ? "text-yellow-400 dark:text-yellow-300 fill-yellow-400 dark:fill-yellow-300"
+                      : "text-slate-300 dark:text-slate-600 hover:text-yellow-200 dark:hover:text-yellow-500"
+                  )}
                 />
               </motion.button>
             ))}
@@ -144,8 +147,8 @@ export default function TestimonialForm() {
         </div>
 
         {/* Review Text Section */}
-        <div className="space-y-3">
-          <label className="block text-sm font-medium text-slate-700">
+        <div className="space-y-4">
+          <label className="block text-base font-medium bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
             Your Review
           </label>
           <Textarea
@@ -153,13 +156,24 @@ export default function TestimonialForm() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Share your experience with us..."
             required
-            className="min-h-[120px] bg-white/50 backdrop-blur-sm border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl resize-none"
+            className={cn(
+              "min-h-[160px]",
+              "bg-slate-50/50 dark:bg-slate-800/50",
+              "backdrop-blur-sm",
+              "border border-slate-200/50 dark:border-slate-700/50",
+              "focus:border-blue-500 dark:focus:border-blue-400",
+              "focus:ring-blue-500/20 dark:focus:ring-blue-400/20",
+              "rounded-xl",
+              "resize-none",
+              "text-slate-900 dark:text-slate-100",
+              "placeholder:text-slate-400 dark:placeholder:text-slate-500"
+            )}
           />
         </div>
 
         {/* Image Upload Section */}
-        <div className="space-y-3">
-          <label className="block text-sm font-medium text-slate-700">
+        <div className="space-y-4">
+          <label className="block text-base font-medium bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
             Profile Picture (Optional)
           </label>
           <div className="relative">
@@ -172,9 +186,17 @@ export default function TestimonialForm() {
             <Button
               type="button"
               variant="outline"
-              className="w-full bg-white/50 backdrop-blur-sm border-slate-200 hover:bg-slate-100 text-slate-700"
+              className={cn(
+                "w-full h-12",
+                "bg-slate-50/50 dark:bg-slate-800/50",
+                "backdrop-blur-sm",
+                "border border-slate-200/50 dark:border-slate-700/50",
+                "hover:bg-slate-100/50 dark:hover:bg-slate-700/50",
+                "text-slate-700 dark:text-slate-300",
+                "rounded-xl"
+              )}
             >
-              <Upload className="mr-2 h-4 w-4" />
+              <Upload className="mr-2 h-5 w-5" />
               {customImage ? "Image Selected" : "Upload Image"}
             </Button>
           </div>
@@ -184,22 +206,45 @@ export default function TestimonialForm() {
         <AnimatePresence mode="wait">
           <motion.div
             key={isSubmitting ? "submitting" : "idle"}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
           >
             <Button
               type="submit"
               disabled={isSubmitting || rating === 0}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl h-11 transition-all duration-200 disabled:opacity-50"
+              className={cn(
+                "w-full h-12",
+                "bg-gradient-to-r from-blue-600 to-indigo-600",
+                "hover:from-blue-500 hover:to-indigo-500",
+                "dark:from-blue-500 dark:to-indigo-500",
+                "dark:hover:from-blue-400 dark:hover:to-indigo-400",
+                "text-white font-medium",
+                "rounded-xl",
+                "shadow-lg hover:shadow-xl",
+                "transition-all duration-300",
+                "disabled:opacity-50 disabled:cursor-not-allowed",
+                "disabled:hover:shadow-lg"
+              )}
             >
               {isSubmitting ? (
-                <div className="flex items-center justify-center gap-2">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex items-center justify-center gap-3"
+                >
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Submitting...
-                </div>
+                  <span>Submitting...</span>
+                </motion.div>
               ) : (
-                "Submit Review"
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex items-center justify-center gap-3"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Submit Review</span>
+                </motion.div>
               )}
             </Button>
           </motion.div>

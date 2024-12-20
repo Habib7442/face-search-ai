@@ -14,7 +14,7 @@ interface ImagePreviewProps {
 export function ImagePreview({ src, alt, title, sourceUrl }: ImagePreviewProps) {
   return (
     <GlassCard className="p-6">
-      <h2 className="text-xl font-semibold mb-4 text-slate-800">{title}</h2>
+      <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-white">{title}</h2>
       <motion.div
         className="relative aspect-square rounded-lg overflow-hidden"
         whileHover={{ scale: 1.02 }}

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { HistoryIcon, HomeIcon, NotebookIcon } from "lucide-react";
+import { HistoryIcon, HomeIcon, NotebookIcon, LogOut } from "lucide-react";
 import { clearUser } from "@/lib/redux/slices/userSlice";
 import { useRouter, usePathname } from "next/navigation";
 import { RootState } from "@/lib/redux/rootReducer";
@@ -31,37 +31,43 @@ export function SidebarDemo() {
     {
       label: "Home",
       href: "/",
-      icon: <HomeIcon className="h-5 w-5 text-slate-600" />,
+      icon: <HomeIcon className="h-5 w-5" />,
     },
     {
       label: "Dashboard",
       href: "/upload",
-      icon: <IconBrandTabler className="h-5 w-5 text-slate-600" />,
+      icon: <IconBrandTabler className="h-5 w-5" />,
     },
     {
       label: "Reviews",
       href: "/reviews",
-      icon: <NotebookIcon className="h-5 w-5 text-slate-600" />,
+      icon: <NotebookIcon className="h-5 w-5" />,
     },
     {
       label: "History",
       href: "/history",
-      icon: <HistoryIcon className="h-5 w-5 text-slate-600" />,
+      icon: <HistoryIcon className="h-5 w-5" />,
     },
     {
       label: "Logout",
       href: "#",
-      icon: <IconLogout className="h-5 w-5 text-red-500" />,
+      icon: <LogOut className="h-5 w-5" />,
       onClick: handleLogout,
     },
   ];
 
   return (
-    <div className="h-screen bg-gradient-to-b from-slate-50/50 to-white/50">
+    <div className="h-screen bg-gradient-to-b from-slate-50/50 to-white/50 dark:from-slate-950/50 dark:to-slate-900/50">
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="flex flex-col h-screen">
           <div className="flex flex-col flex-1">
-            <div className="mb-8">{open ? <Logo /> : <LogoIcon />}</div>
+            <motion.div 
+              className="mb-8 p-2"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {open ? <Logo /> : <LogoIcon />}
+            </motion.div>
 
             <div className="space-y-2">
               {links.map((link, idx) => {
@@ -71,8 +77,10 @@ export function SidebarDemo() {
                     key={idx}
                     link={link}
                     className={cn(
-                      link.label === "Logout" && "text-red-500 hover:bg-red-50",
-                      isActive && "bg-indigo-50 text-indigo-600"
+                      link.label === "Logout" && 
+                        "text-red-500 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20",
+                      isActive && 
+                        "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-600 dark:text-blue-400"
                     )}
                   />
                 );
@@ -81,31 +89,51 @@ export function SidebarDemo() {
           </div>
 
           {user.id && (
-            <div className="mt-auto pt-8">
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-slate-200/50">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-auto pt-8"
+            >
+              <div className={cn(
+                "p-3 rounded-xl",
+                "bg-gradient-to-br from-white/80 to-slate-50/80",
+                "dark:from-slate-800/80 dark:to-slate-900/80",
+                "backdrop-blur-md",
+                "shadow-lg dark:shadow-slate-900/20",
+                "border border-slate-200/50 dark:border-slate-700/50",
+                "hover:border-blue-200/50 dark:hover:border-blue-800/50",
+                "transition-all duration-300"
+              )}>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-medium">
+                  <div className={cn(
+                    "w-10 h-10 rounded-lg",
+                    "bg-gradient-to-br from-blue-500 to-indigo-500",
+                    "dark:from-blue-400 dark:to-indigo-400",
+                    "flex items-center justify-center",
+                    "text-white font-medium",
+                    "shadow-md"
+                  )}>
                     {user.name
                       ? user.name.charAt(0).toUpperCase()
                       : user.email?.charAt(0).toUpperCase()}
                   </div>
                   {open && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
                       className="flex flex-col"
                     >
-                      <span className="text-sm font-medium text-slate-900">
+                      <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
                         {user.name || "User"}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500 dark:text-slate-400">
                         {user.email}
                       </span>
                     </motion.div>
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
         </SidebarBody>
       </Sidebar>
@@ -113,18 +141,24 @@ export function SidebarDemo() {
   );
 }
 
-// Logo components remain the same
 export const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-3">
-      <Image
-        src="/logo-facesearch.png"
-        alt="FaceSearch AI Logo"
-        width={100}
-        height={100}
-        className="object-contain bg-slate-950 w-12 h-12 rounded-md"
-      />
-      
+      <div className={cn(
+        "relative overflow-hidden",
+        "rounded-xl",
+        "bg-slate-950 dark:bg-slate-900",
+        "shadow-lg",
+        "transition-transform duration-300"
+      )}>
+        <Image
+          src="/logo-facesearch.svg"
+          alt="FaceSearch AI Logo"
+          width={100}
+          height={100}
+          className="object-contain w-12 h-12"
+        />
+      </div>
     </Link>
   );
 };
@@ -132,13 +166,21 @@ export const Logo = () => {
 export const LogoIcon = () => {
   return (
     <Link href="/" className="inline-block">
-      <Image
-        src="/logo-facesearch.png"
-        alt="FaceSearch AI Logo"
-        width={100}
-        height={100}
-        className="object-contain bg-slate-950 w-10 h-10 rounded-md"
-      />
+      <div className={cn(
+        "relative overflow-hidden",
+        "rounded-xl",
+        "bg-slate-950 dark:bg-slate-900",
+        "shadow-lg",
+        "transition-transform duration-300"
+      )}>
+        <Image
+          src="/logo-facesearch.svg"
+          alt="FaceSearch AI Logo"
+          width={100}
+          height={100}
+          className="object-contain w-10 h-10"
+        />
+      </div>
     </Link>
   );
 };

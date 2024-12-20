@@ -97,8 +97,10 @@ export const DesktopSidebar = ({
     <div className="relative hidden md:block">
       <motion.div
         className={cn(
-          "h-full px-4 py-6 flex flex-col bg-white/80 backdrop-blur-sm shadow-lg",
-          "border-r border-slate-200/50",
+          "h-full px-4 py-6 flex flex-col",
+          "bg-white/80 dark:bg-slate-900/80 backdrop-blur-md",
+          "shadow-lg dark:shadow-slate-900/20",
+          "border-r border-slate-200/50 dark:border-slate-800/50",
           className
         )}
         animate={{
@@ -109,12 +111,20 @@ export const DesktopSidebar = ({
         {children as React.ReactNode}
         <button
           onClick={() => setOpen(!open)}
-          className="absolute -right-4 top-8 p-1.5 rounded-full bg-white shadow-md border border-slate-200/50"
+          className={cn(
+            "absolute -right-4 top-8",
+            "p-2 rounded-full",
+            "bg-white dark:bg-slate-800",
+            "shadow-lg dark:shadow-slate-900/50",
+            "border border-slate-200/50 dark:border-slate-700/50",
+            "hover:bg-slate-50 dark:hover:bg-slate-700",
+            "transition-colors duration-200"
+          )}
         >
           {open ? (
-            <ChevronLeft className="h-4 w-4 text-slate-600" />
+            <ChevronLeft className="h-4 w-4 text-slate-600 dark:text-slate-300" />
           ) : (
-            <ChevronRight className="h-4 w-4 text-slate-600" />
+            <ChevronRight className="h-4 w-4 text-slate-600 dark:text-slate-300" />
           )}
         </button>
       </motion.div>
@@ -133,24 +143,31 @@ export const MobileSidebar = ({
     <div className="md:hidden">
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-50 p-2 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg"
+        className={cn(
+          "fixed top-4 right-4 z-50",
+          "p-2.5 rounded-xl",
+          "bg-white/80 dark:bg-slate-800/80",
+          "backdrop-blur-md",
+          "shadow-lg dark:shadow-slate-900/20",
+          "border border-slate-200/50 dark:border-slate-700/50",
+          "hover:bg-slate-50 dark:hover:bg-slate-700",
+          "transition-colors duration-200"
+        )}
       >
-        <Menu className="h-5 w-5 text-slate-600" />
+        <Menu className="h-5 w-5 text-slate-600 dark:text-slate-300" />
       </button>
 
       <AnimatePresence>
         {open && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40"
+              className="fixed inset-0 bg-slate-900/20 dark:bg-slate-900/40 backdrop-blur-sm z-40"
             />
 
-            {/* Sidebar */}
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -158,7 +175,10 @@ export const MobileSidebar = ({
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
               className={cn(
                 "fixed inset-y-0 left-0 w-[280px] z-50",
-                "bg-white/90 backdrop-blur-md shadow-xl",
+                "bg-white/90 dark:bg-slate-900/90",
+                "backdrop-blur-md",
+                "shadow-xl dark:shadow-slate-900/50",
+                "border-r border-slate-200/50 dark:border-slate-800/50",
                 "p-6 flex flex-col",
                 className
               )}
@@ -166,9 +186,14 @@ export const MobileSidebar = ({
             >
               <button
                 onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-100"
+                className={cn(
+                  "absolute top-4 right-4",
+                  "p-2 rounded-xl",
+                  "hover:bg-slate-100 dark:hover:bg-slate-800",
+                  "transition-colors duration-200"
+                )}
               >
-                <X className="h-5 w-5 text-slate-600" />
+                <X className="h-5 w-5 text-slate-600 dark:text-slate-300" />
               </button>
               {children}
             </motion.div>
@@ -189,13 +214,29 @@ export const SidebarLink = ({
 
   const content = (
     <>
-      <div className="p-2 rounded-lg bg-slate-100/50">{link.icon}</div>
+      <div className={cn(
+        "p-2 rounded-xl",
+        "bg-gradient-to-br from-slate-100 to-slate-50",
+        "dark:from-slate-800 dark:to-slate-700/50",
+        "border border-slate-200/50 dark:border-slate-700/50",
+        "group-hover:border-blue-200/50 dark:group-hover:border-blue-800/50",
+        "transition-colors duration-200"
+      )}>
+        {React.cloneElement(link.icon as React.ReactElement, {
+          className: cn(
+            "h-5 w-5",
+            "text-slate-600 dark:text-slate-300",
+            "group-hover:text-blue-600 dark:group-hover:text-blue-400",
+            "transition-colors duration-200"
+          )
+        })}
+      </div>
       <motion.span
         animate={{
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-sm font-medium whitespace-pre"
+        className="text-sm font-medium whitespace-pre text-slate-700 dark:text-slate-200"
       >
         {link.label}
       </motion.span>
@@ -203,8 +244,9 @@ export const SidebarLink = ({
   );
 
   const sharedClasses = cn(
-    "flex items-center gap-3 py-2 rounded-xl transition-all duration-200",
-    "hover:bg-slate-100",
+    "group flex items-center gap-3 p-2 rounded-xl",
+    "hover:bg-slate-100/50 dark:hover:bg-slate-800/50",
+    "transition-all duration-200",
     className
   );
 
@@ -218,10 +260,10 @@ export const SidebarLink = ({
       </button>
     );
   }
-
   return (
     <Link href={link.href} className={sharedClasses} {...props}>
       {content}
     </Link>
   );
 };
+

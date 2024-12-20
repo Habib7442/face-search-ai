@@ -24,7 +24,7 @@ const Footer = () => {
               <Link href="/" className="block">
                 <div className="relative h-12 w-48">
                   <Image
-                    src="/logo-facesearch.png"
+                    src="/logo-facesearch.svg"
                     alt="FaceSearch AI Logo"
                     fill
                     className="object-contain dark:bg-slate-950 rounded-md"
@@ -114,7 +114,7 @@ const Footer = () => {
                       href="https://play.google.com/store/apps/details?id=com.facesearch.app"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-transform hover:scale-105 w-fit"
+                      className="transition-transform hover:scale-105 w-full"
                     >
                       <Image
                         src="/google-badge.svg"
@@ -126,7 +126,7 @@ const Footer = () => {
                     </a>
                     <a
                       href="https://apps.apple.com/us/app/face-search-ai-pimeyes/id6504996249"
-                      className="transition-transform hover:scale-105 w-fit"
+                      className="transition-transform hover:scale-105 w-full"
                     >
                       <Image
                         src="/apple-badge.svg"

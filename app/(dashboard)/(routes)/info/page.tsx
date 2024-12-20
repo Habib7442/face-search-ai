@@ -11,6 +11,7 @@ import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { useAppSelector } from "@/lib/redux";
 import { selectSearchResults } from "@/lib/redux/slices/searchResultsSlice";
 import { selectSelectedImages } from "@/lib/redux/slices/selectedImagesSlice";
+import { cn } from "@/lib/utils";
 
 interface GPTResult {
   "Full Name": string;
@@ -83,48 +84,70 @@ export default function InfoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8 px-4 md:py-12 md:px-8">
+    <div className="min-h-screen bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100/50 dark:border-slate-800/50 py-8 px-4 md:py-12 md:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-6 mb-10"
+          className="flex items-start gap-6 mb-12"
         >
           <Link href="/upload">
             <Button
               variant="ghost"
               size="icon"
-              className="p-4 rounded-full bg-white shadow-lg hover:shadow-xl transition-all duration-300"
+              className={cn(
+                "p-4 rounded-xl",
+                "bg-gradient-to-br from-blue-100/50 to-indigo-100/50",
+                "dark:from-blue-900/30 dark:to-indigo-900/30",
+                "backdrop-blur-md",
+                "shadow-lg dark:shadow-slate-900/20",
+                "border border-blue-200/50 dark:border-blue-800/50",
+                "hover:border-blue-300/50 dark:hover:border-blue-700/50",
+                "transition-all duration-300"
+              )}
             >
-              <ArrowLeft className="h-6 w-6 text-blue-600" />
+              <ArrowLeft className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </Button>
           </Link>
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
               Deep Analysis
             </h1>
-            <p className="text-gray-600 mt-1">Detailed insights from your selected images</p>
+            <p className="text-slate-600 dark:text-slate-300">
+              Detailed insights from your selected images
+            </p>
           </div>
         </motion.div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100/50 p-8"
+          className={cn(
+            "rounded-2xl",
+            "bg-white/80 dark:bg-slate-900/80",
+            "backdrop-blur-md",
+            "shadow-xl dark:shadow-slate-900/20",
+            "border border-slate-200/50 dark:border-slate-700/50",
+            "p-8"
+          )}
         >
           {/* Selected Images Grid */}
-          <div className="mb-10">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Selected Images</h2>
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 mb-6">
+              Selected Images
+            </h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
               {searchResults.map((result, index) => (
                 <motion.div
                   key={index}
-                  className={`relative group rounded-2xl overflow-hidden shadow-lg ${
-                    selectedImages.includes(result.imageUrl)
-                      ? "ring-4 ring-blue-500 ring-offset-2"
-                      : ""
-                  }`}
+                  className={cn(
+                    "relative group rounded-xl overflow-hidden",
+                    "bg-slate-100 dark:bg-slate-800",
+                    "shadow-lg dark:shadow-slate-900/20",
+                    selectedImages.includes(result.imageUrl) && 
+                      "ring-2 ring-blue-500 dark:ring-blue-400 ring-offset-2 dark:ring-offset-slate-900"
+                  )}
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -133,15 +156,18 @@ export default function InfoPage() {
                     alt={`Result ${index + 1}`}
                     className="w-full h-40 object-cover"
                   />
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent transition-opacity ${
-                      selectedImages.includes(result.imageUrl)
-                        ? "opacity-100"
-                        : "opacity-0 group-hover:opacity-100"
-                    }`}
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 text-white text-sm font-medium">
-                    {result.sourceUrl}
+                  <div className={cn(
+                    "absolute inset-0",
+                    "bg-gradient-to-t from-slate-900/80 to-transparent",
+                    "transition-opacity duration-300",
+                    selectedImages.includes(result.imageUrl) 
+                      ? "opacity-100" 
+                      : "opacity-0 group-hover:opacity-100"
+                  )} />
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <p className="text-white text-sm font-medium truncate">
+                      {result.sourceUrl}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -150,15 +176,23 @@ export default function InfoPage() {
 
           {/* API Search Results */}
           {apiSearchResults.length > 0 && (
-            <div className="mb-10">
-              <h2 className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6">
+            <div className="mb-12">
+              <h2 className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-6">
                 Search Results
               </h2>
               <BentoGrid className="gap-6">
                 {apiSearchResults.map((result, index) => (
                   <BentoGridItem
                     key={index}
-                    className="bg-gray-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                    className={cn(
+                      "rounded-xl overflow-hidden",
+                      "bg-slate-50/50 dark:bg-slate-800/50",
+                      "backdrop-blur-sm",
+                      "shadow-lg hover:shadow-xl dark:shadow-slate-900/20",
+                      "border border-slate-200/50 dark:border-slate-700/50",
+                      "hover:border-blue-200/50 dark:hover:border-blue-800/50",
+                      "transition-all duration-300"
+                    )}
                     header={
                       <div className="aspect-video overflow-hidden">
                         <img
@@ -181,59 +215,80 @@ export default function InfoPage() {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="space-y-8 bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-lg"
+              className={cn(
+                "space-y-8",
+                "bg-gradient-to-br from-slate-50/50 to-white/50",
+                "dark:from-slate-800/50 dark:to-slate-900/50",
+                "p-8 rounded-xl",
+                "shadow-lg dark:shadow-slate-900/20",
+                "border border-slate-200/50 dark:border-slate-700/50"
+              )}
             >
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 Analysis Results
               </h2>
 
-              {/* Full Name */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  Full Name
-                </h3>
-                <p className="text-gray-700">{gptResult["Full Name"]}</p>
-              </div>
-
-              {/* Confidential Score */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  Confidential Analysis Score
-                </h3>
-                <p className="text-gray-700">{gptResult["Confidential Analysis Score"]}</p>
-              </div>
-
-              {/* Topics */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  Topics
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {gptResult.Topics.map((topic, index) => (
-                    <span key={index} className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">
-                      {topic}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* More Information */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  More Information
-                </h3>
-                <p className="text-gray-700 leading-relaxed">{gptResult["More Information"]}</p>
-              </div>
-
-              {/* AI Generated Poem */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                  AI Generated Poem
-                </h3>
-                <pre className="whitespace-pre-wrap text-gray-700 bg-gray-50 p-6 rounded-xl font-serif italic">
-                  {gptResult["Poem"]}
-                </pre>
-              </div>
+              {/* Analysis Cards */}
+              {[
+                { title: "Full Name", content: gptResult["Full Name"] },
+                { title: "Confidential Analysis Score", content: gptResult["Confidential Analysis Score"] },
+                { 
+                  title: "Topics", 
+                  content: (
+                    <div className="flex flex-wrap gap-2">
+                      {gptResult.Topics.map((topic, index) => (
+                        <span 
+                          key={index} 
+                          className={cn(
+                            "px-3 py-1 rounded-full text-sm",
+                            "bg-blue-100/50 dark:bg-blue-900/50",
+                            "text-blue-600 dark:text-blue-400",
+                            "border border-blue-200/50 dark:border-blue-800/50"
+                          )}
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  )
+                },
+                { title: "More Information", content: gptResult["More Information"] },
+                { 
+                  title: "AI Generated Poem", 
+                  content: (
+                    <pre className={cn(
+                      "whitespace-pre-wrap font-serif italic",
+                      "bg-slate-50/50 dark:bg-slate-800/50",
+                      "p-6 rounded-xl",
+                      "text-slate-700 dark:text-slate-300",
+                      "border border-slate-200/50 dark:border-slate-700/50"
+                    )}>
+                      {gptResult["Poem"]}
+                    </pre>
+                  )
+                }
+              ].map((section, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={cn(
+                    "p-6 rounded-xl",
+                    "bg-white/80 dark:bg-slate-900/80",
+                    "backdrop-blur-sm",
+                    "shadow-lg dark:shadow-slate-900/20",
+                    "border border-slate-200/50 dark:border-slate-700/50"
+                  )}
+                >
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">
+                    {section.title}
+                  </h3>
+                  <div className="text-slate-700 dark:text-slate-300">
+                    {section.content}
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
           )}
         </motion.div>
