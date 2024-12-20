@@ -149,6 +149,9 @@ const PricingSection = () => {
 
   return (
     <section className="py-16 relative overflow-hidden bg-light-background dark:bg-dark-background">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 dark:opacity-50" />
+
       <div className="container mx-auto px-4">
         {/* Header Section */}
         <div className="text-center space-y-8 mb-16">

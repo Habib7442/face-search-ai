@@ -49,7 +49,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-light-background dark:bg-dark-background overflow-hidden">
+    <section className="relative min-h-full bg-light-background dark:bg-dark-background overflow-hidden">
       <div className="container mx-auto px-6 py-24 text-center relative">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Text */}
