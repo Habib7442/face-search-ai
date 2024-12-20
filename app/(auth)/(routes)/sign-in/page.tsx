@@ -1,4 +1,5 @@
 "use client";
+
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -8,7 +9,6 @@ import { Mail, Lock, ArrowRight } from "lucide-react";
 import { useAppDispatch } from "@/lib/redux";
 import { setUser } from "@/lib/redux/slices/userSlice";
 import Image from "next/image";
-import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 
 export default function SignIn() {
@@ -24,7 +24,6 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     try {
-      // Redirect to Google OAuth endpoint
       window.location.href = "/api/auth/google";
     } catch (error) {
       toast.error("Failed to initialize Google Sign In");
@@ -49,19 +48,11 @@ export default function SignIn() {
         throw new Error(data.message || "Login failed");
       }
 
-      // First dispatch the user
       dispatch(setUser(data.user));
-      
-      // Show success message
       toast.success("Login successful!");
-      
-      // Wait briefly to ensure state is updated
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Then navigate
+      await new Promise((resolve) => setTimeout(resolve, 100));
       router.push("/upload");
-      router.refresh(); // Force a refresh of the navigation
-
+      router.refresh();
     } catch (error: any) {
       toast.error(error.message || "Failed to login");
     } finally {
@@ -70,124 +61,138 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      
+    <div className="min-h-screen flex items-center justify-center px-4  relative">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 dark:opacity-50" />
 
-      <div className="max-w-md w-full">
+      <div className="max-w-md w-full relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="bg-white/80 backdrop-blur-lg shadow-xl rounded-2xl p-8 relative overflow-hidden"
+          className="group relative bg-white/80 dark:bg-[#0c1222]/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-200/50 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/[0.2] transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl"
         >
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Welcome Back</h2>
-            <p className="text-slate-600 mt-2">Sign in to your account</p>
-          </div>
+          {/* Glassmorphism effect */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-50/20 dark:from-white/[0.02] dark:via-transparent dark:to-white/[0.02] group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
 
-          {/* Google Sign In Button */}
-          <div className="mb-6">
-            <button
-              onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors duration-200"
-            >
-              <Image
-                src="/google.svg"
-                alt="Google"
-                width={20}
-                height={20}
-                className="w-5 h-5"
-              />
-              <span className="font-medium">Continue with Google</span>
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-slate-500">Or continue with</span>
-            </div>
-          </div>
-
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    required
-                    value={form.email}
-                    onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 text-slate-300 py-2 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
-                    placeholder="Enter your email"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    required
-                    value={form.password}
-                    onChange={handleInputChange}
-                    className="block w-full pl-10 pr-3 py-2 text-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
-                    placeholder="Enter your password"
-                  />
-                </div>
-              </div>
+          <div className="relative">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-blue-200">
+                Welcome Back
+              </h2>
+              <p className="text-slate-600 dark:text-blue-100/80 mt-2">
+                Sign in to your account
+              </p>
             </div>
 
-            <div className="flex items-center justify-between">
-              {/* <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <span className="ml-2 text-sm text-slate-600">Remember me</span>
-              </label> */}
-              <Link
-                href="/forgot-password"
-                className="text-sm text-indigo-600 hover:text-indigo-700"
+            {/* Google Sign In Button */}
+            <div className="mb-8">
+              <button
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-white/10 transition-all duration-300 group"
               >
-                Forgot password?
-              </Link>
+                <Image
+                  src="/google.svg"
+                  alt="Google"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 group-hover:scale-110 transition-transform duration-300"
+                />
+                <span className="font-medium">Continue with Google</span>
+              </button>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 px-4 rounded-xl hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </form>
+            {/* Divider */}
+            <div className="relative mb-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-white/10"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-[#0c1222] text-slate-500 dark:text-slate-400">
+                  Or continue with
+                </span>
+              </div>
+            </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-slate-600">
-              Don&apos;t have an account?{" "}
-              <Link href="/sign-up" className="text-blue-600 hover:text-blue-700 font-medium">
-                Sign up
-              </Link>
-            </p>
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-slate-700 dark:text-white mb-1"
+                  >
+                    Email
+                  </label>
+                  <div className="relative group">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300" />
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      required
+                      value={form.email}
+                      onChange={handleInputChange}
+                      className="block w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-white/10 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-all duration-300"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-slate-700 dark:text-white mb-1"
+                  >
+                    Password
+                  </label>
+                  <div className="relative group">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300" />
+                    <input
+                      type="password"
+                      name="password"
+                      id="password"
+                      required
+                      value={form.password}
+                      onChange={handleInputChange}
+                      className="block w-full pl-10 pr-3 py-2.5 bg-white dark:bg-white/5 text-slate-900 dark:text-white rounded-xl border border-slate-200 dark:border-white/10 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 transition-all duration-300"
+                      placeholder="Enter your password"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-300"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white py-2.5 px-4 rounded-xl hover:opacity-90 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50"
+              >
+                {isLoading ? "Signing in..." : "Sign in"}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Don&apos;t have an account?{" "}
+                <Link
+                  href="/sign-up"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-300"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </div>
         </motion.div>
       </div>
