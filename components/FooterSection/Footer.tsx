@@ -4,13 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Facebook,
-  Twitter,
   Instagram,
   Linkedin,
   Mail,
   Youtube,
-  MessageCircle,
+  XIcon,
 } from "lucide-react";
+import { IconBrandTelegram, IconBrandTiktok } from "@tabler/icons-react";
 
 const Footer = () => {
   return (
@@ -37,9 +37,9 @@ const Footer = () => {
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 {[
-                  { icon: MessageCircle, href: "https://www.tiktok.com/@facesearchai/video/7432635005890743595", label: "TikTok" },
+                  { icon: IconBrandTiktok, href: "https://www.tiktok.com/@facesearchai/video/7432635005890743595", label: "TikTok" },
                   { icon: Linkedin, href: "https://www.linkedin.com/feed/update/urn:li:activity:7258436636349235201", label: "LinkedIn" },
-                  { icon: Twitter, href: "https://twitter.com/FacesearchAI/status/1852667105914609805", label: "X (Twitter)" },
+                  { icon: XIcon, href: "https://twitter.com/FacesearchAI/status/1852667105914609805", label: "X (Twitter)" },
                   { icon: Facebook, href: "https://www.facebook.com/reel/1782310318840217", label: "Facebook" },
                   { icon: Instagram, href: "https://www.instagram.com/reel/DB3dz_zoKqG/", label: "Instagram" },
                   { icon: Youtube, href: "https://www.youtube.com/shorts/6ftL04hu0u0", label: "YouTube" },
@@ -96,10 +96,10 @@ const Footer = () => {
                       </span>
                     </li>
                     <li className="flex items-center space-x-4 group">
-                      <MessageCircle className="h-6 w-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
-                      <span className="text-slate-600 dark:text-slate-300">
-                        @facesearch_ai
-                      </span>
+                      <IconBrandTelegram className="h-6 w-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300" />
+                      <a href="https://t.me/facesearchaibot" className="text-slate-600 dark:text-slate-300">
+                        @facesearch_ai bot
+                      </a>
                     </li>
                   </ul>
                 </div>

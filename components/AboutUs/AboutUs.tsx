@@ -84,10 +84,10 @@ export default function AboutUs() {
                 <div className="flex justify-center text-blue-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300">
                   {stat.icon}
                 </div>
-                <div className="text-3xl font-bold text-slate-800 dark:text-white mb-2">
+                <div className="text-3xl flex justify-center font-bold text-slate-800 dark:text-white mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-slate-600 dark:text-blue-200/80">
+                <div className="text-sm flex justify-center text-slate-600 dark:text-blue-200/80">
                   {stat.label}
                 </div>
               </div>
