@@ -44,34 +44,30 @@ const features = [
 
 export default function AboutUs() {
   return (
-    <section className="py-16 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
-      </div>
+    <section className="py-24 relative overflow-hidden bg-light-background dark:bg-dark-background">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 dark:opacity-50" />
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative">
         {/* Header Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center max-w-3xl mx-auto mb-12"
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">
+          <h2 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-blue-200 mb-4">
             Revolutionizing Face Search Technology
           </h2>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-600 dark:text-blue-100">
             At FaceSearch AI, we combine cutting-edge technology with unwavering privacy 
             protection to deliver the most accurate and secure facial recognition platform.
           </p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -79,23 +75,28 @@ export default function AboutUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white/80 backdrop-blur-sm rounded-xl p-4 text-center shadow-lg"
+              className="group relative bg-white dark:bg-[#0c1222]/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-200/50 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/[0.2] transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl"
             >
-              <div className="flex justify-center text-indigo-600 mb-2">
-                {stat.icon}
-              </div>
-              <div className="text-2xl font-bold text-slate-900 mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-slate-600">
-                {stat.label}
+              {/* Glassmorphism effect */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-50/20 dark:from-white/[0.02] dark:via-transparent dark:to-white/[0.02] group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
+              
+              <div className="relative">
+                <div className="flex justify-center text-blue-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  {stat.icon}
+                </div>
+                <div className="text-3xl font-bold text-slate-800 dark:text-white mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-slate-600 dark:text-blue-200/80">
+                  {stat.label}
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
 
         {/* Main Content */}
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Image Section */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -104,17 +105,19 @@ export default function AboutUs() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="aspect-square relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="aspect-square relative rounded-3xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-white/[0.1]">
               <Image
                 src="/about-us/image3.jpg"
                 alt="FaceSearch AI Technology"
                 fill
                 className="object-cover"
               />
+              {/* Image Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
             {/* Decorative Elements */}
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-indigo-600/10 rounded-full blur-2xl" />
-            <div className="absolute -top-6 -left-6 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl" />
+            <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-blue-600/20 dark:bg-blue-400/10 rounded-full blur-3xl" />
+            <div className="absolute -top-8 -left-8 w-48 h-48 bg-indigo-600/20 dark:bg-indigo-400/10 rounded-full blur-3xl" />
           </motion.div>
 
           {/* Features List */}
@@ -126,14 +129,19 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg"
+                className="group relative bg-white dark:bg-[#0c1222]/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-200/50 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/[0.2] transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl"
               >
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600">
-                  {feature.description}
-                </p>
+                {/* Glassmorphism effect */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-50/20 dark:from-white/[0.02] dark:via-transparent dark:to-white/[0.02] group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
+                
+                <div className="relative">
+                  <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-blue-100/80 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>

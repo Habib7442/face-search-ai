@@ -1,0 +1,15 @@
+1|{/* Trust Indicators */}
+2|<div className="flex items-center justify-center gap-8 mt-8">
+3|  <div className="flex items-center gap-2 bg-[rgba(32,45,72,0.4)] backdrop-blur-[20px] px-4 py-2 rounded-full border border-[rgba(255,255,255,0.1)]">
+4|    <Shield className="w-5 h-5 text-green-400" />
+5|    <span className="text-sm text-slate-300">
+6|      End-to-end encrypted
+7|    </span>
+8|  </div>
+9|  <div className="flex items-center gap-2 bg-[rgba(32,45,72,0.4)] backdrop-blur-[20px] px-4 py-2 rounded-full border border-[rgba(255,255,255,0.1)]">
+10|    <Search className="w-5 h-5 text-indigo-400" />
+11|    <span className="text-sm text-slate-300">
+12|      99.9% accuracy rate
+13|    </span>
+14|  </div>
+15|</div> 

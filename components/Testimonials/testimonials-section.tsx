@@ -1,10 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Quote, Star, Eye } from "lucide-react";
+import { Star, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -22,22 +21,10 @@ interface Testimonial {
 export default function TestimonialsSection() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
     fetchTestimonials();
   }, []);
-
-  useEffect(() => {
-    if (!isAutoPlaying || testimonials.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials.length]);
 
   const fetchTestimonials = async () => {
     try {
@@ -54,9 +41,10 @@ export default function TestimonialsSection() {
 
           if (item.user_image_url) {
             try {
-              const { data: signedData, error: signedError } = await supabase.storage
-                .from("testimonial-images")
-                .createSignedUrl(item.user_image_url, 3600);
+              const { data: signedData, error: signedError } =
+                await supabase.storage
+                  .from("testimonial-images")
+                  .createSignedUrl(item.user_image_url, 3600);
 
               if (!signedError && signedData) {
                 avatarUrl = signedData.signedUrl;
@@ -89,22 +77,14 @@ export default function TestimonialsSection() {
     }
   };
 
-  const handlePrevious = () => {
-    setIsAutoPlaying(false);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const handleNext = () => {
-    setIsAutoPlaying(false);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
   if (isLoading) {
     return (
-      <div className="min-h-[600px] flex items-center justify-center">
+      <div className="min-h-[600px] flex items-center justify-center bg-white dark:bg-gradient-to-b dark:from-[#020617] dark:to-[#0F172A]">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-          <p className="text-slate-600">Loading testimonials...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+          <p className="text-slate-600 dark:text-blue-200">
+            Loading testimonials...
+          </p>
         </div>
       </div>
     );
@@ -112,139 +92,105 @@ export default function TestimonialsSection() {
 
   if (testimonials.length === 0) {
     return (
-      <div className="min-h-[400px] flex items-center justify-center">
-        <p className="text-slate-600">No testimonials available</p>
+      <div className="min-h-[400px] flex items-center justify-center bg-white dark:bg-gradient-to-b dark:from-[#020617] dark:to-[#0F172A]">
+        <p className="text-slate-600 dark:text-blue-200">
+          No testimonials available
+        </p>
       </div>
     );
   }
 
   return (
-    <section className="py-16 relative overflow-hidden bg-gradient-to-b from-slate-50/50 to-white/50">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-32 left-1/3 w-96 h-96 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
-      </div>
+    <section className="py-24 relative overflow-hidden bg-light-background dark:bg-dark-background">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 dark:opacity-50" />
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative">
         {/* Header */}
+        <div className="text-center space-y-4 mb-16">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-blue-200 mb-4"
+          >
+            What people say
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-slate-600 dark:text-blue-100 max-w-2xl mx-auto"
+          >
+            Discover what our satisfied customers have to say about their
+            experiences with our products/services.
+          </motion.p>
+        </div>
+
+        {/* Testimonials Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="group relative bg-white dark:bg-[#0c1222]/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-200/50 dark:border-white/[0.1] hover:border-slate-300 dark:hover:border-white/[0.2] transition-all duration-300 overflow-hidden shadow-lg hover:shadow-xl"
+            >
+              {/* Glassmorphism effect */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-50/20 dark:from-white/[0.02] dark:via-transparent dark:to-white/[0.02] group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
+
+              <div className="relative flex flex-col h-full">
+                <div className="mb-6">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden mb-4 ring-2 ring-slate-100 dark:ring-white/10 group-hover:ring-slate-200 dark:group-hover:ring-white/20 transition-all duration-300">
+                    <Image
+                      src={testimonial.avatar_url}
+                      alt={testimonial.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold text-slate-800 dark:text-white mb-1">
+                    {testimonial.name}
+                  </h3>
+                  <p className="text-slate-500 dark:text-blue-200/80">
+                    {testimonial.title}
+                  </p>
+                </div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                    />
+                  ))}
+                </div>
+                <p className="text-slate-600 dark:text-blue-100/80 leading-relaxed flex-grow">
+                  {testimonial.quote}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* View All Reviews Button */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          transition={{ delay: 0.3 }}
+          className="flex justify-center mt-12"
         >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">
-            Trusted by Industry Leaders
-          </h2>
-          <p className="text-lg text-slate-600 mb-8">
-            Join thousands of satisfied customers using FaceSearch AI
-          </p>
           <Link href="/view-reviews">
-            <Button
-              className="w-full sm:w-auto bg-blue-50/50 backdrop-blur-sm border border-blue-100/50 hover:bg-blue-50/50 text-blue-600 px-6 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 min-w-[240px]"
-            >
-              <Eye className="mr-2 h-4 w-4" />
+            <Button className="bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 hover:border-slate-300 dark:bg-[#0c1222]/50 dark:hover:bg-[#0c1222]/70 dark:text-white dark:border-white/10 dark:hover:border-white/20 px-8 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-md">
+              <Eye className="mr-2 h-5 w-5" />
               View All Reviews
             </Button>
           </Link>
         </motion.div>
-
-        {/* Testimonial Carousel */}
-        <div className="max-w-4xl mx-auto relative">
-          <AnimatePresence mode="wait">
-            {testimonials[currentIndex] && (
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl relative"
-              >
-                {/* Rest of your testimonial card content */}
-                <div className="absolute -top-6 left-8">
-                  <div className="bg-indigo-600 rounded-full p-4 shadow-lg">
-                    <Quote className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-
-                <div className="mb-8 pt-6">
-                  <div className="flex gap-1 mb-6">
-                    {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 text-yellow-400 fill-yellow-400"
-                      />
-                    ))}
-                  </div>
-                  <blockquote className="text-xl text-slate-700 mb-8 italic">
-                    "{testimonials[currentIndex].quote}"
-                  </blockquote>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden ring-4 ring-indigo-50">
-                      <Image
-                        src={testimonials[currentIndex].avatar_url}
-                        alt={testimonials[currentIndex].name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-lg text-slate-900">
-                        {testimonials[currentIndex].name}
-                      </div>
-                      <div className="text-slate-600">
-                        {testimonials[currentIndex].title}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Navigation Buttons */}
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex gap-4">
-                  <button
-                    onClick={handlePrevious}
-                    className="bg-white rounded-full p-3 shadow-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <ChevronLeft className="w-5 h-5 text-slate-600" />
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="bg-white rounded-full p-3 shadow-lg hover:bg-slate-50 transition-colors"
-                  >
-                    <ChevronRight className="w-5 h-5 text-slate-600" />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Indicators */}
-          <div className="flex justify-center gap-3 mt-12">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setIsAutoPlaying(false);
-                  setCurrentIndex(index);
-                }}
-                className={cn(
-                  "w-2 h-2 rounded-full transition-all duration-300",
-                  index === currentIndex 
-                    ? "bg-indigo-600 w-8" 
-                    : "bg-slate-300 hover:bg-slate-400"
-                )}
-              />
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
-} 
+}

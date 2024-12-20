@@ -1,89 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
-import Balancer from "react-wrap-balancer";
-import PricingCards from "./pricing-cards";
-import { RootState } from "@/lib/redux/store";
-import { useAppSelector } from "@/lib/redux";
 import { motion } from "framer-motion";
+import PricingCards from "./pricing-cards";
+import Balancer from "react-wrap-balancer";
+import { useAppSelector } from "@/lib/redux";
+import { RootState } from "@/lib/redux/store";
 
 const PricingSection = () => {
-  const user = useAppSelector((state: RootState) => state.user);
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [showBusinessPlans, setShowBusinessPlans] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(true);
+  const user = useAppSelector((state: RootState) => state.user);
 
   const pricingPlans = [
-    {
-      id: "enterprise-plan",
-      name: "Enterprise Plan",
-      price: "$450",
-      period: "month",
-      description: "Ultimate solution for enterprise-level needs",
-      features: [
-        "Video to GSheet Integration",
-        "Full API Access",
-        "Unlimited DCMA Takedown Requests for Requested Photos",
-        "24/7 Dedicated Support",
-        "Customizable Report Generation",
-        "Priority Support and Service",
-      ],
-      highlighted: false,
-      buttonText: "Get Started",
-      stripePriceId: "price_1EnterprisePlan",
-    },
-    {
-      id: "business-plan",
-      name: "Business Plan",
-      price: "$50",
-      period: "month",
-      description: "Perfect for small businesses and teams",
-      features: [
-        "Receive Notifications When New Photos Are Published on Someone",
-        "1,000 Credits for Monthly Use",
-        "Unlimited Basic Image Research",
-        "Email and Chat Support",
-        "Access to Basic Data Insights",
-      ],
-      highlighted: true,
-      buttonText: "Get Started",
-      badge: "Most Popular",
-      stripePriceId: "price_1BusinessPlan",
-    },
-    {
-      id: "professional-plan",
-      name: "Professional Plan",
-      price: "$19.95",
-      period: "month",
-      description: "Advanced features for professionals",
-      features: [
-        "Unlocks Background Check Search",
-        "Unlocks Deep Search Capabilities",
-        "500 Credits for Monthly Use",
-        "Access to Advanced Search Filters",
-        "24/7 Basic Support",
-      ],
-      highlighted: false,
-      buttonText: "Get Started",
-      stripePriceId: "price_1ProfessionalPlan",
-    },
-    {
-      id: "premium-plan",
-      name: "Premium Plan",
-      price: "$14.20",
-      period: "month",
-      description: "Unlock premium features and referrals",
-      features: [
-        "Unlocks PDF Form Download",
-        "Perpetual Referral Earnings for Background Checks",
-        "150 Credits for Monthly Use",
-        "Priority Referral Earnings Support",
-      ],
-      highlighted: true,
-      buttonText: "Get Started",
-      badge: "Most Popular",
-      stripePriceId: "price_1PremiumPlan",
-    },
     {
       id: "basic-starter-plan",
       name: "Basic Starter Plan",
@@ -98,67 +28,129 @@ const PricingSection = () => {
       highlighted: false,
       buttonText: "Sign Up",
       stripePriceId: "price_1BasicStarterPlan",
+      isFixed: true,
+    },
+    {
+      id: "premium-plan",
+      name: "Premium Plan",
+      price: "$19.99",
+      period: "month",
+      description: "Perfect for individual professionals",
+      features: [
+        "Everything in Basic Plan",
+        "50 Credits for Monthly Use",
+        "Advanced Search Features",
+        "Priority Support",
+      ],
+      highlighted: true,
+      buttonText: "Get Premium",
+      stripePriceId: "price_1PremiumPlan",
+      badge: "Most Popular",
+    },
+    {
+      id: "professional-plan",
+      name: "Professional Plan",
+      price: "$39.99",
+      period: "month",
+      description: "For power users and small teams",
+      features: [
+        "Everything in Premium Plan",
+        "150 Credits for Monthly Use",
+        "API Access",
+        "24/7 Priority Support",
+      ],
+      highlighted: false,
+      buttonText: "Get Professional",
+      stripePriceId: "price_1ProfessionalPlan",
+    },
+    {
+      id: "business-plan",
+      name: "Business Plan",
+      price: "$99.99",
+      period: "month",
+      description: "For growing businesses",
+      features: [
+        "Everything in Professional Plan",
+        "500 Credits for Monthly Use",
+        "Advanced Analytics",
+        "Custom Integration Support",
+      ],
+      highlighted: true,
+      buttonText: "Get Business",
+      stripePriceId: "price_1BusinessPlan",
+      badge: "Best Value",
+    },
+    {
+      id: "enterprise-plan",
+      name: "Enterprise Plan",
+      price: "Custom",
+      period: "month",
+      description: "For large organizations",
+      features: [
+        "Everything in Business Plan",
+        "Unlimited Credits",
+        "Custom Features",
+        "Dedicated Account Manager",
+      ],
+      highlighted: false,
+      buttonText: "Contact Us",
+      stripePriceId: "price_1EnterprisePlan",
     },
   ];
 
-  // Split plans into categories
-  const individualPlans = pricingPlans.filter(plan => 
-    ["basic-starter-plan", "premium-plan", "professional-plan"].includes(plan.id)
+  // Split plans into categories, keeping Basic Starter Plan separate
+  const basicPlan = pricingPlans.find(
+    (plan) => plan.id === "basic-starter-plan"
   );
 
-  const businessPlans = pricingPlans.filter(plan => 
-    ["business-plan", "enterprise-plan"].includes(plan.id)
+  const individualPlans = pricingPlans.filter(
+    (plan) =>
+      !plan.isFixed && ["premium-plan", "professional-plan"].includes(plan.id)
   );
 
-  const isLoaded = user !== null;
+  const businessPlans = pricingPlans.filter(
+    (plan) =>
+      !plan.isFixed && ["business-plan", "enterprise-plan"].includes(plan.id)
+  );
 
-  const handlePurchase = async (plan: typeof pricingPlans[0]) => {
-    if (!isLoaded) {
-      return;
-    }
-
+  const handlePurchase = async (plan: any) => {
     if (!user.id) {
-      toast("You need to be signed in to purchase a plan");
+      window.location.href = "/sign-in";
       return;
     }
+
+    setLoadingPlan(plan.id);
+    setIsLoaded(false);
 
     try {
-      setLoadingPlan(plan.id);
-
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          planId: plan.id,
-          userId: user.id 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          priceId: plan.stripePriceId,
+          userId: user.id,
         }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create checkout session");
+      if (data.url) {
+        window.location.href = data.url;
       }
-
-      window.location.href = data.url;
     } catch (error) {
-      console.error("Purchase error:", error);
-      toast("Failed to initiate checkout. Please try again.");
+      console.error("Error:", error);
     } finally {
       setLoadingPlan(null);
+      setIsLoaded(true);
     }
   };
 
   return (
-    <section className="py-16 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
-      </div>
-
+    <section className="py-16 relative overflow-hidden bg-light-background dark:bg-dark-background">
       <div className="container mx-auto px-4">
+        {/* Header Section */}
         <div className="text-center space-y-8 mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -166,12 +158,13 @@ const PricingSection = () => {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            <h2 className="text-4xl font-bold text-slate-900">
+            <h2 className="text-4xl font-bold text-light-foreground dark:text-dark-foreground">
               Choose Your Perfect Plan
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-light-muted-foreground dark:text-dark-muted-foreground max-w-2xl mx-auto">
               <Balancer>
-                Select the plan that best fits your needs, from individual users to enterprise solutions.
+                Select the plan that best fits your needs, from individual users
+                to enterprise solutions.
               </Balancer>
             </p>
           </motion.div>
@@ -181,49 +174,120 @@ const PricingSection = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="flex items-center justify-center gap-4"
+            className="flex items-center justify-center space-x-3"
           >
-            <span className={`text-sm ${!showBusinessPlans ? 'text-slate-900 font-semibold' : 'text-slate-600'}`}>
-              Individual & Professional
+            <span
+              className={`text-sm font-medium ${
+                !showBusinessPlans
+                  ? "text-light-foreground dark:text-dark-foreground"
+                  : "text-light-muted-foreground dark:text-dark-muted-foreground"
+              }`}
+            >
+              Individual
             </span>
             <button
               onClick={() => setShowBusinessPlans(!showBusinessPlans)}
+              type="button"
+              role="switch"
+              aria-checked={showBusinessPlans}
               className={`
-                relative w-16 h-8 rounded-full transition-colors duration-300
-                ${showBusinessPlans ? 'bg-indigo-600' : 'bg-slate-200'}
+                relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent 
+                transition-colors duration-200 ease-in-out focus:outline-none
+                ${
+                  showBusinessPlans
+                    ? "bg-light-primary dark:bg-dark-primary"
+                    : "bg-light-accent/20 dark:bg-dark-accent/20"
+                }
               `}
             >
-              <div
+              <span
+                aria-hidden="true"
                 className={`
-                  absolute w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300
-                  ${showBusinessPlans ? 'translate-x-9' : 'translate-x-1'}
+                  pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 
+                  transition duration-200 ease-in-out
+                  ${showBusinessPlans ? "translate-x-5" : "translate-x-0"}
                 `}
               />
             </button>
-            <span className={`text-sm ${showBusinessPlans ? 'text-slate-900 font-semibold' : 'text-slate-600'}`}>
-              Business & Enterprise
+            <span
+              className={`text-sm font-medium ${
+                showBusinessPlans
+                  ? "text-light-foreground dark:text-dark-foreground"
+                  : "text-light-muted-foreground dark:text-dark-muted-foreground"
+              }`}
+            >
+              Business
             </span>
           </motion.div>
         </div>
 
-        {/* Display Plans based on toggle */}
-        <motion.div
-          key={showBusinessPlans ? 'business' : 'individual'}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <PricingCards
-            pricingPlans={showBusinessPlans ? businessPlans : individualPlans}
-            handlePurchase={handlePurchase}
-            loadingPlan={loadingPlan}
-            isLoaded={isLoaded}
-          />
-        </motion.div>
+        {/* Display All Plans in One Row */}
+        <div className="max-w-[1200px] mx-auto">
+          <div className="flex flex-wrap justify-center items-stretch gap-6">
+            {showBusinessPlans ? (
+              // Business & Enterprise Plans
+              <>
+                <div className="w-[340px]">
+                  <PricingCards
+                    pricingPlans={[businessPlans.find((p) => !p.highlighted)!]}
+                    handlePurchase={handlePurchase}
+                    loadingPlan={loadingPlan}
+                    isLoaded={isLoaded}
+                  />
+                </div>
+                <div className="w-[340px] mt-4">
+                  <PricingCards
+                    pricingPlans={[businessPlans.find((p) => p.highlighted)!]}
+                    handlePurchase={handlePurchase}
+                    loadingPlan={loadingPlan}
+                    isLoaded={isLoaded}
+                  />
+                </div>
+                <div className="w-[340px]">
+                  <PricingCards
+                    pricingPlans={[basicPlan!]}
+                    handlePurchase={handlePurchase}
+                    loadingPlan={loadingPlan}
+                    isLoaded={isLoaded}
+                  />
+                </div>
+              </>
+            ) : (
+              // Individual & Professional Plans
+              <>
+                <div className="w-[340px]">
+                  <PricingCards
+                    pricingPlans={[
+                      individualPlans.find((p) => !p.highlighted)!,
+                    ]}
+                    handlePurchase={handlePurchase}
+                    loadingPlan={loadingPlan}
+                    isLoaded={isLoaded}
+                  />
+                </div>
+                <div className="w-[340px] mt-4">
+                  <PricingCards
+                    pricingPlans={[individualPlans.find((p) => p.highlighted)!]}
+                    handlePurchase={handlePurchase}
+                    loadingPlan={loadingPlan}
+                    isLoaded={isLoaded}
+                  />
+                </div>
+                <div className="w-[340px]">
+                  <PricingCards
+                    pricingPlans={[basicPlan!]}
+                    handlePurchase={handlePurchase}
+                    loadingPlan={loadingPlan}
+                    isLoaded={isLoaded}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
 };
 
-export default PricingSection; 
+export default PricingSection;

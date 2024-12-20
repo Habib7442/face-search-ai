@@ -22,7 +22,7 @@ const Navbar = () => {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
-          ? "bg-white/80 backdrop-blur-md shadow-lg" 
+          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-lg" 
           : "bg-transparent"
       }`}
     >
@@ -38,12 +38,12 @@ const Navbar = () => {
             <Logo />
           </motion.div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - Centered */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="hidden lg:block"
+            className="hidden lg:flex flex-1 justify-center"
           >
             <NavLinks />
           </motion.div>
@@ -66,13 +66,13 @@ const Navbar = () => {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="h-[1px] w-full bg-gradient-to-r from-transparent via-slate-200 to-transparent"
+          className="h-[1px] w-full bg-gradient-to-r from-transparent via-light-border dark:via-dark-border to-transparent"
         />
       )}
 
       {/* Background Blur Gradient */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-50/50 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-light-background/50 dark:from-dark-background/50 to-transparent pointer-events-none" />
       </div>
     </motion.nav>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Shield, Search, Upload, PlayCircle, Apple } from "lucide-react";
+import { Shield, Search, Upload } from "lucide-react";
 import ImageUpload from "@/components/HeroSection/upload/image-upload";
 import { motion } from "framer-motion";
 import Balancer from "react-wrap-balancer";
@@ -49,32 +49,33 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="min-h-full bg-gradient-to-b from-slate-50 via-white to-slate-50">
+    <section className="relative min-h-screen bg-light-background dark:bg-dark-background overflow-hidden">
       <div className="container mx-auto px-6 py-24 text-center relative">
-        {/* Background Elements */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
-          <div className="absolute top-0 right-1/4 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
-          <div className="absolute bottom-32 left-1/3 w-72 h-72 bg-violet-50 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
-        </div>
-
-        {/* Main Content */}
         <div className="max-w-7xl mx-auto">
+          {/* Welcome Text */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-light-primary dark:text-dark-primary font-medium mb-4"
+          >
+            WELCOME
+          </motion.p>
+
           {/* Hero Text */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl mb-6">
+            <h1 className="text-5xl font-bold tracking-tight text-light-foreground dark:text-dark-foreground sm:text-6xl mb-6">
               <Balancer>
                 Advanced Facial Recognition
-                <span className="block mt-2 bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-to-r from-light-primary to-light-accent dark:from-dark-primary dark:to-dark-accent bg-clip-text text-transparent">
                   Made Simple & Secure
                 </span>
               </Balancer>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-light-muted-foreground dark:text-dark-muted-foreground">
               Upload an image to instantly search and find similar faces across
               our secure database. Enterprise-grade facial recognition, now
               accessible to everyone.
@@ -82,43 +83,40 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Download Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="flex flex-row items-center justify-center gap-4">
+          <div className="mt-4">
+            <div className="flex flex-row items-center justify-center gap-8">
               <a
                 href="https://play.google.com/store/apps/details?id=com.facesearch.app"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="transition-transform hover:scale-105"
               >
                 <Image
                   src="/google-badge.svg"
-                  alt="App Store"
+                  alt="Google Play Store"
                   width={100}
                   height={100}
-                  className="w-40"
+                  className="h-[120px] w-[120px]"
                 />
               </a>
-              <a href="#">
+              <a href="#" className="transition-transform hover:scale-105">
                 <Image
                   src="/apple-badge.svg"
-                  alt="App Store"
+                  alt="Apple App Store"
                   width={100}
                   height={100}
-                  className="w-40"
+                  className="h-[120px] w-[120px]"
                 />
               </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Upload Area */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="mb-16"
+            className="mt-12 mb-16"
           >
             <div
               onDragOver={handleDragOver}
@@ -126,30 +124,34 @@ const HeroSection = () => {
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
               className={`
-                max-w-3xl mx-auto p-8 rounded-2xl border-2 border-dashed transition-all cursor-pointer
+                max-w-3xl mx-auto p-8 rounded-[20px] transition-all cursor-pointer relative
                 ${
                   isDragging
-                    ? "border-indigo-400 bg-indigo-50/50"
-                    : "border-slate-200 bg-white/50 hover:border-indigo-200 hover:bg-slate-50/50"
+                    ? "bg-white dark:bg-[rgba(32,45,72,0.9)] border-light-primary dark:border-indigo-500"
+                    : "bg-white/80 hover:bg-white dark:bg-[rgba(32,45,72,0.4)] dark:hover:bg-[rgba(32,45,72,0.6)]"
                 }
-                backdrop-blur-sm shadow-lg
+                border border-light-border dark:border-[rgba(255,255,255,0.1)]
+                shadow-lg dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.2)]
+                dark:backdrop-blur-[20px]
               `}
             >
+              {/* Gradient glow effect - only in dark mode */}
+              <div className="absolute -z-10 inset-0 hidden dark:block">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 blur-3xl rounded-[20px]" />
+              </div>
+
               <div className="flex flex-col items-center gap-4">
-                <div className="p-4 rounded-full bg-indigo-50">
-                  <Upload className="w-8 h-8 text-indigo-600" />
+                <div className="p-4 rounded-full bg-light-primary/10 dark:bg-gradient-to-br dark:from-indigo-500/10 dark:to-purple-500/10 dark:backdrop-blur-sm dark:border dark:border-indigo-500/20">
+                  <Upload className="w-8 h-8 text-light-primary dark:text-indigo-400" />
                 </div>
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-slate-900">
+                  <h3 className="text-lg font-semibold text-light-foreground dark:text-white">
                     Drop your image here or
-                    <span
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-indigo-600 hover:text-indigo-700 mx-2"
-                    >
+                    <span className="text-light-primary hover:text-light-primary/90 dark:text-indigo-400 dark:hover:text-indigo-300 mx-2 cursor-pointer">
                       browse
                     </span>
                   </h3>
-                  <p className="text-sm text-slate-500 mt-1">
+                  <p className="text-sm text-light-muted-foreground dark:text-slate-400 mt-1">
                     Supports JPG, PNG, WEBP up to 10MB
                   </p>
                 </div>
@@ -165,15 +167,15 @@ const HeroSection = () => {
 
             {/* Trust Indicators */}
             <div className="flex items-center justify-center gap-8 mt-8">
-              <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-green-600" />
-                <span className="text-sm text-slate-600">
+              <div className="flex items-center gap-2 bg-white/80 dark:bg-[rgba(32,45,72,0.4)] backdrop-blur-sm dark:backdrop-blur-[20px] px-4 py-2 rounded-full border border-light-border dark:border-[rgba(255,255,255,0.1)]">
+                <Shield className="w-5 h-5 text-green-500 dark:text-green-400" />
+                <span className="text-sm text-light-muted-foreground dark:text-slate-300">
                   End-to-end encrypted
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Search className="w-5 h-5 text-indigo-600" />
-                <span className="text-sm text-slate-600">
+              <div className="flex items-center gap-2 bg-white/80 dark:bg-[rgba(32,45,72,0.4)] backdrop-blur-sm dark:backdrop-blur-[20px] px-4 py-2 rounded-full border border-light-border dark:border-[rgba(255,255,255,0.1)]">
+                <Search className="w-5 h-5 text-light-primary dark:text-indigo-400" />
+                <span className="text-sm text-light-muted-foreground dark:text-slate-300">
                   99.9% accuracy rate
                 </span>
               </div>
@@ -183,20 +185,23 @@ const HeroSection = () => {
           {/* Features Cards */}
           <div className="hidden lg:flex justify-center gap-6">
             {features.map((feature) => (
-              <div
+              <motion.div
                 key={feature.id}
-                className="w-[280px] bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md border border-slate-200/50 hover:shadow-lg transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="w-[280px] bg-light-background/80 dark:bg-dark-background/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-light-border dark:border-dark-border hover:border-light-primary/50 dark:hover:border-dark-primary/50 transition-all duration-300"
               >
-                <div className="mb-4 text-indigo-600 flex justify-center">
+                <div className="mb-4 text-light-primary dark:text-dark-primary flex justify-center">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold mb-3 text-slate-900 text-center">
+                <h3 className="text-lg font-semibold mb-3 text-light-foreground dark:text-dark-foreground text-center">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600 text-sm text-center">
+                <p className="text-light-muted-foreground dark:text-dark-muted-foreground text-sm text-center">
                   {feature.description}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -204,20 +209,23 @@ const HeroSection = () => {
           <div className="lg:hidden">
             <div className="md:grid md:grid-cols-2 md:gap-6 space-y-4 md:space-y-0">
               {features.map((feature) => (
-                <div
+                <motion.div
                   key={feature.id}
-                  className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-md border border-slate-200/50"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="bg-light-background/80 dark:bg-dark-background/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-light-border dark:border-dark-border"
                 >
-                  <div className="mb-4 text-indigo-600 flex justify-center">
+                  <div className="mb-4 text-light-primary dark:text-dark-primary flex justify-center">
                     {feature.icon}
                   </div>
-                  <h3 className="text-lg font-semibold mb-3 text-slate-900 text-center">
+                  <h3 className="text-lg font-semibold mb-3 text-light-foreground dark:text-dark-foreground text-center">
                     {feature.title}
                   </h3>
-                  <p className="text-slate-600 text-sm text-center">
+                  <p className="text-light-muted-foreground dark:text-dark-muted-foreground text-sm text-center">
                     {feature.description}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

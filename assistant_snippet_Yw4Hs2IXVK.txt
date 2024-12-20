@@ -1,0 +1,37 @@
+1|<section className="relative min-h-screen bg-[#0B1120] overflow-hidden">
+2|  {/* Gradient background effects */}
+3|  <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,_#1B2138_0%,_transparent_50%)]" />
+4|  <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_100%,_#1B2138_0%,_transparent_50%)]" />
+5|  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#1B2138_0%,_transparent_50%)]" />
+6|  {/* Download Buttons */}
+7|<div className="mt-12">
+8|  <div className="flex flex-row items-center justify-center gap-8">
+9|    <a
+10|      href="https://play.google.com/store/apps/details?id=com.facesearch.app"
+11|      target="_blank"
+12|      rel="noopener noreferrer"
+13|      className="transition-transform hover:scale-105"
+14|    >
+15|      <Image
+16|        src="/google-badge.svg"
+17|        alt="Google Play Store"
+18|        width={240}
+19|        height={72}
+20|        className="h-20 w-auto"
+21|      />
+22|    </a>
+23|    <a 
+24|      href="#"
+25|      className="transition-transform hover:scale-105"
+26|    >
+27|      <Image
+28|        src="/apple-badge.svg"
+29|        alt="Apple App Store"
+30|        width={240}
+31|        height={72}
+32|        className="h-20 w-auto"
+33|      />
+34|    </a>
+35|  </div>
+36|</div>
+</section> 

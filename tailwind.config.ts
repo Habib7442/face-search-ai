@@ -1,8 +1,5 @@
 import type { Config } from "tailwindcss";
-const colors = require("tailwindcss/colors");
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 
 export default {
   darkMode: ["class"],
@@ -14,81 +11,72 @@ export default {
   theme: {
     extend: {
       colors: {
-        slate: {
-          50: '#f8fafc',
-          // ... other slate colors
-        },
-        indigo: {
-          50: '#eef2ff',
-          // ... other indigo colors
-        },
-        violet: {
-          50: '#f5f3ff',
-          // ... other violet colors
-        },
-        lightBlue: "#dfeeff",
-        white: "#ffffff",
-        backgroundImage: {
-          "hero-gradient": "linear-gradient(to bottom, #dfeeff, #ffffff)",
-        },
-        primary: {
-          DEFAULT: "#007BFF", // Bright Blue
-          foreground: "#ffffff", // Use white for text on primary buttons
-          hover: "#66B2FF",
-        },
-        secondary: {
-          DEFAULT: "#F0F4FA", // bg-gray-50 (very light gray)
-          foreground: "#1F2937", // Dark text for readability
-        },                          
-        
-        accent: {
-          DEFAULT: "#FF8C00", // Bright Orange
-          foreground: "#ffffff", // White text for contrast
-        },
-        
-        neutral: {
-          DEFAULT: "#F0F4FA", // Light Grayish Blue
-          foreground: "#000000", // Use black for text on neutral backgrounds
-        },
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        // primary: {
-        //   DEFAULT: "hsl(var(--primary))",
-        //   foreground: "hsl(var(--primary-foreground))",
-        // },
-        // secondary: {
-        //   DEFAULT: "hsl(var(--secondary))",
-        //   foreground: "hsl(var(--secondary-foreground))",
-        // },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        // accent: {
-        //   DEFAULT: "hsl(var(--accent))",
-        //   foreground: "hsl(var(--accent-foreground))",
-        // },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
+        // Light mode colors
+        light: {
+          background: "#ffffff",
+          "background-secondary": "#f8fafc",
+          foreground: "#0f172a",
+          primary: {
+            DEFAULT: "#3b82f6",
+            hover: "#2563eb",
+            foreground: "#ffffff",
+          },
+          secondary: {
+            DEFAULT: "#f1f5f9",
+            hover: "#e2e8f0",
+            foreground: "#1e293b",
+          },
+          muted: {
+            DEFAULT: "#f1f5f9",
+            foreground: "#64748b",
+          },
+          accent: {
+            DEFAULT: "#8b5cf6",
+            hover: "#7c3aed",
+            foreground: "#ffffff",
+          },
+          destructive: {
+            DEFAULT: "#ef4444",
+            hover: "#dc2626",
+            foreground: "#ffffff",
+          },
+          border: "#e2e8f0",
+          input: "#e2e8f0",
+          ring: "#3b82f6",
+        },
+        // Dark mode colors
+        dark: {
+          background: "#0f172a",
+          "background-secondary": "#1e293b",
+          foreground: "#f8fafc",
+          primary: {
+            DEFAULT: "#3b82f6",
+            hover: "#60a5fa",
+            foreground: "#ffffff",
+          },
+          secondary: {
+            DEFAULT: "#1e293b",
+            hover: "#334155",
+            foreground: "#f8fafc",
+          },
+          muted: {
+            DEFAULT: "#1e293b",
+            foreground: "#94a3b8",
+          },
+          accent: {
+            DEFAULT: "#8b5cf6",
+            hover: "#a78bfa",
+            foreground: "#ffffff",
+          },
+          destructive: {
+            DEFAULT: "#ef4444",
+            hover: "#f87171",
+            foreground: "#ffffff",
+          },
+          border: "#334155",
+          input: "#334155",
+          ring: "#3b82f6",
         },
       },
       borderRadius: {
@@ -125,10 +113,16 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [
+    require("tailwindcss-animate"),
+    addVariablesForColors,
+  ],
 } satisfies Config;
 
-function addVariablesForColors({ addBase, theme }: any) {
+function addVariablesForColors({ addBase, theme }: { 
+  addBase: (config: Record<string, any>) => void;
+  theme: (path: string) => Record<string, any>;
+}) {
   const allColors = flattenColorPalette(theme("colors"));
   const newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])

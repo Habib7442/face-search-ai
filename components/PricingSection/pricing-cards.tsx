@@ -1,118 +1,139 @@
 import React from "react";
-import { Loader2, Check } from "lucide-react";
-import { motion } from "framer-motion";
 
-interface PricingPlan {
-  id: string;
-  name: string;
-  price: string;
-  period: string;
-  description: string;
-  features: string[];
-  highlighted: boolean;
-  buttonText: string;
-  stripePriceId: string;
-  badge?: string;
+interface PricingCardsProps {
+  pricingPlans: Array<{
+    id: string;
+    name: string;
+    price: string;
+    period: string;
+    description: string;
+    features: string[];
+    highlighted: boolean;
+    buttonText: string;
+    badge?: string;
+    isFixed?: boolean;
+  }>;
+  handlePurchase: (plan: any) => void;
+  loadingPlan: string | null;
+  isLoaded: boolean;
 }
 
-const PricingCards: React.FC<{
-  pricingPlans: PricingPlan[];
-  handlePurchase: (plan: PricingPlan) => Promise<void>;
-  loadingPlan?: string | null;
-  isLoaded?: boolean;
-}> = ({ pricingPlans, handlePurchase, loadingPlan = "", isLoaded = true }) => {
+const PricingCards = ({
+  pricingPlans,
+  handlePurchase,
+  loadingPlan,
+  isLoaded,
+}: PricingCardsProps) => {
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-      {pricingPlans.map((plan, index) => (
-        <motion.div
+    <div className="flex gap-6 h-full">
+      {pricingPlans.map((plan) => (
+        <div
           key={plan.id}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
           className={`
-            relative flex flex-col h-full rounded-2xl overflow-hidden transition-all duration-300
-            ${plan.highlighted 
-              ? 'bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-xl scale-105 z-10' 
-              : 'bg-white hover:shadow-xl border border-slate-200'
+            relative rounded-2xl p-6 transition-all duration-300 w-[340px] h-full flex flex-col
+            ${
+              plan.highlighted
+                ? "bg-light-primary/5 dark:bg-dark-primary/5 border-light-primary dark:border-dark-primary scale-105 z-10"
+                : "bg-light-background dark:bg-dark-background border-light-border dark:border-dark-border hover:border-light-primary/50 dark:hover:border-dark-primary/50"
             }
+            border-2 backdrop-blur-sm
           `}
         >
-          {/* Popular Badge */}
+          {/* Badge */}
           {plan.badge && (
-            <div className="absolute top-4 right-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-600">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span className="px-4 py-1 rounded-full text-xs font-medium bg-light-primary dark:bg-dark-primary text-white">
                 {plan.badge}
               </span>
             </div>
           )}
 
-          {/* Card Content */}
-          <div className="p-8 flex-grow space-y-6">
-            {/* Header */}
-            <div className="space-y-2">
-              <h3 className={`text-2xl font-bold ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
-                {plan.name}
-              </h3>
-              <p className={`text-sm ${plan.highlighted ? 'text-indigo-100' : 'text-slate-600'}`}>
-                {plan.description}
-              </p>
+          {/* Plan Header */}
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-semibold mb-2 text-light-foreground dark:text-dark-foreground">
+              {plan.name}
+            </h3>
+            <p className="text-sm text-light-muted-foreground dark:text-dark-muted-foreground mb-4 line-clamp-2">
+              {plan.description}
+            </p>
+            <div className="flex items-end justify-center gap-1">
+              <span className="text-4xl font-bold text-light-foreground dark:text-dark-foreground">
+                {plan.price}
+              </span>
+              <span className="text-light-muted-foreground dark:text-dark-muted-foreground mb-1">
+                /{plan.period}
+              </span>
             </div>
-
-            {/* Price */}
-            <div className="space-y-1">
-              <div className="flex items-baseline">
-                <span className={`text-4xl font-extrabold ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
-                  {plan.price}
-                </span>
-                <span className={`text-sm ml-2 ${plan.highlighted ? 'text-indigo-100' : 'text-slate-600'}`}>
-                  /{plan.period}
-                </span>
-              </div>
-            </div>
-
-            {/* Features */}
-            <ul className="space-y-4">
-              {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <Check className={`w-5 h-5 flex-shrink-0 ${
-                    plan.highlighted ? 'text-indigo-200' : 'text-indigo-600'
-                  }`} />
-                  <span className={`text-sm ${
-                    plan.highlighted ? 'text-indigo-100' : 'text-slate-600'
-                  }`}>
-                    {feature}
-                  </span>
-                </li>
-              ))}
-            </ul>
           </div>
 
-          {/* Button */}
-          <div className="p-8 pt-0">
-            <button
-              onClick={() => handlePurchase(plan)}
-              disabled={loadingPlan === plan.id || !isLoaded}
-              className={`
-                w-full py-3 px-4 rounded-xl font-medium transition-all duration-200
-                ${plan.highlighted
-                  ? 'bg-white text-indigo-600 hover:bg-indigo-50'
-                  : 'bg-indigo-600 text-white hover:bg-indigo-700'
-                }
-                disabled:opacity-50 disabled:cursor-not-allowed
-              `}
-            >
-              {loadingPlan === plan.id ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Processing...
-                </div>
-              ) : (
-                plan.buttonText
-              )}
-            </button>
-          </div>
-        </motion.div>
+          {/* Features List */}
+          <ul className="space-y-3 mb-6 flex-grow">
+            {plan.features.map((feature, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-2 text-light-foreground dark:text-dark-foreground"
+              >
+                <svg
+                  className="w-5 h-5 text-light-primary dark:text-dark-primary flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span className="text-sm leading-tight">{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Action Button */}
+          <button
+            onClick={() => handlePurchase(plan)}
+            disabled={!isLoaded || loadingPlan === plan.id}
+            className={`
+              w-full py-3 px-6 rounded-xl text-sm font-medium transition-all duration-300 mt-auto
+              ${
+                plan.highlighted
+                  ? "bg-light-primary dark:bg-dark-primary text-white hover:bg-light-primary/90 dark:hover:bg-dark-primary/90"
+                  : "bg-light-accent/10 dark:bg-dark-accent/10 text-light-foreground dark:text-dark-foreground hover:bg-light-accent/20 dark:hover:bg-dark-accent/20"
+              }
+              disabled:opacity-50 disabled:cursor-not-allowed
+            `}
+          >
+            {loadingPlan === plan.id ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-4 w-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Processing...
+              </span>
+            ) : (
+              plan.buttonText
+            )}
+          </button>
+        </div>
       ))}
     </div>
   );
