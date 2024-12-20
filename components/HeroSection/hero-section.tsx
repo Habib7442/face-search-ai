@@ -50,6 +50,9 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-full bg-light-background dark:bg-dark-background overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 dark:opacity-50" />
+
       <div className="container mx-auto px-6 py-24 text-center relative">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Text */}
@@ -137,7 +140,7 @@ const HeroSection = () => {
             >
               {/* Gradient glow effect - only in dark mode */}
               <div className="absolute -z-10 inset-0 hidden dark:block">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 blur-3xl rounded-[20px]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/20 to-pink-500/10 blur-3xl rounded-[20px]" />
               </div>
 
               <div className="flex flex-col items-center gap-4">
